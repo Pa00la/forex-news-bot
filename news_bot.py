@@ -27,11 +27,16 @@ MAX_NEWS_PER_DAY = 40
 NEWS_MAX_AGE_MIN = 45
 
 FEEDS = {  # name -> url (a failing feed is simply skipped)
-    "FXStreet": "https://www.fxstreet.com/rss/news",
     "investingLive": "https://investinglive.com/feed",
     "CNBC Economy": "https://search.cnbc.com/rs/search/combinedcms/view.xml?partnerId=wrss01&id=20910258",
     "CNBC Finance": "https://search.cnbc.com/rs/search/combinedcms/view.xml?partnerId=wrss01&id=10000664",
     "MarketWatch": "https://feeds.content.dowjones.io/public/rss/mw_topstories",
+    "WSJ Markets": "https://feeds.content.dowjones.io/public/rss/RSSMarketsMain",
+    "Federal Reserve": "https://www.federalreserve.gov/feeds/press_all.xml",
+    "US BLS": "https://www.bls.gov/feed/bls_latest.rss",
+    "ECB": "https://www.ecb.europa.eu/rss/press.html",
+    "Bank of England": "https://www.bankofengland.co.uk/rss/news",
+    "BBC Business": "https://feeds.bbci.co.uk/news/business/rss.xml",
 }
 KEYWORDS = ["gold", "xau", "fed ", "fomc", "powell", "trump", "nfp", "payroll", "cpi", "inflation", "pce", "ppi",
             "gdp", "unemployment", "jobs report", "jobless", "rate cut", "rate hike", "rate decision", "interest rate",
@@ -97,15 +102,31 @@ def fmt_time(dt):
     h = dt.hour % 12 or 12
     return f"{h}:{dt.minute:02d} {'م' if dt.hour >= 12 else 'ص'}"
 
-def translate_ar(text):
-    try:
-        url = ("https://translate.googleapis.com/translate_a/single?client=gtx&sl=en&tl=ar&dt=t&q="
-               + urllib.parse.quote(text))
-        data = json.loads(http_get(url, 15))
-        out = "".join(part[0] for part in data[0] if part and part[0])
-        return out.strip() or None
-    except Exception:
-        return None
+def _tr_google(text):
+    url = ("https://translate.googleapis.com/translate_a/single?client=gtx&sl=en&tl=ar&dt=t&q="
+           + urllib.parse.quote(text))
+    data = json.loads(http_get(url, 15))
+    return "".join(part[0] for part in data[0] if part and part[0]).strip()
+
+def _tr_google_mobile(text):
+    raw = http_get("https://translate.google.com/m?sl=en&tl=ar&q=" + urllib.parse.quote(text), 15).decode("utf-8", "ignore")
+    m = re.search(r'class="result-container">(.*?)</div>', raw, re.S)
+    return html.unescape(m.group(1)).strip() if m else ""
+
+def _tr_mymemory(text):
+    data = json.loads(http_get("https://api.mymemory.translated.net/get?langpair=en|ar&q=" + urllib.parse.quote(text), 15))
+    out = data["responseData"]["translatedText"]
+    return "" if "MYMEMORY WARNING" in out.upper() else html.unescape(out).strip()
+
+def translate_ar(text, verbose=False):
+    for fn in (_tr_google, _tr_google_mobile, _tr_mymemory):
+        try:
+            out = fn(text)
+            if out and out != text:
+                return out
+        except Exception as ex:
+            if verbose: print(f"translate {fn.__name__} failed: {ex}")
+    return None
 
 # ---------------- calendar ----------------
 def fetch_calendar():
@@ -241,8 +262,10 @@ PAIRS = ["EURUSD", "GBPUSD", "USDJPY", "AUDUSD", "USDCAD", "USDCHF", "NZDUSD"]
 
 def yahoo_change(symbol):
     url = f"https://query1.finance.yahoo.com/v8/finance/chart/{symbol}?interval=1d&range=5d"
-    meta = json.loads(http_get(url, 20))["chart"]["result"][0]["meta"]
-    price, prev = meta["regularMarketPrice"], meta["chartPreviousClose"]
+    res = json.loads(http_get(url, 20))["chart"]["result"][0]
+    price = res["meta"]["regularMarketPrice"]
+    closes = [c for c in res["indicators"]["quote"][0]["close"] if c is not None]
+    prev = closes[-2] if len(closes) >= 2 else res["meta"]["chartPreviousClose"]
     return price, (price / prev - 1) * 100
 
 def currency_strength(changes):
@@ -295,7 +318,7 @@ def diagnose():
         try:
             items = parse_feed(http_get(url)); print(f"feed OK: {name}: {len(items)} items; newest: {items[0][0][:80] if items else '-'}")
         except Exception as ex: print(f"feed FAILED: {name}: {ex}")
-    print("translate test:", translate_ar("Gold rises as dollar slips"))
+    print("translate test:", translate_ar("Gold rises as dollar slips", verbose=True))
     for s in ["GC=F", "EURUSD=X"]:
         try: print("yahoo OK:", s, yahoo_change(s))
         except Exception as ex: print("yahoo FAILED:", s, ex)
