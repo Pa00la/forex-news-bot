@@ -1,6 +1,6 @@
 """Forex / gold news bot for a Telegram channel (free, runs on GitHub Actions every ~5 min).
 
-What it posts (Arabic, no emojis, no trade recommendations, Dubai time):
+What it posts (Arabic, no emojis, no trade recommendations, Egypt + Saudi time):
   - Morning calendar of today's high-impact events
   - Pre-alert ~1 hour before each high-impact release, and a "released now" alert
   - Breaking news from free RSS feeds (headline translated to Arabic + source)
@@ -12,7 +12,8 @@ from datetime import datetime, timedelta, timezone
 from email.utils import parsedate_to_datetime
 from zoneinfo import ZoneInfo
 
-DUBAI = ZoneInfo("Asia/Dubai")
+DUBAI = ZoneInfo("Africa/Cairo")   # base zone = Egypt time
+KSA = ZoneInfo("Asia/Riyadh")
 STATE_FILE = "state.json"
 UA = {"User-Agent": "Mozilla/5.0 (compatible; news-bot/1.0)"}
 
@@ -67,7 +68,7 @@ TITLE_AR = {
 DAYS_AR = ["الاثنين", "الثلاثاء", "الأربعاء", "الخميس", "الجمعة", "السبت", "الأحد"]
 DISCLAIMER = "للمعلومات فقط وليس توصية. التداول ينطوي على مخاطر عالية."
 LINE = "━━━━━━━━━━━━━━"
-FOOTER = "📢 @forex_news_M1"
+FOOTER = '📢 <a href="https://t.me/forex_news_M1">انضم للقناة: Forex News | Pola</a>'
 FLAGS = {"USD": "🇺🇸", "GBP": "🇬🇧", "EUR": "🇪🇺", "JPY": "🇯🇵", "CAD": "🇨🇦", "AUD": "🇦🇺", "CHF": "🇨🇭", "NZD": "🇳🇿", "CNY": "🇨🇳"}
 esc = html.escape
 
@@ -102,9 +103,12 @@ def send(text):
             f"https://api.telegram.org/bot{token}/sendMessage", data=data), timeout=30) as r:
         r.read()
 
-def fmt_time(dt):
+def _t12(dt):
     h = dt.hour % 12 or 12
     return f"{h}:{dt.minute:02d} {'م' if dt.hour >= 12 else 'ص'}"
+
+def fmt_time(dt):
+    return f"{_t12(dt.astimezone(DUBAI))} مصر | {_t12(dt.astimezone(KSA))} السعودية"
 
 def _tr_google(text):
     url = ("https://translate.googleapis.com/translate_a/single?client=gtx&sl=en&tl=ar&dt=t&q="
@@ -163,7 +167,7 @@ def msg_prealert(e, when, stage=60):
     flag = FLAGS.get(e["country"], "")
     lines = [f"🔔 <b>تنبيه قبل الخبر</b>", LINE,
              f"{flag} <b>{esc(c)}</b>", f"📌 {esc(t)}",
-             f"🕒 {DAYS_AR[when.weekday()]} {fmt_time(when)} (بتوقيت دبي)",
+             f"🕒 {DAYS_AR[when.weekday()]} {fmt_time(when)}",
              f"⏳ {STAGE_AR[stage]}"]
     fc, pv = (e.get("forecast") or "").strip(), (e.get("previous") or "").strip()
     if fc: lines.append(f"🎯 التوقع: <b>{esc(fc)}</b>")
@@ -172,6 +176,8 @@ def msg_prealert(e, when, stage=60):
     if stage == 60:
         lines.append("⚠️ خبر عالي التأثير وممكن يحرك الدولار والذهب")
         lines.append(f"ℹ️ {DISCLAIMER}")
+    elif stage == 5:
+        lines.append("⚠️ وقت الأخبار السبريد بيتسع والحركة بتبقى سريعة، خد بالك")
     lines.append(FOOTER)
     return "\n".join(lines)
 
@@ -179,7 +185,7 @@ def msg_now(e, when):
     c, t = ev_names(e)
     flag = FLAGS.get(e["country"], "")
     lines = ["🚨 <b>صدر الآن</b>", LINE, f"{flag} <b>{esc(c)}</b>", f"📌 {esc(t)}",
-             f"🕒 {fmt_time(when)} (بتوقيت دبي)"]
+             f"🕒 {fmt_time(when)}"]
     fc, pv = (e.get("forecast") or "").strip(), (e.get("previous") or "").strip()
     if fc: lines.append(f"🎯 التوقع: <b>{esc(fc)}</b>")
     if pv: lines.append(f"📊 السابق: <b>{esc(pv)}</b>")
@@ -187,7 +193,7 @@ def msg_now(e, when):
     return "\n".join(lines)
 
 def msg_morning(items, today):
-    lines = [f"📅 <b>أهم أخبار اليوم</b>", f"🗓️ {DAYS_AR[today.weekday()]} {today.day}/{today.month}  (بتوقيت دبي)", LINE]
+    lines = [f"📅 <b>أهم أخبار اليوم</b>", f"🗓️ {DAYS_AR[today.weekday()]} {today.day}/{today.month} ", LINE]
     for e, when in items:
         c, t = ev_names(e)
         lines.append(f"🕒 <b>{fmt_time(when)}</b>  {FLAGS.get(e['country'], '')} {esc(c)}: {esc(t)}")
@@ -294,7 +300,7 @@ def currency_strength(changes):
     return sorted(((c, sum(v) / len(v)) for c, v in score.items() if v), key=lambda x: -x[1])
 
 def msg_snapshot(gold, strength, now):
-    lines = [f"📈 <b>لقطة السوق</b>", f"🕒 {fmt_time(now)} (بتوقيت دبي)", LINE]
+    lines = [f"📈 <b>لقطة السوق</b>", f"🕒 {fmt_time(now)}", LINE]
     if gold:
         price, ch = gold
         arrow = "🟢" if ch >= 0 else "🔴"
@@ -330,6 +336,57 @@ def run_snapshot(state, now, out):
                 print("snapshot skipped: no data")
             return
 
+
+# ---------------- market sessions ----------------
+SESSIONS = [  # name, flag, timezone, local open time
+    ("لندن", "🇬🇧", "Europe/London", (8, 0)),
+    ("الأمريكي", "🇺🇸", "America/New_York", (9, 30)),
+]
+INDICES = [("^GSPC", "S&P 500"), ("^IXIC", "ناسداك"), ("^DJI", "داو جونز"), ("^VIX", "مؤشر الخوف VIX")]
+
+def session_open_dubai(tzname, hm, now):
+    tz = ZoneInfo(tzname)
+    local_now = now.astimezone(tz)
+    if local_now.weekday() >= 5:
+        return None
+    return local_now.replace(hour=hm[0], minute=hm[1], second=0, microsecond=0).astimezone(DUBAI)
+
+def msg_open_alert(name, flag, open_dubai):
+    return "\n".join([f"🔔 <b>تنبيه: افتتاح السوق {name}</b>", LINE,
+                      f"{flag} السوق {name} بيفتح بعد 5 دقايق",
+                      f"🕒 {fmt_time(open_dubai)}",
+                      "📌 وقت الافتتاح السيولة بتزيد والتذبذب بيرتفع",
+                      LINE, FOOTER])
+
+def msg_indices(rows):
+    up = sum(1 for _, _, ch in rows if ch >= 0 and _ != "^VIX")
+    head = "🟢 <b>المؤشرات الأمريكية تفتتح على ارتفاع</b>" if up >= 2 else "🔴 <b>المؤشرات الأمريكية تفتتح على انخفاض</b>"
+    lines = [head, LINE]
+    for sym, nm, ch in rows:
+        lines.append(f"{'🟢' if ch >= 0 else '🔴'} {nm}: <b>{ch:+.2f}%</b>")
+    lines += [LINE, f"ℹ️ {DISCLAIMER}", FOOTER]
+    return "\n".join(lines)
+
+def run_sessions(state, now, out):
+    today = now.date().isoformat()
+    for name, flag, tzname, hm in SESSIONS:
+        op = session_open_dubai(tzname, hm, now)
+        if not op: continue
+        left = (op - now).total_seconds() / 60
+        key = f"open5:{name}:{today}"
+        if 0 < left <= 5 and key not in state["sent"]:
+            out.append((key, msg_open_alert(name, flag, op)))
+        if name == "الأمريكي":
+            after = -left
+            ikey = f"usidx:{today}"
+            if 2 <= after <= 25 and ikey not in state["sent"]:
+                rows = []
+                for sym, nm in INDICES:
+                    try: rows.append((sym, nm, yahoo_change(sym)[1]))
+                    except Exception as ex: print("index failed:", sym, ex)
+                if len(rows) >= 3:
+                    out.append((ikey, msg_indices(rows)))
+
 # ---------------- diagnosis (manual run only) ----------------
 def diagnose():
     print("=== DIAGNOSIS ===")
@@ -358,6 +415,8 @@ def main():
     except Exception as ex: print("calendar error:", ex)
     run_news(state, now, out)
     run_snapshot(state, now, out)
+    try: run_sessions(state, now, out)
+    except Exception as ex: print("sessions error:", ex)
     sent = 0
     for key, text in out:
         try:
