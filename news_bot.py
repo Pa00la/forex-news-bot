@@ -66,6 +66,10 @@ TITLE_AR = {
 }
 DAYS_AR = ["الاثنين", "الثلاثاء", "الأربعاء", "الخميس", "الجمعة", "السبت", "الأحد"]
 DISCLAIMER = "للمعلومات فقط وليس توصية. التداول ينطوي على مخاطر عالية."
+LINE = "━━━━━━━━━━━━━━"
+FOOTER = "📢 @forex_news_M1"
+FLAGS = {"USD": "🇺🇸", "GBP": "🇬🇧", "EUR": "🇪🇺", "JPY": "🇯🇵", "CAD": "🇨🇦", "AUD": "🇦🇺", "CHF": "🇨🇭", "NZD": "🇳🇿", "CNY": "🇨🇳"}
+esc = html.escape
 
 # ---------------- helpers ----------------
 def http_get(url, timeout=25):
@@ -93,7 +97,7 @@ def save_state(s):
 
 def send(text):
     token, chat = os.environ["BOT_TOKEN"], os.environ["CHAT_ID"]
-    data = urllib.parse.urlencode({"chat_id": chat, "text": text, "disable_web_page_preview": "true"}).encode()
+    data = urllib.parse.urlencode({"chat_id": chat, "text": text, "parse_mode": "HTML", "disable_web_page_preview": "true"}).encode()
     with urllib.request.urlopen(urllib.request.Request(
             f"https://api.telegram.org/bot{token}/sendMessage", data=data), timeout=30) as r:
         r.read()
@@ -156,25 +160,38 @@ STAGE_AR = {60: "بعد ساعة تقريبًا", 5: "بعد 5 دقايق", 1: "
 
 def msg_prealert(e, when, stage=60):
     c, t = ev_names(e)
-    lines = [f"تنبيه: {STAGE_AR[stage]}، {DAYS_AR[when.weekday()]} {fmt_time(when)} بتوقيت دبي", f"{c}: {t}"]
-    if fc_line(e): lines.append(fc_line(e))
+    flag = FLAGS.get(e["country"], "")
+    lines = [f"🔔 <b>تنبيه قبل الخبر</b>", LINE,
+             f"{flag} <b>{esc(c)}</b>", f"📌 {esc(t)}",
+             f"🕒 {DAYS_AR[when.weekday()]} {fmt_time(when)} (بتوقيت دبي)",
+             f"⏳ {STAGE_AR[stage]}"]
+    fc, pv = (e.get("forecast") or "").strip(), (e.get("previous") or "").strip()
+    if fc: lines.append(f"🎯 التوقع: <b>{esc(fc)}</b>")
+    if pv: lines.append(f"📊 السابق: <b>{esc(pv)}</b>")
+    lines.append(LINE)
     if stage == 60:
-        lines.append("خبر عالي التأثير وممكن يحرك الدولار والذهب. " + DISCLAIMER)
+        lines.append("⚠️ خبر عالي التأثير وممكن يحرك الدولار والذهب")
+        lines.append(f"ℹ️ {DISCLAIMER}")
+    lines.append(FOOTER)
     return "\n".join(lines)
 
 def msg_now(e, when):
     c, t = ev_names(e)
-    lines = [f"صدر الآن: {c} - {t}", f"الوقت: {fmt_time(when)} بتوقيت دبي"]
-    if fc_line(e): lines.append(fc_line(e))
-    lines.append("القراءة الفعلية بتوصل في الرسالة اللي بعدها.")
+    flag = FLAGS.get(e["country"], "")
+    lines = ["🚨 <b>صدر الآن</b>", LINE, f"{flag} <b>{esc(c)}</b>", f"📌 {esc(t)}",
+             f"🕒 {fmt_time(when)} (بتوقيت دبي)"]
+    fc, pv = (e.get("forecast") or "").strip(), (e.get("previous") or "").strip()
+    if fc: lines.append(f"🎯 التوقع: <b>{esc(fc)}</b>")
+    if pv: lines.append(f"📊 السابق: <b>{esc(pv)}</b>")
+    lines += [LINE, "⏱️ القراءة الفعلية في الرسالة اللي بعدها", FOOTER]
     return "\n".join(lines)
 
 def msg_morning(items, today):
-    lines = [f"أهم أخبار اليوم، {DAYS_AR[today.weekday()]} {today.day}/{today.month} (بتوقيت دبي):"]
+    lines = [f"📅 <b>أهم أخبار اليوم</b>", f"🗓️ {DAYS_AR[today.weekday()]} {today.day}/{today.month}  (بتوقيت دبي)", LINE]
     for e, when in items:
         c, t = ev_names(e)
-        lines.append(f"{fmt_time(when)} - {c}: {t}")
-    lines.append("هنبعت تنبيه قبل كل خبر وبعده. " + DISCLAIMER)
+        lines.append(f"🕒 <b>{fmt_time(when)}</b>  {FLAGS.get(e['country'], '')} {esc(c)}: {esc(t)}")
+    lines += [LINE, "🔔 هنبعت تنبيه قبل كل خبر وبعده", f"ℹ️ {DISCLAIMER}", FOOTER]
     return "\n".join(lines)
 
 def run_calendar(state, now, events, out):
@@ -250,8 +267,9 @@ def run_news(state, now, out):
         tl = title.lower()
         is_result = any(w in tl for w in RESULT_WORDS) and re.search(r"\d", title)
         ar = translate_ar(title)
-        head = "نتيجة" if is_result else "عاجل"
-        text = f"{head}: {ar}\n{title}\nالمصدر: {name}" if ar else f"{head}: {title}\nالمصدر: {name}"
+        head = "📊 <b>نتيجة</b>" if is_result else "🚨 <b>عاجل</b>"
+        body = f"<b>{esc(ar)}</b>\n<i>{esc(title)}</i>" if ar else f"<b>{esc(title)}</b>"
+        text = f"{head}\n{LINE}\n{body}\n{LINE}\n📰 المصدر: {esc(name)}\n{FOOTER}"
         out.append((None, text))
         state["titles"].append(" ".join(sorted(norm(title))))
         used += 1
@@ -276,16 +294,20 @@ def currency_strength(changes):
     return sorted(((c, sum(v) / len(v)) for c, v in score.items() if v), key=lambda x: -x[1])
 
 def msg_snapshot(gold, strength, now):
-    lines = [f"لقطة السوق، {fmt_time(now)} بتوقيت دبي:"]
+    lines = [f"📈 <b>لقطة السوق</b>", f"🕒 {fmt_time(now)} (بتوقيت دبي)", LINE]
     if gold:
         price, ch = gold
-        lines.append(f"الذهب: {price:,.2f} دولار للأوقية ({ch:+.2f}% عن إغلاق أمس)")
+        arrow = "🟢" if ch >= 0 else "🔴"
+        lines.append(f"🥇 <b>الذهب</b>: {price:,.2f} دولار للأوقية")
+        lines.append(f"{arrow} التغيّر عن إغلاق أمس: <b>{ch:+.2f}%</b>")
     if strength:
-        lines.append("قوة العملات اليوم (من الأقوى للأضعف):")
         names = {"USD": "الدولار الأمريكي", "EUR": "اليورو", "GBP": "الإسترليني", "JPY": "الين", "AUD": "الأسترالي",
-                 "CAD": "الكندي", "CHF": "الفرنك", "NZD": "النيوزيلندي"}
-        lines.append(" > ".join(f"{names[c]} ({v:+.2f}%)" for c, v in strength))
-    lines.append(DISCLAIMER)
+                 "CAD": "الكندي", "CHF": "الفرنك السويسري", "NZD": "النيوزيلندي"}
+        flags = {**FLAGS}
+        lines += ["", "💱 <b>قوة العملات اليوم</b> (من الأقوى للأضعف)"]
+        for i, (c, v) in enumerate(strength, 1):
+            lines.append(f"{'🟢' if v >= 0 else '🔴'} {i}. {flags.get(c, '')} {names[c]}: <b>{v:+.2f}%</b>")
+    lines += [LINE, f"ℹ️ {DISCLAIMER}", FOOTER]
     return "\n".join(lines)
 
 def run_snapshot(state, now, out):
@@ -327,7 +349,7 @@ def diagnose():
 def main():
     manual = os.environ.get("GITHUB_EVENT_NAME") == "workflow_dispatch"
     if manual:
-        send("اختبار: القناة شغالة والبوت متصل.")
+        send("✅ <b>اختبار</b>\nالقناة شغالة والبوت متصل.")
         diagnose()
     now = now_dubai()
     state = load_state()
