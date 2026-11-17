@@ -7,13 +7,18 @@ What it posts (Arabic, no emojis, no trade recommendations, Egypt + Saudi time):
   - Gold and currency strength snapshots a few times a day
 Manual run (workflow_dispatch) sends a test message and prints a diagnosis of every source.
 """
-import json, os, re, sys, html, urllib.request, urllib.parse, xml.etree.ElementTree as ET
+import json, time, os, re, sys, html, urllib.request, urllib.parse, xml.etree.ElementTree as ET
 from datetime import datetime, timedelta, timezone
 from email.utils import parsedate_to_datetime
 from zoneinfo import ZoneInfo
 
+def C():
+    import cards  # lazy: installs Pillow only when an image is needed
+    return cards
+
 DUBAI = ZoneInfo("Africa/Cairo")   # base zone = Egypt time
 KSA = ZoneInfo("Asia/Riyadh")
+import content
 STATE_FILE = "state.json"
 UA = {"User-Agent": "Mozilla/5.0 (compatible; news-bot/1.0)"}
 
@@ -98,12 +103,39 @@ def save_state(s):
     with open(STATE_FILE, "w", encoding="utf-8") as f:
         json.dump(s, f, ensure_ascii=False, indent=1)
 
+def _tg(method, fields, files=None):
+    token = os.environ["BOT_TOKEN"]
+    url = f"https://api.telegram.org/bot{token}/{method}"
+    if files:
+        boundary = "----nb" + str(int(time.time() * 1000))
+        body = b""
+        for k, v in fields.items():
+            body += f'--{boundary}\r\nContent-Disposition: form-data; name="{k}"\r\n\r\n{v}\r\n'.encode()
+        for k, (fn, data) in files.items():
+            body += (f'--{boundary}\r\nContent-Disposition: form-data; name="{k}"; filename="{fn}"\r\n'
+                     f'Content-Type: image/png\r\n\r\n').encode() + data + b"\r\n"
+        body += f"--{boundary}--\r\n".encode()
+        req = urllib.request.Request(url, data=body, headers={"Content-Type": f"multipart/form-data; boundary={boundary}"})
+    else:
+        req = urllib.request.Request(url, data=urllib.parse.urlencode(fields).encode())
+    with urllib.request.urlopen(req, timeout=40) as r:
+        return r.read()
+
 def send(text):
-    token, chat = os.environ["BOT_TOKEN"], os.environ["CHAT_ID"]
-    data = urllib.parse.urlencode({"chat_id": chat, "text": text, "parse_mode": "HTML", "disable_web_page_preview": "true"}).encode()
-    with urllib.request.urlopen(urllib.request.Request(
-            f"https://api.telegram.org/bot{token}/sendMessage", data=data), timeout=30) as r:
-        r.read()
+    _tg("sendMessage", {"chat_id": os.environ["CHAT_ID"], "text": text, "parse_mode": "HTML",
+                        "disable_web_page_preview": "true"})
+
+def send_photo(png, caption=""):
+    chat = os.environ["CHAT_ID"]
+    if len(caption) <= 1000:
+        _tg("sendPhoto", {"chat_id": chat, "caption": caption, "parse_mode": "HTML"}, {"photo": ("card.png", png)})
+    else:
+        _tg("sendPhoto", {"chat_id": chat}, {"photo": ("card.png", png)})
+        send(caption)
+
+def send_poll(question, options):
+    _tg("sendPoll", {"chat_id": os.environ["CHAT_ID"], "question": question[:290],
+                     "options": json.dumps(options, ensure_ascii=False), "is_anonymous": "true"})
 
 def _t12(dt):
     h = dt.hour % 12 or 12
@@ -224,6 +256,24 @@ def run_calendar(state, now, events, out):
             out.append(("now:" + ev_key(e), msg_now(e, when)))
 
 # ---------------- RSS news ----------------
+NUM = r"[+\-]?\d[\d.,]*\s?[%KMB]?"
+
+def _f(x):
+    try: return float(re.sub(r"[^\d.\-]", "", x.replace(",", "")))
+    except Exception: return None
+
+def parse_result(title):
+    m = re.search(rf"(?P<a>{NUM})\s+vs\.?\s+(?P<f>{NUM})\s+(?:expected|est\.?|forecast|consensus)", title, re.I)
+    if not m: return None
+    pm = re.search(rf"(?:prior|previous)[^\d+\-]*(?P<p>{NUM})", title, re.I)
+    a, f = _f(m.group("a")), _f(m.group("f"))
+    if a is None or f is None: return None
+    verdict = "أعلى من المتوقع" if a > f else "أقل من المتوقع" if a < f else "مطابق للمتوقع"
+    name = re.sub(r"\s+", " ", title[:m.start()]).strip(" :-,") or "بيانات اقتصادية"
+    name = re.sub(r"[+\-]?\d[\d.,]*\s?[%KMB]?$", "", name).strip() or name
+    return {"name": name, "actual": m.group("a").strip(), "forecast": m.group("f").strip(),
+            "prev": pm.group("p").strip() if pm else "", "verdict": verdict}
+
 def parse_feed(raw):
     root = ET.fromstring(raw)
     items = []
@@ -275,10 +325,16 @@ def run_news(state, now, out):
         tl = title.lower()
         is_result = any(w in tl for w in RESULT_WORDS) and re.search(r"\d", title)
         ar = translate_ar(title)
+        if not ar:
+            continue  # Arabic only
+        res = parse_result(title) if is_result else None
         head = "📊 <b>نتيجة</b>" if is_result else "🚨 <b>عاجل</b>"
-        body = f"<b>{esc(ar)}</b>\n<i>{esc(title)}</i>" if ar else f"<b>{esc(title)}</b>"
-        text = f"{head}\n{LINE}\n{body}\n{LINE}\n📰 المصدر: {esc(name)}\n{FOOTER}"
-        out.append((None, text))
+        text = f"{head}\n{LINE}\n<b>{esc(ar)}</b>\n{LINE}\n📰 المصدر: {esc(name)}\n{FOOTER}"
+        extra = None
+        if res:
+            label = translate_ar(res["name"]) or res["name"]
+            extra = ("img", lambda r=res, l=label: C().card_result("", l, r["actual"], r["forecast"], r["prev"], r["verdict"]))
+        out.append((None, text, extra))
         state["titles"].append(" ".join(sorted(norm(title))))
         used += 1
     state["news_count"][day] = count + used
@@ -300,6 +356,9 @@ def currency_strength(changes):
         base, quote = pair[:3], pair[3:]
         score[base].append(ch); score[quote].append(-ch)
     return sorted(((c, sum(v) / len(v)) for c, v in score.items() if v), key=lambda x: -x[1])
+
+SNAP_NAMES = {"USD": "الدولار الأمريكي", "EUR": "اليورو", "GBP": "الإسترليني", "JPY": "الين", "AUD": "الأسترالي",
+              "CAD": "الكندي", "CHF": "الفرنك السويسري", "NZD": "النيوزيلندي"}
 
 def msg_snapshot(gold, strength, now):
     lines = [f"📈 <b>لقطة السوق</b>", f"🕒 {fmt_time(now)}", LINE]
@@ -333,7 +392,12 @@ def run_snapshot(state, now, out):
                 except Exception as ex: print("pair failed:", p, ex)
             strength = currency_strength(changes) if len(changes) >= 5 else None
             if gold or strength:
-                out.append((key, msg_snapshot(gold, strength, now)))
+                extra = None
+                if strength:
+                    rows = [(c, SNAP_NAMES[c], v) for c, v in strength]
+                    sub = f"{DAYS_AR[now.weekday()]} {now.day}/{now.month} - {fmt_time(now)}"
+                    extra = ("img", lambda r=rows, sb=sub: C().card_strength(r, sb))
+                out.append((key, msg_snapshot(gold, strength, now), extra))
             else:
                 print("snapshot skipped: no data")
             return
@@ -389,6 +453,105 @@ def run_sessions(state, now, out):
                 if len(rows) >= 3:
                     out.append((ikey, msg_indices(rows)))
 
+
+# ---------------- closes, weekly, tips, polls ----------------
+EU_CLOSE = [("^GDAXI", "داكس ألمانيا"), ("^FTSE", "فوتسي لندن"), ("^FCHI", "كاك فرنسا"), ("^STOXX50E", "يورو ستوكس 50")]
+US_CLOSE = [("^GSPC", "S&P 500"), ("^IXIC", "ناسداك"), ("^DJI", "داو جونز"), ("GC=F", "الذهب"), ("DX-Y.NYB", "مؤشر الدولار DXY")]
+WEEKLY = [("GC=F", "الذهب"), ("DX-Y.NYB", "مؤشر الدولار DXY"), ("^GSPC", "S&P 500"), ("EURUSD=X", "اليورو/دولار"),
+          ("GBPUSD=X", "الإسترليني/دولار"), ("USDJPY=X", "دولار/ين")]
+
+def yahoo_weekly(symbol):
+    url = f"https://query1.finance.yahoo.com/v8/finance/chart/{symbol}?interval=1d&range=15d"
+    res = json.loads(http_get(url, 20))["chart"]["result"][0]
+    closes = [c for c in res["indicators"]["quote"][0]["close"] if c is not None]
+    price = res["meta"]["regularMarketPrice"]
+    return price, (price / closes[-6] - 1) * 100 if len(closes) >= 6 else None
+
+def table_rows(symbols, fn):
+    rows = []
+    for sym, nm in symbols:
+        try:
+            price, ch = fn(sym)
+            if ch is not None: rows.append((nm, f"{price:,.2f}", ch))
+        except Exception as ex:
+            print("table row failed:", sym, ex)
+    return rows
+
+def msg_close(title, rows, up_word, down_word, n_head=None):
+    hr = rows[:n_head] if n_head else rows
+    ups = sum(1 for _, _, c in hr if c >= 0)
+    head = f"🟢 <b>{up_word}</b>" if ups * 2 >= len(hr) else f"🔴 <b>{down_word}</b>"
+    lines = [head, LINE]
+    for nm, val, ch in rows:
+        lines.append(f"{'🟢' if ch >= 0 else '🔴'} {nm}: {val}  (<b>{ch:+.2f}%</b>)")
+    lines += [LINE, f"ℹ️ {DISCLAIMER}", FOOTER]
+    return "\n".join(lines)
+
+def run_closes(state, now, out):
+    today = now.date().isoformat()
+    for tzname, hm, kind in [("Europe/London", (16, 30), "eu"), ("America/New_York", (16, 0), "us")]:
+        tz = ZoneInfo(tzname)
+        ln = now.astimezone(tz)
+        if ln.weekday() >= 5: continue
+        close = ln.replace(hour=hm[0], minute=hm[1], second=0, microsecond=0).astimezone(DUBAI)
+        after = (now - close).total_seconds() / 60
+        key = f"close:{kind}:{today}"
+        if 5 <= after <= 40 and key not in state["sent"]:
+            symbols = EU_CLOSE if kind == "eu" else US_CLOSE
+            rows = table_rows(symbols, yahoo_change)
+            if len(rows) < 3: continue
+            if kind == "eu":
+                title, sub, up, down = "إغلاق الأسواق الأوروبية", "ملخص الجلسة", "الأسواق الأوروبية تغلق على ارتفاع", "الأسواق الأوروبية تغلق على انخفاض"
+            else:
+                title, sub, up, down = "إغلاق وول ستريت", "ملخص الجلسة الأمريكية", "وول ستريت تغلق على ارتفاع", "وول ستريت تغلق على انخفاض"
+            sb = f"{DAYS_AR[now.weekday()]} {now.day}/{now.month}"
+            out.append((key, msg_close(title, rows, up, down, 3 if kind == "us" else None),
+                        ("img", lambda t=title, sbt=sb, r=rows: C().card_table(t, sbt, r))))
+
+def run_weekly(state, now, out):
+    today = now.date().isoformat()
+    # Sunday night: next week's calendar
+    key = f"week:{today}"
+    if now.weekday() == 6 and 21 <= now.hour <= 23 and key not in state["sent"]:
+        try:
+            ev = json.loads(http_get(CAL_URL.replace("thisweek", "nextweek"), 30))
+            items = sorted(cal_events(ev), key=lambda x: x[1])
+        except Exception as ex:
+            print("nextweek failed:", ex); items = []
+        if items:
+            lines = ["🗓️ <b>جدول أهم أخبار الأسبوع الجاي</b>", LINE]
+            day = None
+            for e, w in items:
+                if w.date() != day:
+                    day = w.date(); lines += ["", f"📌 <b>{DAYS_AR[w.weekday()]} {w.day}/{w.month}</b>"]
+                c, t = ev_names(e)
+                lines.append(f"🕒 {_t12(w)} {FLAGS.get(e['country'], '')} {esc(c)}: {esc(t)}")
+            lines += ["", LINE, "🔔 هنبعت تنبيه قبل كل خبر بساعة وبـ 5 دقايق وبدقيقة", f"ℹ️ {DISCLAIMER}", FOOTER]
+            txt = "\n".join(lines)
+            if len(txt) < 4000: out.append((key, txt))
+    # Friday night: weekly recap
+    key = f"recap:{today}"
+    if now.weekday() == 4 and 22 <= now.hour <= 23 and key not in state["sent"]:
+        rows = table_rows(WEEKLY, yahoo_weekly)
+        if len(rows) >= 4:
+            sb = f"ملخص الأسبوع - حتى {now.day}/{now.month}"
+            txt = msg_close("", rows, "أسبوع إيجابي لمعظم الأسواق", "أسبوع ضاغط على معظم الأسواق")
+            txt = txt.replace("\n" + LINE + "\n", "\n" + LINE + "\n📆 التغير خلال الأسبوع:\n", 1)
+            out.append((key, txt, ("img", lambda r=rows, sbt=sb: C().card_table("ملخص الأسبوع", sbt, r))))
+
+def run_engagement(state, now, out):
+    day_no = now.date().toordinal()
+    today = now.date().isoformat()
+    key = f"tip:{today}"
+    if 10 <= now.hour <= 14 and key not in state["sent"]:
+        title, body = content.TIPS[day_no % len(content.TIPS)]
+        cap = f"💡 <b>{esc(title)}</b>\n{LINE}\n{esc(body)}\n{LINE}\n{FOOTER}"
+        out.append((key, cap, ("img", lambda t=title, b=body: C().card_tip(t, b))))
+    key = f"poll:{today}"
+    if now.weekday() < 5 and 19 <= now.hour <= 22 and key not in state["sent"]:
+        q, opts = content.POLLS[day_no % len(content.POLLS)]
+        out.append((key, "", ("poll", q, opts)))
+
 # ---------------- diagnosis (manual run only) ----------------
 def diagnose():
     print("=== DIAGNOSIS ===")
@@ -409,6 +572,11 @@ def main():
     manual = os.environ.get("GITHUB_EVENT_NAME") == "workflow_dispatch"
     if manual:
         send("✅ <b>اختبار</b>\nالقناة شغالة والبوت متصل.")
+        try:
+            t, b = content.TIPS[0]
+            send_photo(C().card_tip(t, b), "🖼️ اختبار الصور")
+        except Exception as ex:
+            print("image test failed:", ex)
         diagnose()
     now = now_dubai()
     state = load_state()
@@ -417,12 +585,24 @@ def main():
     except Exception as ex: print("calendar error:", ex)
     run_news(state, now, out)
     run_snapshot(state, now, out)
-    try: run_sessions(state, now, out)
-    except Exception as ex: print("sessions error:", ex)
+    for fn in (run_sessions, run_closes, run_weekly, run_engagement):
+        try: fn(state, now, out)
+        except Exception as ex: print(fn.__name__, "error:", ex)
     sent = 0
-    for key, text in out:
+    for item in out:
+        key, text = item[0], item[1]
+        extra = item[2] if len(item) > 2 else None
         try:
-            send(text)
+            if extra and extra[0] == "poll":
+                send_poll(extra[1], extra[2])
+            elif extra and extra[0] == "img":
+                try:
+                    send_photo(extra[1](), text)
+                except Exception as ex:
+                    print("image failed, sending text:", ex)
+                    send(text)
+            else:
+                send(text)
             if key: state["sent"].append(key)
             sent += 1
         except Exception as ex:
