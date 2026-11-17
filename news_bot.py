@@ -69,6 +69,8 @@ DAYS_AR = ["الاثنين", "الثلاثاء", "الأربعاء", "الخمي
 DISCLAIMER = "للمعلومات فقط وليس توصية. التداول ينطوي على مخاطر عالية."
 LINE = "━━━━━━━━━━━━━━"
 FOOTER = '📢 <a href="https://t.me/forex_news_M1">انضم للقناة: Forex News | Pola</a>'
+TAGS = "#أخبار_الفوركس #الذهب #الدولار"
+FOOTER = TAGS + "\n" + FOOTER
 FLAGS = {"USD": "🇺🇸", "GBP": "🇬🇧", "EUR": "🇪🇺", "JPY": "🇯🇵", "CAD": "🇨🇦", "AUD": "🇦🇺", "CHF": "🇨🇭", "NZD": "🇳🇿", "CNY": "🇨🇳"}
 esc = html.escape
 
