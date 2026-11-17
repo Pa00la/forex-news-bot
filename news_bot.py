@@ -730,7 +730,17 @@ def main():
             send_photo(C().card_tip(t, b), "🖼️ اختبار الصور")
         except Exception as ex:
             print("image test failed:", ex)
+        try:
+            key = "PEXELS" if os.environ.get("PEXELS_KEY") else ("PIXABAY" if os.environ.get("PIXABAY_KEY") else "none")
+            print("photo key:", key)
+            send_photo(C().card_news("الذهب يقفز مع تراجع الدولار وترقب قرار الفائدة", "gold rises", "Reuters"),
+                       "🖼️ اختبار صورة خبر - مصدر الخلفية: " + key)
+            send_photo(C().card_news("باول يلمّح لخفض الفائدة في ديسمبر", "Fed Powell", "Reuters"), "🖼️ اختبار صورة خبر (الفيدرالي)")
+        except Exception as ex:
+            print("news card test failed:", ex)
         diagnose()
+        if os.environ.get("TEST_ONLY") == "yes":
+            return
     loop_min = float(os.environ.get("LOOP_MINUTES") or 0)
     state = load_state()
     if not loop_min:
