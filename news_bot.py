@@ -191,14 +191,28 @@ def translate_ar(text, verbose=False):
 def fetch_calendar():
     return json.loads(http_get(CAL_URL, 30))
 
+PRIORITY = [("federal funds", 10), ("fomc", 9), ("non-farm", 9), ("rate statement", 8), ("monetary policy", 8),
+            ("cpi", 8), ("interest rate", 8), ("official bank rate", 8), ("main refinancing", 8), ("gdp", 6),
+            ("unemployment", 6), ("retail sales", 6), ("pce", 6), ("ppi", 5), ("pmi", 4), ("claims", 4)]
+
+def ev_score(e):
+    t = (e.get("title") or "").lower()
+    sc = max([w for k, w in PRIORITY if k in t] or [1])
+    return sc + (2 if e.get("country") == "USD" else 0)
+
 def cal_events(events):
     seen = {(e.get("country"), e.get("date"), e.get("title")) for e in events}
+    best = {}
     for e in events:
         if e.get("impact") != "High" or e.get("country") not in CURRENCIES:
             continue
         t = e.get("title") or ""
         if t.startswith("Core ") and (e.get("country"), e.get("date"), t[5:]) in seen:
             continue  # the plain version is enough
+        cur = best.get(e.get("date"))
+        if cur is None or ev_score(e) > ev_score(cur):
+            best[e.get("date")] = e  # one event per release time: the most important one
+    for e in best.values():
         try:
             yield e, datetime.fromisoformat(e["date"]).astimezone(DUBAI)
         except Exception:
