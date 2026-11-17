@@ -28,6 +28,8 @@ jobs:
         env:
           BOT_TOKEN: ${{ secrets.BOT_TOKEN }}
           CHAT_ID: ${{ secrets.CHAT_ID }}
+          PEXELS_KEY: ${{ secrets.PEXELS_KEY }}
+          PIXABAY_KEY: ${{ secrets.PIXABAY_KEY }}
           TEST_RUN: ${{ inputs.test }}
           LOOP_MINUTES: "335"
         run: python news_bot.py
