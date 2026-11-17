@@ -570,26 +570,17 @@ def diagnose():
         except Exception as ex: print("yahoo FAILED:", s, ex)
 
 # ---------------- main ----------------
-def main():
-    manual = os.environ.get("GITHUB_EVENT_NAME") == "workflow_dispatch"
-    if manual:
-        send("✅ <b>اختبار</b>\nالقناة شغالة والبوت متصل.")
+_CAL = {"t": 0.0, "data": []}
+
+def calendar_cached():
+    if time.time() - _CAL["t"] > 300:
         try:
-            t, b = content.TIPS[0]
-            send_photo(C().card_tip(t, b), "🖼️ اختبار الصور")
+            _CAL["data"] = fetch_calendar(); _CAL["t"] = time.time()
         except Exception as ex:
-            print("image test failed:", ex)
-        diagnose()
-    now = now_dubai()
-    state = load_state()
-    out = []
-    try: run_calendar(state, now, fetch_calendar(), out)
-    except Exception as ex: print("calendar error:", ex)
-    run_news(state, now, out)
-    run_snapshot(state, now, out)
-    for fn in (run_sessions, run_closes, run_weekly, run_engagement):
-        try: fn(state, now, out)
-        except Exception as ex: print(fn.__name__, "error:", ex)
+            print("calendar fetch failed (using cache):", ex); _CAL["t"] = time.time() - 240
+    return _CAL["data"]
+
+def deliver(state, out):
     sent = 0
     for item in out:
         key, text = item[0], item[1]
@@ -609,8 +600,60 @@ def main():
             sent += 1
         except Exception as ex:
             print("send failed:", ex)
-    save_state(state)
-    print(f"done, sent {sent}")
+    return sent
+
+def run_once(state, with_news=True):
+    now = now_dubai()
+    out = []
+    try: run_calendar(state, now, calendar_cached(), out)
+    except Exception as ex: print("calendar error:", ex)
+    if with_news:
+        try: run_news(state, now, out)
+        except Exception as ex: print("news error:", ex)
+    for fn in (run_snapshot, run_sessions, run_closes, run_weekly, run_engagement):
+        try: fn(state, now, out)
+        except Exception as ex: print(fn.__name__, "error:", ex)
+    return deliver(state, out)
+
+def git_save():
+    if not os.environ.get("GITHUB_ACTIONS"): return
+    import subprocess
+    cmds = [["git", "config", "user.name", "news-bot"], ["git", "config", "user.email", "bot@users.noreply.github.com"],
+            ["git", "add", "state.json"]]
+    for c in cmds: subprocess.run(c, check=False)
+    if subprocess.run(["git", "diff", "--staged", "--quiet"]).returncode != 0:
+        subprocess.run(["git", "commit", "-m", "update state"], check=False)
+        subprocess.run(["git", "pull", "--rebase", "-X", "theirs", "-q"], check=False)
+        subprocess.run(["git", "push", "-q"], check=False)
+
+def main():
+    if os.environ.get("TEST_RUN") == "yes":
+        send("✅ <b>اختبار</b>\nالقناة شغالة والبوت متصل.")
+        try:
+            t, b = content.TIPS[0]
+            send_photo(C().card_tip(t, b), "🖼️ اختبار الصور")
+        except Exception as ex:
+            print("image test failed:", ex)
+        diagnose()
+    loop_min = float(os.environ.get("LOOP_MINUTES") or 0)
+    state = load_state()
+    if not loop_min:
+        n = run_once(state); save_state(state); print(f"done, sent {n}"); return
+    end = time.time() + loop_min * 60
+    last_git, i = time.time(), 0
+    while time.time() < end:
+        t0 = time.time()
+        try:
+            n = run_once(state, with_news=(i % 2 == 0))
+            save_state(state)
+            if n: print(f"sent {n}")
+        except Exception as ex:
+            print("iteration error:", ex)
+        i += 1
+        if time.time() - last_git > 900:
+            git_save(); last_git = time.time()
+        time.sleep(max(1, 30 - (time.time() - t0)))
+    print("loop finished")
 
 if __name__ == "__main__":
     main()
