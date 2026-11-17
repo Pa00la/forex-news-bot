@@ -39,11 +39,20 @@
   "and earnings kickstart loom morning nvidia rebound retail sales stocks struggle",
   "0.2% advance expected october retail sales",
   "asia china chip east hit how new restrictions south will",
-  "and estate has invest nvidia real sell should spooked stocks turmoil"
+  "and estate has invest nvidia real sell should spooked stocks turmoil",
+  "continued futures gain oil risks shipping"
  ],
  "daily": {},
  "news_count": {
   "2026-11-16": 4,
-  "2026-11-17": 13
+  "2026-11-17": 14
+ },
+ "day_news": {
+  "2026-11-17": [
+   {
+    "ar": "ارتفاع العقود الآجلة للنفط بسبب استمرار مخاطر الشحن",
+    "score": 1
+   }
+  ]
  }
 }
