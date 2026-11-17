@@ -49,7 +49,7 @@ KEYWORDS = ["gold", "xau", "fed ", "fomc", "powell", "trump", "nfp", "payroll", 
             "bank of england", "boe", "ecb", "boj", "lagarde", "bailey", "ueda", "treasury", "yield", "dollar", "dxy",
             "oil", "opec", "tariff", "sanction", "iran", "israel", "ceasefire", "retail sales", "pmi", "ism",
             "china", "safe haven", "central bank"]
-SKIP = ["bitcoin", "crypto", "ethereum", "xrp", "dogecoin", "stock picks", "sponsored", "earnings call", "podcast"]
+SKIP = ["should i ", "moneyist", "my husband", "my wife", "my mother", "my father", "my parents", "my daughter", "my son", "bitcoin", "crypto", "ethereum", "xrp", "dogecoin", "stock picks", "sponsored", "earnings call", "podcast"]
 RESULT_WORDS = ["nfp", "payroll", "cpi", "ppi", "pce", "gdp", "retail sales", "unemployment rate", "jobless claims",
                 "pmi", "ism", "rate decision", "holds rates", "cuts rates", "raises rates", "keeps rates"]
 
@@ -73,7 +73,7 @@ TITLE_AR = {
 DAYS_AR = ["الاثنين", "الثلاثاء", "الأربعاء", "الخميس", "الجمعة", "السبت", "الأحد"]
 DISCLAIMER = "للمعلومات فقط وليس توصية. التداول ينطوي على مخاطر عالية."
 LINE = "━━━━━━━━━━━━━━"
-FOOTER = '📢 <a href="https://t.me/forex_news_M1">انضم للقناة: Maged | Forex News</a>'
+FOOTER = "📢 انضم للقناة 👈 t.me/forex_news_M1"
 LINK = FOOTER
 TAGS = "#أخبار_الفوركس #الذهب #الدولار"
 FOOTER = TAGS + "\n" + FOOTER
@@ -121,7 +121,7 @@ def save_state(s):
         json.dump(s, f, ensure_ascii=False, indent=1)
 
 LRI, PDI, RLM = "\u2066", "\u2069", "\u200f"
-_LATIN = re.compile(r"[A-Za-z0-9][A-Za-z0-9&%.,:'+\-/$ ]*[A-Za-z0-9%$]|[A-Za-z0-9]")
+_LATIN = re.compile(r"[A-Za-z0-9][A-Za-z0-9&%.,:'+\-/_$ ]*[A-Za-z0-9%$]|[A-Za-z0-9]")
 
 def fix_bidi(text):
     """Keep English/number runs in their natural order inside Arabic lines (tags and links untouched)."""
@@ -184,12 +184,12 @@ def _tr_google(text):
 def _tr_google_mobile(text):
     raw = http_get("https://translate.google.com/m?sl=en&tl=ar&q=" + urllib.parse.quote(text), 15).decode("utf-8", "ignore")
     m = re.search(r'class="result-container">(.*?)</div>', raw, re.S)
-    return html.unescape(m.group(1)).strip() if m else ""
+    return unesc(m.group(1)).strip() if m else ""
 
 def _tr_mymemory(text):
     data = json.loads(http_get("https://api.mymemory.translated.net/get?langpair=en|ar&q=" + urllib.parse.quote(text), 15))
     out = data["responseData"]["translatedText"]
-    return "" if "MYMEMORY WARNING" in out.upper() else html.unescape(out).strip()
+    return "" if "MYMEMORY WARNING" in out.upper() else unesc(out).strip()
 
 def translate_ar(text, verbose=False):
     for fn in (_tr_google, _tr_google_mobile, _tr_mymemory):
@@ -370,6 +370,13 @@ def parse_result(title):
     return {"name": name, "actual": m.group("a").strip(), "forecast": m.group("f").strip(),
             "prev": pm.group("p").strip() if pm else "", "verdict": verdict}
 
+def unesc(t):
+    for _ in range(3):
+        n = html.unescape(t)
+        if n == t: break
+        t = n
+    return t
+
 def parse_feed(raw):
     root = ET.fromstring(raw)
     items = []
@@ -377,7 +384,7 @@ def parse_feed(raw):
         def g(tag):
             el = it.find(tag) if it.find(tag) is not None else it.find("{http://www.w3.org/2005/Atom}" + tag)
             return (el.text or "").strip() if el is not None and el.text else ""
-        title = html.unescape(re.sub(r"<[^>]+>", "", g("title"))).strip()
+        title = unesc(re.sub(r"<[^>]+>", "", g("title"))).strip()
         pub = g("pubDate") or g("published") or g("updated")
         try:
             dt = parsedate_to_datetime(pub)

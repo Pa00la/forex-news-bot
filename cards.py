@@ -155,6 +155,7 @@ CATS = [
     (("ecb", "lagarde"), "المركزي الأوروبي", "€", (40, 90, 200)),
     (("bank of england", "boe", "bailey"), "بنك إنجلترا", "£", (140, 60, 170)),
     (("boj", "ueda", "yen"), "بنك اليابان", "¥", (200, 70, 90)),
+    (("nvidia", "stocks", "stock market", "wall street", "s&p", "nasdaq", "dow jones", "tesla", "apple", "microsoft", "tech "), "الأسهم", "STK", (40, 150, 120)),
     (("gold", "xau"), "الذهب", "Au", (230, 170, 40)),
     (("oil", "opec", "crude", "brent"), "النفط", "OIL", (90, 90, 100)),
     (("china", "xi ", "beijing", "tariff"), "الصين والتجارة", "CN", (210, 60, 40)),
@@ -163,10 +164,12 @@ CATS = [
 ]
 
 def pick_cat(english_title):
+    import re
     t = (english_title or "").lower() + " "
     for keys, name, glyph, col in CATS:
-        if any(k in t for k in keys):
-            return name, glyph, col
+        for k in keys:
+            if re.search(r"(?<![a-z])" + re.escape(k.strip()) + r"(?![a-z])", t):
+                return name, glyph, col
     return "عاجل", "!", (200, 50, 50)
 
 QUERIES = {
@@ -176,7 +179,8 @@ QUERIES = {
     "بنك إنجلترا": ["london city skyline", "british pound money", "big ben"],
     "بنك اليابان": ["tokyo skyline", "japanese yen", "tokyo night"],
     "الذهب": ["gold bars", "gold coins", "gold bullion"],
-    "النفط": ["oil refinery", "oil barrels", "oil pump sunset"],
+    "النفط": ["oil refinery", "oil drilling rig", "oil pump sunset"],
+    "الأسهم": ["stock market chart", "wall street", "trading screen"],
     "الصين والتجارة": ["shipping containers port", "shanghai skyline", "cargo ship"],
     "جيوسياسة": ["city skyline night", "world map", "stormy sky"],
     "بيانات اقتصادية": ["stock market chart", "financial charts screen", "trading screen"],
@@ -354,7 +358,7 @@ def card_news(headline_ar, english_title="", source="", layout=None):
         _pill(d, (W - 190, 810), name, 40, col)
     elif v == 8:    # big circle badge
         d.ellipse([40, 40, 300, 300], fill=col)
-        d.text((170, 172), glyph, font=font(150), fill=WHITE, anchor="mm")
+        d.text((170, 172), glyph, font=font(150 if len(glyph) <= 1 else (110 if len(glyph) == 2 else 78)), fill=WHITE, anchor="mm")
         text(d, (W - 60, 120), "عاجل", 70, (230, 60, 60), "rm")
         text(d, (W - 60, 215), name, 48, GOLD, "rm")
         size, lines = _fit(d, headline_ar, W - 130, 6, (62, 56, 50))
