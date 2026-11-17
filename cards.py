@@ -1,7 +1,7 @@
 """Image cards for the channel (Pillow). Free, runs inside GitHub Actions, no accounts needed."""
 import io, os, subprocess, sys
 
-BRAND = "Maged.P | Forex News"
+BRAND = "Maged | Forex News"
 HANDLE = "t.me/forex_news_M1"
 
 try:

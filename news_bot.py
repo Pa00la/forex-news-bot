@@ -73,7 +73,7 @@ TITLE_AR = {
 DAYS_AR = ["الاثنين", "الثلاثاء", "الأربعاء", "الخميس", "الجمعة", "السبت", "الأحد"]
 DISCLAIMER = "للمعلومات فقط وليس توصية. التداول ينطوي على مخاطر عالية."
 LINE = "━━━━━━━━━━━━━━"
-FOOTER = '📢 <a href="https://t.me/forex_news_M1">انضم للقناة: Forex News | Pola</a>'
+FOOTER = '📢 <a href="https://t.me/forex_news_M1">انضم للقناة: Maged | Forex News</a>'
 LINK = FOOTER
 TAGS = "#أخبار_الفوركس #الذهب #الدولار"
 FOOTER = TAGS + "\n" + FOOTER
@@ -120,6 +120,20 @@ def save_state(s):
     with open(STATE_FILE, "w", encoding="utf-8") as f:
         json.dump(s, f, ensure_ascii=False, indent=1)
 
+LRI, PDI, RLM = "\u2066", "\u2069", "\u200f"
+_LATIN = re.compile(r"[A-Za-z0-9][A-Za-z0-9&%.,:'+\-/$ ]*[A-Za-z0-9%$]|[A-Za-z0-9]")
+
+def fix_bidi(text):
+    """Keep English/number runs in their natural order inside Arabic lines (tags and links untouched)."""
+    parts = re.split(r"(<[^>]+>)", text)
+    out = []
+    for part in parts:
+        if part.startswith("<") and part.endswith(">"):
+            out.append(part)
+        else:
+            out.append(_LATIN.sub(lambda m: LRI + m.group(0).rstrip() + PDI + (" " if m.group(0).endswith(" ") else ""), part))
+    return "\n".join(RLM + ln if ln.strip() else ln for ln in "".join(out).split("\n"))
+
 def _tg(method, fields, files=None):
     token = os.environ["BOT_TOKEN"]
     url = f"https://api.telegram.org/bot{token}/{method}"
@@ -139,13 +153,13 @@ def _tg(method, fields, files=None):
         return r.read()
 
 def send(text):
-    _tg("sendMessage", {"chat_id": os.environ["CHAT_ID"], "text": text, "parse_mode": "HTML",
+    _tg("sendMessage", {"chat_id": os.environ["CHAT_ID"], "text": fix_bidi(text), "parse_mode": "HTML",
                         "disable_web_page_preview": "true"})
 
 def send_photo(png, caption=""):
     chat = os.environ["CHAT_ID"]
     if len(caption) <= 1000:
-        _tg("sendPhoto", {"chat_id": chat, "caption": caption, "parse_mode": "HTML"}, {"photo": ("card.png", png)})
+        _tg("sendPhoto", {"chat_id": chat, "caption": fix_bidi(caption), "parse_mode": "HTML"}, {"photo": ("card.png", png)})
     else:
         _tg("sendPhoto", {"chat_id": chat}, {"photo": ("card.png", png)})
         send(caption)
@@ -283,6 +297,60 @@ def run_calendar(state, now, events, out):
         elif -8 <= left <= 0 and ("now:" + ev_key(e)) not in state["sent"]:
             out.append(("now:" + ev_key(e), msg_now(e, when)))
 
+
+# ---------------- market reaction after a US release (measured, not predicted) ----------------
+def intraday(symbol):
+    url = f"https://query1.finance.yahoo.com/v8/finance/chart/{symbol}?interval=1m&range=1d"
+    res = json.loads(http_get(url, 20))["chart"]["result"][0]
+    q = res["indicators"]["quote"][0]
+    return [(t, c, h, l) for t, c, h, l in zip(res["timestamp"], q["close"], q["high"], q["low"])
+            if c is not None and h is not None and l is not None]
+
+def reaction(symbol, t0, minutes=5):
+    """Move of the price in the N minutes after t0 (epoch seconds)."""
+    bars = intraday(symbol)
+    before = [b for b in bars if b[0] <= t0]
+    after = [b for b in bars if t0 < b[0] <= t0 + minutes * 60]
+    if not before or len(after) < max(2, minutes - 2):
+        return None
+    p0 = before[-1][1]
+    p1 = after[-1][1]
+    hi, lo = max(b[2] for b in after), min(b[3] for b in after)
+    return {"p0": p0, "p1": p1, "move": p1 - p0, "pct": (p1 / p0 - 1) * 100, "range": hi - lo, "range_pct": (hi - lo) / p0 * 100}
+
+def strength_word(range_pct):
+    if range_pct < 0.10: return "هادئة"
+    if range_pct < 0.25: return "متوسطة"
+    if range_pct < 0.50: return "قوية"
+    return "عنيفة"
+
+def msg_reaction(e, gold, dxy):
+    c, t = ev_names(e)
+    arrow = "🟢 ▲" if gold["move"] >= 0 else "🔴 ▼"
+    lines = [f"📊 <b>تفاعل السوق مع الخبر</b>", f"{FLAGS.get(e['country'], '')} {esc(t)}",
+             f"🥇 الذهب: {arrow} <b>{abs(gold['move']):.1f}$</b> ({gold['pct']:+.2f}%) خلال 5 دقايق",
+             f"⚡ مدى التذبذب: <b>{gold['range']:.1f}$</b> - حركة {strength_word(gold['range_pct'])}"]
+    if dxy:
+        lines.append(f"💵 مؤشر الدولار: {'🟢 ▲' if dxy['move'] >= 0 else '🔴 ▼'} {dxy['pct']:+.2f}%")
+    lines += [LINK]
+    return "\n".join(lines)
+
+def run_reaction(state, now, events, out):
+    for e, when in cal_events(events):
+        if e.get("country") != "USD": continue
+        after = (now - when).total_seconds() / 60
+        key = "react:" + ev_key(e)
+        if 5.5 <= after <= 25 and key not in state["sent"]:
+            t0 = int(when.timestamp())
+            try:
+                gold = reaction("GC=F", t0)
+            except Exception as ex:
+                print("reaction gold failed:", ex); continue
+            if not gold: continue
+            try: dxy = reaction("DX-Y.NYB", t0)
+            except Exception: dxy = None
+            out.append((key, msg_reaction(e, gold, dxy)))
+
 # ---------------- RSS news ----------------
 NUM = r"[+\-]?\d[\d.,]*\s?[%KMB]?"
 
@@ -357,7 +425,7 @@ def run_news(state, now, out):
             continue  # Arabic only
         ar = re.sub(r"^(?:investing\s?live|InvestingLive)\s*[:\-–]?\s*", "", ar, flags=re.I).strip()
         res = parse_result(title) if is_result else None
-        src = SRC_AR.get(name, name)
+        src = name
         head = "📊 <b>نتيجة</b>" if is_result else pick(NEWS_POOL, title)
         text = f"{head}\n{esc(ar)}\n📰 {esc(src)}\n{LINK}"
         extra = None
@@ -633,6 +701,8 @@ def run_once(state, with_news=True):
     out = []
     try: run_calendar(state, now, calendar_cached(), out)
     except Exception as ex: print("calendar error:", ex)
+    try: run_reaction(state, now, calendar_cached(), out)
+    except Exception as ex: print("reaction error:", ex)
     if with_news:
         try: run_news(state, now, out)
         except Exception as ex: print("news error:", ex)
