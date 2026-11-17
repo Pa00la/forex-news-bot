@@ -4,7 +4,19 @@
   "pre60:2026-11-17T08:30:00-05:00|USD|Core Retail Sales m/m",
   "pre60:2026-11-17T08:30:00-05:00|USD|Retail Sales m/m",
   "snap:2026-11-17:12",
-  "tip:2026-11-17"
+  "tip:2026-11-17",
+  "pre60:2026-11-17T08:30:00-05:00|USD|Core Retail Sales m/m",
+  "pre60:2026-11-17T08:30:00-05:00|USD|Retail Sales m/m",
+  "pre5:2026-11-17T08:30:00-05:00|USD|Core Retail Sales m/m",
+  "pre5:2026-11-17T08:30:00-05:00|USD|Retail Sales m/m",
+  "pre60:2026-11-17T08:30:00-05:00|USD|Core Retail Sales m/m",
+  "pre5:2026-11-17T08:30:00-05:00|USD|Core Retail Sales m/m",
+  "pre60:2026-11-17T08:30:00-05:00|USD|Retail Sales m/m",
+  "pre5:2026-11-17T08:30:00-05:00|USD|Retail Sales m/m",
+  "pre1:2026-11-17T08:30:00-05:00|USD|Core Retail Sales m/m",
+  "pre1:2026-11-17T08:30:00-05:00|USD|Retail Sales m/m",
+  "now:2026-11-17T08:30:00-05:00|USD|Core Retail Sales m/m",
+  "now:2026-11-17T08:30:00-05:00|USD|Retail Sales m/m"
  ],
  "titles": [
   "for futures global lower oil outlook start surplus week",
@@ -14,11 +26,13 @@
   "ball become breakout could dollar driven market stock u.s. wrecking",
   "0.12% 98.46 dollar index rises wsj",
   "and being fair happily husband keep retired should thinks working.",
-  "2027 4.9% bofa end expected fall says survey treasury u.s. year yield"
+  "2027 4.9% bofa end expected fall says survey treasury u.s. year yield",
+  "amid and european fed hawkish investinglive iran news remains risk sentiment stalemate tentative wrap",
+  "east middle oil persist prices rebound risks shipping"
  ],
  "daily": {},
  "news_count": {
   "2026-11-16": 4,
-  "2026-11-17": 4
+  "2026-11-17": 6
  }
 }
