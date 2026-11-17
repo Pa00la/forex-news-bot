@@ -187,36 +187,45 @@ QUERIES = {
     "عاجل": ["stock exchange trading floor", "financial district", "forex chart"],
 }
 
+def _crop_sq(data):
+    im = Image.open(io.BytesIO(data)).convert("RGB")
+    w, h = im.size; m = min(w, h)
+    return im.crop(((w - m) // 2, (h - m) // 2, (w - m) // 2 + m, (h - m) // 2 + m)).resize((W, W))
+
+def _links_pexels(key, q):
+    import json, urllib.request, urllib.parse
+    url = "https://api.pexels.com/v1/search?" + urllib.parse.urlencode({"query": q, "per_page": 30, "orientation": "square"})
+    req = urllib.request.Request(url, headers={"Authorization": key, "User-Agent": "Mozilla/5.0"})
+    return [p_["src"]["large"] for p_ in json.loads(urllib.request.urlopen(req, timeout=20).read()).get("photos") or []]
+
+def _links_pixabay(key, q):
+    import json, urllib.request, urllib.parse
+    url = "https://pixabay.com/api/?" + urllib.parse.urlencode({"key": key, "q": q, "image_type": "photo", "per_page": 50, "safesearch": "true"})
+    hits = json.loads(urllib.request.urlopen(urllib.request.Request(url, headers={"User-Agent": "Mozilla/5.0"}), timeout=20).read()).get("hits") or []
+    return [h["largeImageURL"] for h in hits]
+
 def fetch_bg(cat, seed):
-    """Optional royalty-free photo (Pexels or Pixabay, whichever key exists). Places/objects only,
-    never photos of public figures. Returns a PIL image or None."""
-    pex = os.environ.get("PEXELS_KEY", "").strip()
-    pix = os.environ.get("PIXABAY_KEY", "").strip()
-    if not (pex or pix):
+    """Optional royalty-free photo. Uses every library that has a key (PEXELS_KEY, PIXABAY_KEY), in a
+    per-news random order, and falls back to the next one if a library fails. Places/objects only."""
+    providers = []
+    if os.environ.get("PEXELS_KEY", "").strip(): providers.append(("pexels", _links_pexels, os.environ["PEXELS_KEY"].strip()))
+    if os.environ.get("PIXABAY_KEY", "").strip(): providers.append(("pixabay", _links_pixabay, os.environ["PIXABAY_KEY"].strip()))
+    if not providers:
         return None
-    import json, random, urllib.request, urllib.parse, zlib
-    try:
-        qs = QUERIES.get(cat) or QUERIES["عاجل"]
-        rnd = random.Random(zlib.crc32(str(seed).encode()))
-        q = rnd.choice(qs)
-        if pex:
-            url = "https://api.pexels.com/v1/search?" + urllib.parse.urlencode({"query": q, "per_page": 30, "orientation": "square"})
-            req = urllib.request.Request(url, headers={"Authorization": pex, "User-Agent": "Mozilla/5.0"})
-            photos = json.loads(urllib.request.urlopen(req, timeout=20).read()).get("photos") or []
-            links = [p_["src"]["large"] for p_ in photos]
-        else:
-            url = "https://pixabay.com/api/?" + urllib.parse.urlencode({"key": pix, "q": q, "image_type": "photo", "per_page": 50, "safesearch": "true"})
-            hits = json.loads(urllib.request.urlopen(urllib.request.Request(url, headers={"User-Agent": "Mozilla/5.0"}), timeout=20).read()).get("hits") or []
-            links = [h["largeImageURL"] for h in hits]
-        if not links:
-            return None
-        data = urllib.request.urlopen(urllib.request.Request(rnd.choice(links), headers={"User-Agent": "Mozilla/5.0"}), timeout=25).read()
-        im = Image.open(io.BytesIO(data)).convert("RGB")
-        w, h = im.size; m = min(w, h)
-        return im.crop(((w - m) // 2, (h - m) // 2, (w - m) // 2 + m, (h - m) // 2 + m)).resize((W, W))
-    except Exception as ex:
-        print("photo fetch failed:", ex)
-        return None
+    import random, urllib.request, zlib
+    rnd = random.Random(zlib.crc32(str(seed).encode()))
+    rnd.shuffle(providers)
+    qs = QUERIES.get(cat) or QUERIES["عاجل"]
+    for name, fn, key in providers:
+        try:
+            links = fn(key, rnd.choice(qs))
+            if not links:
+                continue
+            data = urllib.request.urlopen(urllib.request.Request(rnd.choice(links), headers={"User-Agent": "Mozilla/5.0"}), timeout=25).read()
+            return _crop_sq(data)
+        except Exception as ex:
+            print(f"{name} failed:", ex)
+    return None
 
 PERSON_CATS = ("ترامب", "الفيدرالي", "المركزي الأوروبي", "بنك إنجلترا", "بنك اليابان")
 

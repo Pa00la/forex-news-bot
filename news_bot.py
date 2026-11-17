@@ -117,6 +117,7 @@ def save_state(s):
     s["sent"] = s["sent"][-500:]; s["titles"] = s["titles"][-200:]
     s["daily"] = dict(list(sorted(s["daily"].items()))[-60:])
     s["news_count"] = dict(list(sorted(s["news_count"].items()))[-10:])
+    s["day_news"] = dict(list(sorted(s.get("day_news", {}).items()))[-5:])
     with open(STATE_FILE, "w", encoding="utf-8") as f:
         json.dump(s, f, ensure_ascii=False, indent=1)
 
@@ -351,6 +352,53 @@ def run_reaction(state, now, events, out):
             except Exception: dxy = None
             out.append((key, msg_reaction(e, gold, dxy)))
 
+
+# ---------------- end-of-day top 3 and fast gold move ----------------
+def run_top3(state, now, out):
+    if now.weekday() >= 5 or now.hour < 22: return
+    day = now.date().isoformat()
+    key = f"top3:{day}"
+    if key in state["sent"]: return
+    items = state.get("day_news", {}).get(day, [])
+    if len(items) < 2: return
+    top = sorted(items, key=lambda x: -x["score"])[:3]
+    nums = ["1️⃣", "2️⃣", "3️⃣"]
+    lines = ["🗞️ <b>أهم أخبار اليوم</b>", LINE]
+    for i, it in enumerate(top):
+        lines.append(f"{nums[i]} {esc(it['ar'])}")
+    lines += [LINE, f"ℹ️ {DISCLAIMER}", FOOTER]
+    out.append((key, "\n".join(lines)))
+
+GOLD_MOVE_PCT = 0.30
+_gold_last = [0.0]
+
+def run_goldmove(state, now, out):
+    if now.weekday() >= 5: return
+    if time.time() - _gold_last[0] < 120: return
+    _gold_last[0] = time.time()
+    try:
+        bars = intraday("GC=F")
+    except Exception as ex:
+        print("goldmove failed:", ex); return
+    if len(bars) < 20: return
+    t_last, p_last = bars[-1][0], bars[-1][1]
+    if time.time() - t_last > 600: return  # stale / market closed
+    past = [b for b in bars if b[0] <= t_last - 900]
+    if not past: return
+    p0 = past[-1][1]
+    pct = (p_last / p0 - 1) * 100
+    if abs(pct) < GOLD_MOVE_PCT: return
+    direction = "up" if pct > 0 else "down"
+    bucket = int(time.time() // 1800)
+    key = f"goldmove:{bucket}:{direction}"
+    if key in state["sent"]: return
+    arrow = "🟢 ▲" if pct > 0 else "🔴 ▼"
+    verb = "يقفز" if pct > 0 else "يهبط"
+    msg = "\n".join([f"⚡ <b>الذهب {verb} بسرعة</b>",
+                     f"{arrow} <b>{abs(p_last - p0):.1f}$</b> ({pct:+.2f}%) خلال 15 دقيقة",
+                     f"🥇 السعر الآن: <b>{p_last:,.2f}</b>", LINE, f"ℹ️ {DISCLAIMER}", LINK])
+    out.append((key, msg))
+
 # ---------------- RSS news ----------------
 NUM = r"[+\-]?\d[\d.,]*\s?[%KMB]?"
 
@@ -410,6 +458,13 @@ def relevant(title):
     tl = title.lower() + " "
     return any(k in tl for k in KEYWORDS) and not any(s in tl for s in SKIP)
 
+IMPORTANT_WORDS = ["fed ", "powell", "trump", "cpi", "nfp", "payroll", "rate cut", "rate hike", "interest rate", "inflation",
+                   "gold", "tariff", "opec", "oil", "ecb", "boj", "bank of england", "war", "ceasefire", "recession", "gdp", "jobs"]
+
+def news_score(title):
+    tl = title.lower() + " "
+    return sum(1 for w in IMPORTANT_WORDS if w in tl)
+
 def run_news(state, now, out):
     day = now.date().isoformat()
     count = state["news_count"].get(day, 0)
@@ -442,6 +497,7 @@ def run_news(state, now, out):
         if extra is None:
             extra = ("img", lambda a=ar, t=title, sr=src: C().card_news(a, t, sr))
         out.append((None, text, extra))
+        state.setdefault("day_news", {}).setdefault(day, []).append({"ar": ar, "score": news_score(title)})
         state["titles"].append(" ".join(sorted(norm(title))))
         used += 1
     state["news_count"][day] = count + used
@@ -721,7 +777,7 @@ def run_once(state, with_news=True):
     if with_news:
         try: run_news(state, now, out)
         except Exception as ex: print("news error:", ex)
-    for fn in (run_snapshot, run_sessions, run_closes, run_weekly, run_engagement):
+    for fn in (run_snapshot, run_sessions, run_closes, run_weekly, run_engagement, run_top3, run_goldmove):
         try: fn(state, now, out)
         except Exception as ex: print(fn.__name__, "error:", ex)
     return deliver(state, out)
