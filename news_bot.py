@@ -505,6 +505,8 @@ def run_snapshot(state, now, out):
 
 # ---------------- market sessions ----------------
 SESSIONS = [  # name, flag, timezone, local open time
+    ("سيدني", "🇦🇺", "Australia/Sydney", (10, 0)),
+    ("طوكيو", "🇯🇵", "Asia/Tokyo", (9, 0)),
     ("لندن", "🇬🇧", "Europe/London", (8, 0)),
     ("الأمريكي", "🇺🇸", "America/New_York", (9, 30)),
 ]
@@ -517,8 +519,14 @@ def session_open_dubai(tzname, hm, now):
         return None
     return local_now.replace(hour=hm[0], minute=hm[1], second=0, microsecond=0).astimezone(DUBAI)
 
-def msg_open_alert(name, flag, open_dubai):
-    return "\n".join([f"🔔 <b>السوق {name} يفتح بعد 5 دقايق</b>", f"{flag} السيولة بتزيد والتذبذب بيرتفع", LINK])
+def msg_open_alert(name, flag, open_dubai, left=5):
+    if left > 1.2:
+        head = f"🔔 <b>السوق {name} يفتح بعد {int(round(left))} دقايق</b>"
+    elif left > 0:
+        head = f"🔔 <b>السوق {name} يفتح بعد دقيقة</b>"
+    else:
+        head = f"🔔 <b>السوق {name} فتح الآن</b>"
+    return "\n".join([head, f"{flag} السيولة بتزيد والتذبذب بيرتفع", LINK])
 
 def msg_indices(rows):
     up = sum(1 for _, _, ch in rows if ch >= 0 and _ != "^VIX")
@@ -536,8 +544,8 @@ def run_sessions(state, now, out):
         if not op: continue
         left = (op - now).total_seconds() / 60
         key = f"open5:{name}:{today}"
-        if 0 < left <= 5 and key not in state["sent"]:
-            out.append((key, msg_open_alert(name, flag, op)))
+        if -3 < left <= 6 and key not in state["sent"]:
+            out.append((key, msg_open_alert(name, flag, op, left)))
         if name == "الأمريكي":
             after = -left
             ikey = f"usidx:{today}"

@@ -227,36 +227,145 @@ def draw_silhouette(img, col):
     o.polygon([(cx - 30, by - 320), (cx + 30, by - 320), (cx + 15, by - 200), (cx - 15, by - 200)], fill=(255, 255, 255, 60))
     return Image.alpha_composite(img.convert("RGBA"), ov).convert("RGB")
 
-def card_news(headline_ar, english_title="", source=""):
-    name, glyph, col = pick_cat(english_title)
-    bg = fetch_bg(name, english_title or headline_ar)
-    if bg is not None:
-        shade = Image.new("RGB", (W, W), (8, 12, 22))
-        img = Image.blend(bg, shade, 0.62)
-    else:
-        img = Image.new("RGB", (W, W), BG)
-        if name in PERSON_CATS:
-            img = draw_silhouette(img, col)
-    d = ImageDraw.Draw(img)
-    # faint giant glyph + diagonal accent
-    if bg is None and name not in PERSON_CATS:
-        d.text((W // 2 - 20, W // 2 + 40), glyph, font=font(560), fill=(20, 30, 50), anchor="mm")
-    d.polygon([(0, 0), (W, 0), (W, 120), (0, 260)], fill=PANEL)
-    d.rectangle([0, 0, 18, W], fill=col)
-    d.rounded_rectangle([W - 330, 40, W - 40, 130], 20, fill=(200, 40, 40))
-    text(d, (W - 185, 85), "عاجل", 56, WHITE, "mm")
-    d.rounded_rectangle([40, 50, 40 + 40 + int(d.textlength(ar(name), font=font(40))), 125], 20, fill=col)
-    text(d, (60, 87), name, 40, WHITE, "lm")
-    size = 66 if len(headline_ar) < 110 else 54
-    lines = wrap(d, headline_ar, size, W - 130)[:7]
-    total = len(lines) * int(size * 1.45)
-    y = (W - total) // 2 + 70
-    for ln in lines:
-        text(d, (W - 65, y), ln, size, WHITE, "ra")
-        y += int(size * 1.45)
+def _footer(d, source, dark=True):
     d.rectangle([0, W - 110, W, W], fill=PANEL)
     d.text((40, W - 55), BRAND, font=font(36), fill=GOLD, anchor="lm")
     d.text((W - 40, W - 55), HANDLE, font=font(30), fill=GREY, anchor="rm")
     if source:
         text(d, (W - 65, W - 150), "المصدر: " + source, 28, GREY, "ra")
+
+def _pill(d, xy, label, size, fill, fg=WHITE):
+    w = int(d.textlength(ar(label), font=font(size))) + 60
+    x, y = xy
+    d.rounded_rectangle([x - w // 2, y - size, x + w // 2, y + size], 20, fill=fill)
+    text(d, (x, y), label, size, fg, "mm")
+
+def _fit(d, s, maxw, maxlines, sizes=(72, 64, 56, 48)):
+    for size in sizes:
+        lines = wrap(d, s, size, maxw)
+        if len(lines) <= maxlines:
+            return size, lines
+    return sizes[-1], wrap(d, s, sizes[-1], maxw)[:maxlines]
+
+def _lines(d, lines, size, x, y, anchor="ra", fill=WHITE):
+    for ln in lines:
+        text(d, (x, y), ln, size, fill, anchor)
+        y += int(size * 1.45)
+    return y
+
+def _shade(c, k):
+    return tuple(max(0, min(255, int(v * k))) for v in c)
+
+def _gradient_bottom(img, y0, strength=235):
+    ov = Image.new("RGBA", img.size, (0, 0, 0, 0))
+    o = ImageDraw.Draw(ov)
+    for y in range(y0, W):
+        a = int(strength * (y - y0) / (W - y0))
+        o.line([(0, y), (W, y)], fill=(5, 8, 16, a))
+    return Image.alpha_composite(img.convert("RGBA"), ov).convert("RGB")
+
+N_LAYOUTS = 10
+
+def card_news(headline_ar, english_title="", source="", layout=None):
+    import zlib
+    name, glyph, col = pick_cat(english_title)
+    seed = zlib.crc32((english_title + headline_ar).encode())
+    v = seed % N_LAYOUTS if layout is None else layout
+    bgs = [(11, 18, 32), (14, 14, 28), (10, 24, 30), (22, 14, 20)]
+    base_bg = bgs[(seed // 10) % len(bgs)]
+    photo = fetch_bg(name, english_title or headline_ar)
+    if photo is not None:
+        img = Image.blend(photo, Image.new("RGB", (W, W), (8, 12, 22)), 0.6 if v not in (5,) else 0.4)
+    else:
+        img = Image.new("RGB", (W, W), base_bg)
+        if name in PERSON_CATS:
+            img = draw_silhouette(img, col)
+    if v == 5:
+        img = _gradient_bottom(img, 300)
+    d = ImageDraw.Draw(img)
+    big = photo is None and name not in PERSON_CATS
+
+    if v == 0:      # classic: side bar + corner pills
+        if big: d.text((W // 2 - 20, W // 2 + 40), glyph, font=font(560), fill=_shade(base_bg, 1.8), anchor="mm")
+        d.polygon([(0, 0), (W, 0), (W, 120), (0, 260)], fill=PANEL)
+        d.rectangle([0, 0, 18, W], fill=col)
+        d.rounded_rectangle([W - 330, 40, W - 40, 130], 20, fill=(200, 40, 40))
+        text(d, (W - 185, 85), "عاجل", 56, WHITE, "mm")
+        d.rounded_rectangle([40, 50, 40 + 40 + int(d.textlength(ar(name), font=font(40))), 125], 20, fill=col)
+        text(d, (60, 87), name, 40, WHITE, "lm")
+        size, lines = _fit(d, headline_ar, W - 130, 7, (66, 58, 52))
+        y = (W - len(lines) * int(size * 1.45)) // 2 + 70
+        _lines(d, lines, size, W - 65, y)
+    elif v == 1:    # centered with pill on top
+        if big: d.text((W // 2, W // 2), glyph, font=font(620), fill=_shade(base_bg, 1.6), anchor="mm")
+        _pill(d, (W // 2, 120), "عاجل", 54, (200, 40, 40))
+        text(d, (W // 2, 235), name, 46, GOLD, "mm")
+        d.rectangle([W // 2 - 90, 280, W // 2 + 90, 286], fill=col)
+        size, lines = _fit(d, headline_ar, W - 150, 6, (68, 60, 52))
+        y = 330 + (520 - len(lines) * int(size * 1.45)) // 2
+        _lines(d, lines, size, W // 2, y, "ma")
+    elif v == 2:    # split: color block top
+        d.rectangle([0, 0, W, 400], fill=col)
+        d.text((W // 2 - 20, 210), glyph, font=font(420), fill=_shade(col, 0.82), anchor="mm")
+        text(d, (W - 60, 90), name, 84, WHITE, "rm")
+        _pill(d, (170, 90), "عاجل", 40, (200, 40, 40))
+        size, lines = _fit(d, headline_ar, W - 130, 5, (64, 56, 50))
+        y = 440 + (400 - len(lines) * int(size * 1.45)) // 2
+        _lines(d, lines, size, W - 65, y)
+    elif v == 3:    # quote style
+        text(d, (W - 60, 250), "”", 420, _shade(col, 0.9), "rd")
+        _pill(d, (190, 90), "عاجل", 40, (200, 40, 40))
+        size, lines = _fit(d, headline_ar, W - 150, 6, (62, 56, 50))
+        y = 330
+        y = _lines(d, lines, size, W - 75, y)
+        d.rectangle([W - 75 - 200, y + 20, W - 75, y + 26], fill=col)
+        text(d, (W - 75, y + 50), name, 44, GOLD, "ra")
+    elif v == 4:    # diagonal band
+        d.polygon([(0, 330), (W, 130), (W, 560), (0, 760)], fill=_shade(col, 0.55))
+        d.polygon([(0, 330), (W, 130), (W, 150), (0, 350)], fill=col)
+        _pill(d, (W - 190, 90), "عاجل", 44, (200, 40, 40))
+        text(d, (60, 90), name, 46, GOLD, "lm")
+        size, lines = _fit(d, headline_ar, W - 190, 5, (64, 56, 50))
+        y = 330 + (360 - len(lines) * int(size * 1.45)) // 2
+        _lines(d, lines, size, W - 90, y)
+    elif v == 5:    # bottom-heavy with giant category word
+        text(d, (W - 50, 60), name, 150, _shade(col, 1.0) if photo is not None else _shade(col, 0.5), "ra")
+        _pill(d, (190, 330), "عاجل", 44, (200, 40, 40))
+        size, lines = _fit(d, headline_ar, W - 130, 5, (62, 56, 50))
+        h = len(lines) * int(size * 1.45)
+        _lines(d, lines, size, W - 65, W - 200 - h)
+    elif v == 6:    # frame
+        d.rectangle([34, 34, W - 34, W - 34], outline=GOLD, width=4)
+        d.rectangle([52, 52, W - 52, W - 52], outline=_shade(GOLD, 0.5), width=2)
+        d.rectangle([W // 2 - 150, 14, W // 2 + 150, 74], fill=(200, 40, 40))
+        text(d, (W // 2, 44), "عاجل", 44, WHITE, "mm")
+        text(d, (W // 2, 170), name, 48, GOLD, "mm")
+        size, lines = _fit(d, headline_ar, W - 220, 6, (64, 56, 50))
+        y = 230 + (560 - len(lines) * int(size * 1.45)) // 2
+        _lines(d, lines, size, W // 2, y, "ma")
+    elif v == 7:    # ticker strip
+        d.rectangle([0, 0, W, 90], fill=col)
+        for k in range(6):
+            text(d, (W - 90 - k * 190, 45), "عاجل", 38, WHITE, "mm")
+            d.ellipse([W - 175 - k * 190 - 7, 38, W - 175 - k * 190 + 7, 52], fill=WHITE)
+        size, lines = _fit(d, headline_ar, W - 130, 6, (66, 58, 52))
+        y = 170 + (600 - len(lines) * int(size * 1.45)) // 2
+        _lines(d, lines, size, W - 65, y)
+        _pill(d, (W - 190, 810), name, 40, col)
+    elif v == 8:    # big circle badge
+        d.ellipse([40, 40, 300, 300], fill=col)
+        d.text((170, 172), glyph, font=font(150), fill=WHITE, anchor="mm")
+        text(d, (W - 60, 120), "عاجل", 70, (230, 60, 60), "rm")
+        text(d, (W - 60, 215), name, 48, GOLD, "rm")
+        size, lines = _fit(d, headline_ar, W - 130, 6, (62, 56, 50))
+        y = 360 + (440 - len(lines) * int(size * 1.45)) // 2
+        _lines(d, lines, size, W - 65, y)
+    else:           # minimal
+        text(d, (W - 65, 130), name, 54, GOLD, "ra")
+        d.rectangle([W - 65 - 120, 215, W - 65, 224], fill=col)
+        text(d, (65, 135), "عاجل", 40, (230, 60, 60), "la")
+        size, lines = _fit(d, headline_ar, W - 130, 6, (70, 62, 54))
+        y = 290 + (500 - len(lines) * int(size * 1.45)) // 2
+        _lines(d, lines, size, W - 65, y)
+    _footer(d, source)
     return to_png(img)
