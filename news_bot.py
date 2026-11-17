@@ -283,10 +283,17 @@ def _fc_pv(e):
     bits = ([f"🎯 المتوقع <b>{esc(fc)}</b>"] if fc else []) + ([f"📊 السابق <b>{esc(pv)}</b>"] if pv else [])
     return "   ".join(bits)
 
+def impact_tag(e):
+    return "🔴 <b>تأثير عالي</b>" if e.get("impact") == "High" else "🟡 <b>تأثير متوسط</b>"
+
 def msg_prealert(e, when, stage=60):
     c, t = ev_names(e)
     flag = FLAGS.get(e["country"], "")
-    lines = [pick(PRE_POOL[stage], ev_key(e) + str(stage)), f"{flag} {esc(t)}"]
+    if e.get("impact") == "High":
+        head = pick(PRE_POOL[stage], ev_key(e) + str(stage))
+    else:
+        head = "⏳ <b>بعد 5 دقايق خبر متوسط التأثير</b>"
+    lines = [head, f"{flag} {esc(t)}", impact_tag(e)]
     line = _fc_pv(e)
     if line: lines.append(line)
     lines.append(LINK)
@@ -295,7 +302,8 @@ def msg_prealert(e, when, stage=60):
 def msg_now(e, when):
     c, t = ev_names(e)
     flag = FLAGS.get(e["country"], "")
-    lines = [pick(NOW_POOL, ev_key(e)), f"{flag} {esc(t)}"]
+    head = pick(NOW_POOL, ev_key(e)) if e.get("impact") == "High" else "📌 <b>صدر الآن خبر متوسط التأثير</b>"
+    lines = [head, f"{flag} {esc(t)}", impact_tag(e)]
     line = _fc_pv(e)
     if line: lines.append(line)
     lines.append(LINK)
