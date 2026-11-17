@@ -90,6 +90,8 @@ PRE_POOL = {
 }
 NOW_POOL = ["🚨 <b>صدر الآن</b>", "⚡ <b>نزل الخبر الآن</b>", "🔴 <b>صدر الآن</b>", "📣 <b>خبر صدر الآن</b>"]
 NEWS_POOL = ["🚨 <b>عاجل</b>", "⚡ <b>عاجل</b>", "🔴 <b>خبر عاجل</b>"]
+NEWS_POOL_NORMAL = ["📰 <b>خبر جديد</b>", "🗞️ <b>من السوق</b>", "📌 <b>تحديث</b>"]
+URGENT_MIN_SCORE = 2  # "عاجل" only for really important news, so it keeps its weight
 SRC_AR = {"investingLive": "إنفستنج لايف", "CNBC Economy": "سي إن بي سي", "CNBC Finance": "سي إن بي سي",
           "MarketWatch": "ماركت ووتش", "WSJ Markets": "وول ستريت جورنال", "Federal Reserve": "الفيدرالي الأمريكي",
           "US BLS": "مكتب إحصاءات العمل", "ECB": "المركزي الأوروبي", "Bank of England": "بنك إنجلترا", "BBC Business": "بي بي سي"}
@@ -530,14 +532,15 @@ def run_news(state, now, out):
         ar = re.sub(r"^(?:investing\s?live|InvestingLive)\s*[:\-–]?\s*", "", ar, flags=re.I).strip()
         res = parse_result(title) if is_result else None
         src = name
-        head = "📊 <b>نتيجة</b>" if is_result else pick(NEWS_POOL, title)
+        urgent = news_score(title) >= URGENT_MIN_SCORE
+        head = "📊 <b>نتيجة</b>" if is_result else pick(NEWS_POOL if urgent else NEWS_POOL_NORMAL, title)
         text = f"{head}\n{esc(ar)}\n📰 {esc(src)}"
         extra = None
         if res:
             label = translate_ar(res["name"]) or res["name"]
             extra = ("img", lambda r=res, l=label: C().card_result("", l, r["actual"], r["forecast"], r["prev"], r["verdict"]))
         if extra is None:
-            extra = ("img", lambda a=ar, t=title, sr=src: C().card_news(a, t, sr))
+            extra = ("img", lambda a=ar, t=title, sr=src, u=urgent: C().card_news(a, t, sr, urgent=u))
         out.append((None, text, extra))
         state.setdefault("day_news", {}).setdefault(day, []).append({"ar": ar, "score": news_score(title)})
         state["titles"].append(" ".join(sorted(norm(title))))

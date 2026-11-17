@@ -183,7 +183,7 @@ QUERIES = {
     "الأسهم": ["stock exchange", "stock market chart", "financial charts"],
     "الصين والتجارة": ["shipping containers port", "shanghai skyline", "cargo ship"],
     "جيوسياسة": ["city skyline night", "world map", "stormy sky"],
-    "بيانات اقتصادية": ["stock market chart", "financial charts screen", "trading screen"],
+    "بيانات اقتصادية": ["stock market chart", "financial charts screen", "calculator and charts"],
     "عاجل": ["stock exchange trading floor", "financial district", "forex chart"],
 }
 
@@ -198,7 +198,7 @@ TOPICS = [  # (regex on the English headline, photo searches) - checked before t
     (r"apple|iphone", ["smartphone close up", "technology gadgets"]),
     (r"housing|mortgage|real estate|home sales|homebuilder", ["houses neighborhood aerial", "real estate buildings"]),
     (r"shipping|port|container|supply chain|freight", ["cargo ship", "shipping containers port"]),
-    (r"inflation|cpi|prices|grocery|consumer", ["supermarket shelves", "shopping cart supermarket"]),
+    (r"inflation|cpi|prices|grocery|consumer", ["supermarket shelves", "empty shopping cart"]),
     (r"jobs|payroll|unemployment|hiring|labor", ["office building windows", "city skyline day"]),
     (r"treasury|yield|bond", ["us treasury building", "government building columns"]),
     (r"bank|banks|lender", ["bank building columns", "bank building exterior"]),
@@ -207,10 +207,17 @@ TOPICS = [  # (regex on the English headline, photo searches) - checked before t
     (r"yen|japan", ["tokyo skyline", "japanese yen banknotes"]),
     (r"pound|sterling|britain|\buk\b", ["london skyline", "british pound banknotes"]),
     (r"tariff|trade war|china", ["shipping containers port", "cargo ship"]),
-    (r"retail sales|retail", ["shopping mall interior", "shopping street"]),
+    (r"retail sales|retail", ["shopping bags", "store shelves", "cash register"]),
 ]
 _BAD_TAGS = {"woman", "man", "girl", "boy", "people", "person", "child", "children", "portrait", "model", "face", "horse",
-             "rider", "couple", "baby", "wedding", "fashion", "selfie", "dog", "cat"}
+             "rider", "couple", "baby", "wedding", "fashion", "selfie", "dog", "cat", "women", "men", "lady", "elderly",
+             "old", "senior", "pedestrian", "pedestrians", "crowd", "walking", "hand", "hands", "worker", "workers",
+             "kid", "kids", "family", "student", "students", "tourist", "tourists", "customer", "customers", "shopper",
+             "shoppers", "human", "bride", "groom", "lady", "guy", "boys", "girls", "animal", "bird", "horses"}
+
+def _is_bad(txt):
+    import re
+    return bool(set(re.findall(r"[a-z]+", (txt or "").lower())) & _BAD_TAGS)
 
 def topic_queries(title, cat):
     import re
@@ -227,7 +234,7 @@ def _links_pexels(key, q):
     url = "https://api.pexels.com/v1/search?" + urllib.parse.urlencode({"query": q, "per_page": 30, "orientation": "square"})
     req = urllib.request.Request(url, headers={"Authorization": key, "User-Agent": "Mozilla/5.0"})
     ph = json.loads(urllib.request.urlopen(req, timeout=20).read()).get("photos") or []
-    return [p_["src"]["large"] for p_ in ph if not (set((p_.get("alt") or "").lower().replace(",", " ").split()) & _BAD_TAGS)]
+    return [p_["src"]["large"] for p_ in ph if not _is_bad(p_.get("alt"))]
 
 def _links_pixabay(key, q):
     import json, urllib.request, urllib.parse
@@ -235,7 +242,7 @@ def _links_pixabay(key, q):
         url = "https://pixabay.com/api/?" + urllib.parse.urlencode({"key": key, "q": q, "image_type": "photo", "per_page": 50,
                                                                     "safesearch": "true", "min_width": 1000, **extra})
         hits = json.loads(urllib.request.urlopen(urllib.request.Request(url, headers={"User-Agent": "Mozilla/5.0"}), timeout=20).read()).get("hits") or []
-        hits = [h for h in hits if not ({t_.strip() for t_ in (h.get("tags") or "").lower().split(",")} & _BAD_TAGS)]
+        hits = [h for h in hits if not _is_bad(h.get("tags"))]
         if hits:
             return [h["largeImageURL"] for h in hits]
     return []
@@ -290,11 +297,19 @@ def _ctext(d, cx, cy, s_, size, fill):
     d.text((cx - (l + r) / 2, cy - (t + b) / 2), ar(s_), font=f, fill=fill, anchor="la")
 
 def _footer(d, source, dark=True):
-    d.rectangle([0, W - 110, W, W], fill=PANEL)
-    d.text((40, W - 55), BRAND, font=font(36), fill=GOLD, anchor="lm")
-    d.text((W - 40, W - 55), HANDLE, font=font(30), fill=GREY, anchor="rm")
+    """Brand + link sit directly on the picture over a soft dark fade (no separate strip)."""
+    img = d._image
+    ov = Image.new("RGBA", img.size, (0, 0, 0, 0))
+    o = ImageDraw.Draw(ov)
+    y0 = W - 230
+    for y in range(y0, W):
+        o.line([(0, y), (W, y)], fill=(4, 7, 14, int(215 * (y - y0) / 230)))
+    img.paste(Image.alpha_composite(img.convert("RGBA"), ov).convert("RGB"))
+    d.text((45, W - 52), BRAND, font=font(40), fill=GOLD, anchor="lm")
+    d.text((W - 45, W - 52), HANDLE, font=font(32), fill=WHITE, anchor="rm")
+    d.line([(45, W - 100), (W - 45, W - 100)], fill=(255, 255, 255, 60), width=2)
     if source:
-        text(d, (W - 65, W - 150), "المصدر: " + source, 28, GREY, "ra")
+        text(d, (W - 45, W - 125), "المصدر: " + source, 28, (200, 205, 215), "ra")
 
 def _pill(d, xy, label, size, fill, fg=WHITE):
     w = int(d.textlength(ar(label), font=font(size))) + 60
@@ -328,9 +343,10 @@ def _gradient_bottom(img, y0, strength=235):
 
 N_LAYOUTS = 10
 
-def card_news(headline_ar, english_title="", source="", layout=None):
+def card_news(headline_ar, english_title="", source="", layout=None, urgent=True):
     import zlib
     name, glyph, col = pick_cat(english_title)
+    LBL, PILL, PILLT = ("عاجل", (200, 40, 40), (230, 60, 60)) if urgent else ("خبر", (45, 70, 110), (120, 160, 215))
     seed = zlib.crc32((english_title + headline_ar).encode())
     v = seed % N_LAYOUTS if layout is None else layout
     bgs = [(11, 18, 32), (14, 14, 28), (10, 24, 30), (22, 14, 20)]
@@ -351,8 +367,8 @@ def card_news(headline_ar, english_title="", source="", layout=None):
         if big: _ctext(d, W // 2, W // 2, glyph, 560 if len(glyph) <= 2 else 420, _shade(base_bg, 1.8))
         d.polygon([(0, 0), (W, 0), (W, 120), (0, 260)], fill=PANEL)
         d.rectangle([0, 0, 18, W], fill=col)
-        d.rounded_rectangle([W - 330, 40, W - 40, 130], 20, fill=(200, 40, 40))
-        text(d, (W - 185, 85), "عاجل", 56, WHITE, "mm")
+        d.rounded_rectangle([W - 330, 40, W - 40, 130], 20, fill=PILL)
+        text(d, (W - 185, 85), LBL, 56, WHITE, "mm")
         d.rounded_rectangle([40, 50, 40 + 40 + int(d.textlength(ar(name), font=font(40))), 125], 20, fill=col)
         text(d, (60, 87), name, 40, WHITE, "lm")
         size, lines = _fit(d, headline_ar, W - 130, 7, (66, 58, 52))
@@ -360,7 +376,7 @@ def card_news(headline_ar, english_title="", source="", layout=None):
         _lines(d, lines, size, W - 65, y)
     elif v == 1:    # centered with pill on top
         if big: _ctext(d, W // 2, W // 2, glyph, 620 if len(glyph) <= 2 else 440, _shade(base_bg, 1.6))
-        _pill(d, (W // 2, 120), "عاجل", 54, (200, 40, 40))
+        _pill(d, (W // 2, 120), LBL, 54, PILL)
         text(d, (W // 2, 235), name, 46, GOLD, "mm")
         d.rectangle([W // 2 - 90, 280, W // 2 + 90, 286], fill=col)
         size, lines = _fit(d, headline_ar, W - 150, 6, (68, 60, 52))
@@ -369,14 +385,16 @@ def card_news(headline_ar, english_title="", source="", layout=None):
     elif v == 2:    # split: color block top
         d.rectangle([0, 0, W, 400], fill=col)
         _ctext(d, W // 2, 205, glyph, 420 if len(glyph) <= 2 else 330, _shade(col, 0.82))
-        text(d, (W - 60, 90), name, 84, WHITE, "rm")
-        _pill(d, (170, 90), "عاجل", 40, (200, 40, 40))
+        _ns = 84
+        while _ns > 44 and d.textlength(ar(name), font=font(_ns)) > W - 330: _ns -= 4
+        text(d, (W - 60, 90), name, _ns, WHITE, "rm")
+        _pill(d, (170, 90), LBL, 40, PILL)
         size, lines = _fit(d, headline_ar, W - 130, 5, (64, 56, 50))
         y = 440 + (400 - len(lines) * int(size * 1.45)) // 2
         _lines(d, lines, size, W - 65, y)
     elif v == 3:    # quote style
         text(d, (W - 60, 250), "”", 420, _shade(col, 0.9), "rd")
-        _pill(d, (190, 90), "عاجل", 40, (200, 40, 40))
+        _pill(d, (190, 90), LBL, 40, PILL)
         size, lines = _fit(d, headline_ar, W - 150, 6, (62, 56, 50))
         y = 330
         y = _lines(d, lines, size, W - 75, y)
@@ -385,22 +403,24 @@ def card_news(headline_ar, english_title="", source="", layout=None):
     elif v == 4:    # diagonal band
         d.polygon([(0, 330), (W, 130), (W, 560), (0, 760)], fill=_shade(col, 0.55))
         d.polygon([(0, 330), (W, 130), (W, 150), (0, 350)], fill=col)
-        _pill(d, (W - 190, 90), "عاجل", 44, (200, 40, 40))
+        _pill(d, (W - 190, 90), LBL, 44, PILL)
         text(d, (60, 90), name, 46, GOLD, "lm")
         size, lines = _fit(d, headline_ar, W - 190, 5, (64, 56, 50))
         y = 330 + (360 - len(lines) * int(size * 1.45)) // 2
         _lines(d, lines, size, W - 90, y)
     elif v == 5:    # bottom-heavy with giant category word
-        text(d, (W - 50, 60), name, 150, _shade(col, 1.0) if photo is not None else _shade(col, 0.5), "ra")
-        _pill(d, (190, 330), "عاجل", 44, (200, 40, 40))
+        _ns = 150
+        while _ns > 60 and d.textlength(ar(name), font=font(_ns)) > W - 100: _ns -= 6
+        text(d, (W - 50, 60), name, _ns, _shade(col, 1.0) if photo is not None else _shade(col, 0.5), "ra")
+        _pill(d, (190, 330), LBL, 44, PILL)
         size, lines = _fit(d, headline_ar, W - 130, 5, (62, 56, 50))
         h = len(lines) * int(size * 1.45)
         _lines(d, lines, size, W - 65, W - 200 - h)
     elif v == 6:    # frame
         d.rectangle([34, 34, W - 34, W - 34], outline=GOLD, width=4)
         d.rectangle([52, 52, W - 52, W - 52], outline=_shade(GOLD, 0.5), width=2)
-        d.rectangle([W // 2 - 150, 14, W // 2 + 150, 74], fill=(200, 40, 40))
-        text(d, (W // 2, 44), "عاجل", 44, WHITE, "mm")
+        d.rectangle([W // 2 - 150, 14, W // 2 + 150, 74], fill=PILL)
+        text(d, (W // 2, 44), LBL, 44, WHITE, "mm")
         text(d, (W // 2, 170), name, 48, GOLD, "mm")
         size, lines = _fit(d, headline_ar, W - 220, 6, (64, 56, 50))
         y = 230 + (560 - len(lines) * int(size * 1.45)) // 2
@@ -408,7 +428,7 @@ def card_news(headline_ar, english_title="", source="", layout=None):
     elif v == 7:    # ticker strip
         d.rectangle([0, 0, W, 90], fill=col)
         for k in range(6):
-            text(d, (W - 90 - k * 190, 45), "عاجل", 38, WHITE, "mm")
+            text(d, (W - 90 - k * 190, 45), LBL, 38, WHITE, "mm")
             d.ellipse([W - 175 - k * 190 - 7, 38, W - 175 - k * 190 + 7, 52], fill=WHITE)
         size, lines = _fit(d, headline_ar, W - 130, 6, (66, 58, 52))
         y = 170 + (600 - len(lines) * int(size * 1.45)) // 2
@@ -417,7 +437,7 @@ def card_news(headline_ar, english_title="", source="", layout=None):
     elif v == 8:    # big circle badge
         d.ellipse([40, 40, 300, 300], fill=col)
         _ctext(d, 170, 170, glyph, 150 if len(glyph) <= 1 else (110 if len(glyph) == 2 else 78), WHITE)
-        text(d, (W - 60, 120), "عاجل", 70, (230, 60, 60), "rm")
+        text(d, (W - 60, 120), LBL, 70, PILLT, "rm")
         text(d, (W - 60, 215), name, 48, GOLD, "rm")
         size, lines = _fit(d, headline_ar, W - 130, 6, (62, 56, 50))
         y = 360 + (440 - len(lines) * int(size * 1.45)) // 2
@@ -425,7 +445,7 @@ def card_news(headline_ar, english_title="", source="", layout=None):
     else:           # minimal
         text(d, (W - 65, 130), name, 54, GOLD, "ra")
         d.rectangle([W - 65 - 120, 215, W - 65, 224], fill=col)
-        text(d, (65, 135), "عاجل", 40, (230, 60, 60), "la")
+        text(d, (65, 135), LBL, 40, PILLT, "la")
         size, lines = _fit(d, headline_ar, W - 130, 6, (70, 62, 54))
         y = 290 + (500 - len(lines) * int(size * 1.45)) // 2
         _lines(d, lines, size, W - 65, y)
