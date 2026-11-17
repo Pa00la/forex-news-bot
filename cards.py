@@ -169,13 +169,74 @@ def pick_cat(english_title):
             return name, glyph, col
     return "عاجل", "!", (200, 50, 50)
 
+QUERIES = {
+    "ترامب": ["white house building", "american flag", "washington dc capitol"],
+    "الفيدرالي": ["federal reserve building", "us dollar bills", "wall street"],
+    "المركزي الأوروبي": ["euro banknotes", "frankfurt skyline", "european union flags"],
+    "بنك إنجلترا": ["london city skyline", "british pound money", "big ben"],
+    "بنك اليابان": ["tokyo skyline", "japanese yen", "tokyo night"],
+    "الذهب": ["gold bars", "gold coins", "gold bullion"],
+    "النفط": ["oil refinery", "oil barrels", "oil pump sunset"],
+    "الصين والتجارة": ["shipping containers port", "shanghai skyline", "cargo ship"],
+    "جيوسياسة": ["city skyline night", "world map", "stormy sky"],
+    "بيانات اقتصادية": ["stock market chart", "financial charts screen", "trading screen"],
+    "عاجل": ["stock exchange trading floor", "financial district", "forex chart"],
+}
+
+def fetch_bg(cat, seed):
+    """Optional royalty-free photo from Pexels (needs PEXELS_KEY). Never people photos of public figures:
+    queries are places/objects only. Returns a PIL image or None."""
+    key = os.environ.get("PEXELS_KEY", "").strip()
+    if not key:
+        return None
+    import json, random, urllib.request, urllib.parse, zlib
+    try:
+        qs = QUERIES.get(cat) or QUERIES["عاجل"]
+        rnd = random.Random(zlib.crc32(str(seed).encode()))
+        q = rnd.choice(qs)
+        url = "https://api.pexels.com/v1/search?" + urllib.parse.urlencode({"query": q, "per_page": 30, "orientation": "square"})
+        req = urllib.request.Request(url, headers={"Authorization": key, "User-Agent": "Mozilla/5.0"})
+        res = json.loads(urllib.request.urlopen(req, timeout=20).read())
+        photos = res.get("photos") or []
+        if not photos:
+            return None
+        ph = rnd.choice(photos)
+        data = urllib.request.urlopen(urllib.request.Request(ph["src"]["large"], headers={"User-Agent": "Mozilla/5.0"}), timeout=25).read()
+        im = Image.open(io.BytesIO(data)).convert("RGB")
+        w, h = im.size; m = min(w, h)
+        im = im.crop(((w - m) // 2, (h - m) // 2, (w - m) // 2 + m, (h - m) // 2 + m)).resize((W, W))
+        return im
+    except Exception as ex:
+        print("pexels failed:", ex)
+        return None
+
+PERSON_CATS = ("ترامب", "الفيدرالي", "المركزي الأوروبي", "بنك إنجلترا", "بنك اليابان")
+
+def draw_silhouette(img, col):
+    """Generic anonymous suit silhouette (not a real person) shown on central-bank / politics news."""
+    ov = Image.new("RGBA", img.size, (0, 0, 0, 0))
+    o = ImageDraw.Draw(ov)
+    cx, by = W // 2 + 250, W - 110
+    o.ellipse([cx - 95, by - 520, cx + 95, by - 330], fill=col + (42,))
+    o.polygon([(cx - 260, by), (cx - 215, by - 250), (cx - 60, by - 320), (cx + 60, by - 320),
+               (cx + 215, by - 250), (cx + 260, by)], fill=col + (42,))
+    o.polygon([(cx - 30, by - 320), (cx + 30, by - 320), (cx + 15, by - 200), (cx - 15, by - 200)], fill=(255, 255, 255, 60))
+    return Image.alpha_composite(img.convert("RGBA"), ov).convert("RGB")
+
 def card_news(headline_ar, english_title="", source=""):
     name, glyph, col = pick_cat(english_title)
-    img = Image.new("RGB", (W, W), BG)
+    bg = fetch_bg(name, english_title or headline_ar)
+    if bg is not None:
+        shade = Image.new("RGB", (W, W), (8, 12, 22))
+        img = Image.blend(bg, shade, 0.62)
+    else:
+        img = Image.new("RGB", (W, W), BG)
+        if name in PERSON_CATS:
+            img = draw_silhouette(img, col)
     d = ImageDraw.Draw(img)
     # faint giant glyph + diagonal accent
-    gf = font(560)
-    d.text((W // 2 - 20, W // 2 + 40), glyph, font=gf, fill=(20, 30, 50), anchor="mm")
+    if bg is None and name not in PERSON_CATS:
+        d.text((W // 2 - 20, W // 2 + 40), glyph, font=font(560), fill=(20, 30, 50), anchor="mm")
     d.polygon([(0, 0), (W, 0), (W, 120), (0, 260)], fill=PANEL)
     d.rectangle([0, 0, 18, W], fill=col)
     d.rounded_rectangle([W - 330, 40, W - 40, 130], 20, fill=(200, 40, 40))
