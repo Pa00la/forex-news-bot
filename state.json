@@ -23,7 +23,8 @@
   "snap:2026-11-17:17",
   "close:eu:2026-11-17",
   "poll:2026-11-17",
-  "snap:2026-11-17:21"
+  "snap:2026-11-17:21",
+  "top3:2026-11-17"
  ],
  "titles": [
   "for futures global lower oil outlook start surplus week",
@@ -48,12 +49,13 @@
   "bond edge eurozone lower treasury u.s. yields",
   "and communication ecb experience lane monetary philip policy practice science the",
   "dollar futures gold higher inch slip u.s. yields",
-  "come has nvidia sell spooked stocks the time turmoil"
+  "come has nvidia sell spooked stocks the time turmoil",
+  "direction economy fed getting inflation moving not right stronger the williams"
  ],
  "daily": {},
  "news_count": {
   "2026-11-16": 4,
-  "2026-11-17": 19
+  "2026-11-17": 20
  },
  "day_news": {
   "2026-11-17": [
@@ -79,6 +81,10 @@
    },
    {
     "ar": "\"اضطراب نفيديا أثار قلقي\": هل حان الوقت لبيع أسهمي؟",
+    "score": 1
+   },
+   {
+    "ar": "ويليامز من بنك الاحتياطي الفيدرالي: الاقتصاد يزداد قوة، والتضخم لا يتحرك في الاتجاه الصحيح",
     "score": 1
    }
   ]
