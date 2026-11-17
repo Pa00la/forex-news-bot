@@ -74,8 +74,25 @@ DAYS_AR = ["الاثنين", "الثلاثاء", "الأربعاء", "الخمي
 DISCLAIMER = "للمعلومات فقط وليس توصية. التداول ينطوي على مخاطر عالية."
 LINE = "━━━━━━━━━━━━━━"
 FOOTER = '📢 <a href="https://t.me/forex_news_M1">انضم للقناة: Forex News | Pola</a>'
+LINK = FOOTER
 TAGS = "#أخبار_الفوركس #الذهب #الدولار"
 FOOTER = TAGS + "\n" + FOOTER
+
+import zlib
+def pick(pool, key):
+    """Stable variety: same event always gets the same wording, different events get different ones."""
+    return pool[zlib.crc32(str(key).encode()) % len(pool)]
+
+PRE_POOL = {
+    60: ["🔔 <b>خبر مهم بعد ساعة</b>", "⏳ <b>ساعة وينزل خبر مهم</b>", "📌 <b>بعد ساعة تقريبًا: خبر مهم</b>"],
+    5: ["⏰ <b>بعد 5 دقايق</b>", "🔥 <b>5 دقايق ويصدر الخبر</b>", "⚡ <b>خبر مهم بعد 5 دقايق</b>"],
+    1: ["🚨 <b>بعد دقيقة</b>", "⏱️ <b>دقيقة واحدة ويصدر الخبر</b>", "❗ <b>الخبر بعد دقيقة</b>"],
+}
+NOW_POOL = ["🚨 <b>صدر الآن</b>", "⚡ <b>نزل الخبر الآن</b>", "🔴 <b>صدر الآن</b>", "📣 <b>خبر صدر الآن</b>"]
+NEWS_POOL = ["🚨 <b>عاجل</b>", "⚡ <b>عاجل</b>", "🔴 <b>خبر عاجل</b>"]
+SRC_AR = {"investingLive": "إنفستنج لايف", "CNBC Economy": "سي إن بي سي", "CNBC Finance": "سي إن بي سي",
+          "MarketWatch": "ماركت ووتش", "WSJ Markets": "وول ستريت جورنال", "Federal Reserve": "الفيدرالي الأمريكي",
+          "US BLS": "مكتب إحصاءات العمل", "ECB": "المركزي الأوروبي", "Bank of England": "بنك إنجلترا", "BBC Business": "بي بي سي"}
 FLAGS = {"USD": "🇺🇸", "GBP": "🇬🇧", "EUR": "🇪🇺", "JPY": "🇯🇵", "CAD": "🇨🇦", "AUD": "🇦🇺", "CHF": "🇨🇭", "NZD": "🇳🇿", "CNY": "🇨🇳"}
 esc = html.escape
 
@@ -175,9 +192,13 @@ def fetch_calendar():
     return json.loads(http_get(CAL_URL, 30))
 
 def cal_events(events):
+    seen = {(e.get("country"), e.get("date"), e.get("title")) for e in events}
     for e in events:
         if e.get("impact") != "High" or e.get("country") not in CURRENCIES:
             continue
+        t = e.get("title") or ""
+        if t.startswith("Core ") and (e.get("country"), e.get("date"), t[5:]) in seen:
+            continue  # the plain version is enough
         try:
             yield e, datetime.fromisoformat(e["date"]).astimezone(DUBAI)
         except Exception:
@@ -196,34 +217,27 @@ def fc_line(e):
 
 STAGE_AR = {60: "بعد ساعة تقريبًا", 5: "بعد 5 دقايق", 1: "بعد دقيقة"}
 
+def _fc_pv(e):
+    fc, pv = (e.get("forecast") or "").strip(), (e.get("previous") or "").strip()
+    bits = ([f"🎯 المتوقع <b>{esc(fc)}</b>"] if fc else []) + ([f"📊 السابق <b>{esc(pv)}</b>"] if pv else [])
+    return "   ".join(bits)
+
 def msg_prealert(e, when, stage=60):
     c, t = ev_names(e)
     flag = FLAGS.get(e["country"], "")
-    lines = [f"🔔 <b>تنبيه قبل الخبر</b>", LINE,
-             f"{flag} <b>{esc(c)}</b>", f"📌 {esc(t)}",
-             f"🕒 {DAYS_AR[when.weekday()]} {fmt_time(when)}",
-             f"⏳ {STAGE_AR[stage]}"]
-    fc, pv = (e.get("forecast") or "").strip(), (e.get("previous") or "").strip()
-    if fc: lines.append(f"🎯 التوقع: <b>{esc(fc)}</b>")
-    if pv: lines.append(f"📊 السابق: <b>{esc(pv)}</b>")
-    lines.append(LINE)
-    if stage == 60:
-        lines.append("⚠️ خبر عالي التأثير وممكن يحرك الدولار والذهب")
-        lines.append(f"ℹ️ {DISCLAIMER}")
-    elif stage == 5:
-        lines.append("⚠️ وقت الأخبار السبريد بيتسع والحركة بتبقى سريعة، خد بالك")
-    lines.append(FOOTER)
+    lines = [pick(PRE_POOL[stage], ev_key(e) + str(stage)), f"{flag} {esc(t)}"]
+    line = _fc_pv(e)
+    if line: lines.append(line)
+    lines.append(LINK)
     return "\n".join(lines)
 
 def msg_now(e, when):
     c, t = ev_names(e)
     flag = FLAGS.get(e["country"], "")
-    lines = ["🚨 <b>صدر الآن</b>", LINE, f"{flag} <b>{esc(c)}</b>", f"📌 {esc(t)}",
-             f"🕒 {fmt_time(when)}"]
-    fc, pv = (e.get("forecast") or "").strip(), (e.get("previous") or "").strip()
-    if fc: lines.append(f"🎯 التوقع: <b>{esc(fc)}</b>")
-    if pv: lines.append(f"📊 السابق: <b>{esc(pv)}</b>")
-    lines += [LINE, "⏱️ القراءة الفعلية في الرسالة اللي بعدها", FOOTER]
+    lines = [pick(NOW_POOL, ev_key(e)), f"{flag} {esc(t)}"]
+    line = _fc_pv(e)
+    if line: lines.append(line)
+    lines.append(LINK)
     return "\n".join(lines)
 
 def msg_morning(items, today):
@@ -327,15 +341,17 @@ def run_news(state, now, out):
         ar = translate_ar(title)
         if not ar:
             continue  # Arabic only
+        ar = re.sub(r"^(?:investing\s?live|InvestingLive)\s*[:\-–]?\s*", "", ar, flags=re.I).strip()
         res = parse_result(title) if is_result else None
-        head = "📊 <b>نتيجة</b>" if is_result else "🚨 <b>عاجل</b>"
-        text = f"{head}\n{LINE}\n<b>{esc(ar)}</b>\n{LINE}\n📰 المصدر: {esc(name)}\n{FOOTER}"
+        src = SRC_AR.get(name, name)
+        head = "📊 <b>نتيجة</b>" if is_result else pick(NEWS_POOL, title)
+        text = f"{head}\n{esc(ar)}\n📰 {esc(src)}\n{LINK}"
         extra = None
         if res:
             label = translate_ar(res["name"]) or res["name"]
             extra = ("img", lambda r=res, l=label: C().card_result("", l, r["actual"], r["forecast"], r["prev"], r["verdict"]))
         if extra is None:
-            extra = ("img", lambda a=ar, t=title, sr=name: C().card_news(a, t, sr))
+            extra = ("img", lambda a=ar, t=title, sr=src: C().card_news(a, t, sr))
         out.append((None, text, extra))
         state["titles"].append(" ".join(sorted(norm(title))))
         used += 1
@@ -410,7 +426,7 @@ SESSIONS = [  # name, flag, timezone, local open time
     ("لندن", "🇬🇧", "Europe/London", (8, 0)),
     ("الأمريكي", "🇺🇸", "America/New_York", (9, 30)),
 ]
-INDICES = [("^GSPC", "S&P 500"), ("^IXIC", "ناسداك"), ("^DJI", "داو جونز"), ("^VIX", "مؤشر الخوف VIX")]
+INDICES = [("^GSPC", "S&P 500"), ("^IXIC", "ناسداك"), ("^DJI", "داو جونز"), ("^VIX", "مؤشر الخوف")]
 
 def session_open_dubai(tzname, hm, now):
     tz = ZoneInfo(tzname)
@@ -420,11 +436,7 @@ def session_open_dubai(tzname, hm, now):
     return local_now.replace(hour=hm[0], minute=hm[1], second=0, microsecond=0).astimezone(DUBAI)
 
 def msg_open_alert(name, flag, open_dubai):
-    return "\n".join([f"🔔 <b>تنبيه: افتتاح السوق {name}</b>", LINE,
-                      f"{flag} السوق {name} بيفتح بعد 5 دقايق",
-                      f"🕒 {fmt_time(open_dubai)}",
-                      "📌 وقت الافتتاح السيولة بتزيد والتذبذب بيرتفع",
-                      LINE, FOOTER])
+    return "\n".join([f"🔔 <b>السوق {name} يفتح بعد 5 دقايق</b>", f"{flag} السيولة بتزيد والتذبذب بيرتفع", LINK])
 
 def msg_indices(rows):
     up = sum(1 for _, _, ch in rows if ch >= 0 and _ != "^VIX")
