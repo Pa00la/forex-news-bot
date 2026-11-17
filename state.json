@@ -53,12 +53,13 @@
   "come has nvidia sell spooked stocks the time turmoil",
   "direction economy fed getting inflation moving not right stronger the williams",
   "and bear buy digital gold good hackproof increasingly market this time world.",
-  "futures gains modest oil post"
+  "futures gains modest oil post",
+  "drag market retail sales slower"
  ],
  "daily": {},
  "news_count": {
   "2026-11-16": 4,
-  "2026-11-17": 22
+  "2026-11-17": 23
  },
  "day_news": {
   "2026-11-17": [
@@ -97,6 +98,10 @@
    {
     "ar": "العقود الآجلة للنفط تسجل مكاسب متواضعة",
     "score": 1
+   },
+   {
+    "ar": "تباطؤ مبيعات التجزئة يؤثر سلبًا على السوق",
+    "score": 0
    }
   ]
  }
