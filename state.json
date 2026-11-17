@@ -25,7 +25,8 @@
   "poll:2026-11-17",
   "snap:2026-11-17:21",
   "top3:2026-11-17",
-  "close:us:2026-11-17"
+  "close:us:2026-11-17",
+  "open5:سيدني:2026-11-18"
  ],
  "titles": [
   "for futures global lower oil outlook start surplus week",
@@ -55,13 +56,14 @@
   "and bear buy digital gold good hackproof increasingly market this time world.",
   "futures gains modest oil post",
   "drag market retail sales slower",
-  "again earn for shift. shorter term this treasurys want watch"
+  "again earn for shift. shorter term this treasurys want watch",
+  "0.04% 98.42 dollar falls index wsj"
  ],
  "daily": {},
  "news_count": {
   "2026-11-16": 4,
   "2026-11-17": 23,
-  "2026-11-18": 1
+  "2026-11-18": 2
  },
  "day_news": {
   "2026-11-17": [
@@ -109,6 +111,10 @@
   "2026-11-18": [
    {
     "ar": "هل ترغب في كسب 5% على سندات الخزانة قصيرة الأجل مرة أخرى؟ راقب هذا التحول.",
+    "score": 0
+   },
+   {
+    "ar": "مؤشر وول ستريت جورنال للدولار ينخفض بنسبة 0.04% إلى 98.42",
     "score": 0
    }
   ]
