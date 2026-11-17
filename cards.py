@@ -180,11 +180,11 @@ QUERIES = {
     "بنك اليابان": ["tokyo skyline", "japanese yen", "tokyo night"],
     "الذهب": ["gold bars", "gold coins", "gold bullion"],
     "النفط": ["oil refinery", "oil drilling rig", "oil pump sunset"],
-    "الأسهم": ["stock exchange", "stock market chart", "financial charts"],
+    "الأسهم": ["stock exchange traders", "stock market chart", "financial charts"],
     "الصين والتجارة": ["shipping containers port", "shanghai skyline", "cargo ship"],
     "جيوسياسة": ["city skyline night", "world map", "stormy sky"],
-    "بيانات اقتصادية": ["stock market chart", "financial charts screen", "calculator and charts"],
-    "عاجل": ["stock exchange trading floor", "financial district", "forex chart"],
+    "بيانات اقتصادية": ["stock market chart", "financial charts screen", "economist analyzing charts"],
+    "عاجل": ["stock exchange trading floor", "traders screens", "financial district"],
 }
 
 def _crop_sq(data):
@@ -196,10 +196,10 @@ TOPICS = [  # (regex on the English headline, photo searches) - checked before t
     (r"nvidia|chip|semiconductor|\bai\b|artificial intelligence", ["semiconductor chip", "computer processor close up", "data center servers"]),
     (r"tesla|electric vehicle|\bev\b", ["electric car charging", "electric car"]),
     (r"apple|iphone", ["smartphone close up", "technology gadgets"]),
-    (r"housing|mortgage|real estate|home sales|homebuilder", ["houses neighborhood aerial", "real estate buildings"]),
+    (r"housing|mortgage|real estate|home sales|homebuilder", ["houses neighborhood aerial", "house for sale sign", "real estate buildings"]),
     (r"shipping|port|container|supply chain|freight", ["cargo ship", "shipping containers port"]),
-    (r"inflation|cpi|prices|grocery|consumer", ["supermarket shelves", "empty shopping cart"]),
-    (r"jobs|payroll|unemployment|hiring|labor", ["office building windows", "city skyline day"]),
+    (r"inflation|cpi|prices|grocery|consumer", ["supermarket shopping", "grocery prices", "shopping cart supermarket"]),
+    (r"jobs|payroll|unemployment|hiring|labor", ["job interview office", "office workers", "factory workers"]),
     (r"treasury|yield|bond", ["us treasury building", "government building columns"]),
     (r"bank|banks|lender", ["bank building columns", "bank building exterior"]),
     (r"dollar|dxy|greenback", ["us dollar banknotes", "dollar bills close up"]),
@@ -207,13 +207,11 @@ TOPICS = [  # (regex on the English headline, photo searches) - checked before t
     (r"yen|japan", ["tokyo skyline", "japanese yen banknotes"]),
     (r"pound|sterling|britain|\buk\b", ["london skyline", "british pound banknotes"]),
     (r"tariff|trade war|china", ["shipping containers port", "cargo ship"]),
-    (r"retail sales|retail", ["shopping bags", "store shelves", "cash register"]),
+    (r"retail sales|retail", ["shoppers in store", "supermarket shopping", "shopping bags store"]),
 ]
-_BAD_TAGS = {"woman", "man", "girl", "boy", "people", "person", "child", "children", "portrait", "model", "face", "horse",
-             "rider", "couple", "baby", "wedding", "fashion", "selfie", "dog", "cat", "women", "men", "lady", "elderly",
-             "old", "senior", "pedestrian", "pedestrians", "crowd", "walking", "hand", "hands", "worker", "workers",
-             "kid", "kids", "family", "student", "students", "tourist", "tourists", "customer", "customers", "shopper",
-             "shoppers", "human", "bride", "groom", "lady", "guy", "boys", "girls", "animal", "bird", "horses"}
+_BAD_TAGS = {"horse", "horses", "dog", "cat", "animal", "bird", "baby", "wedding", "bride", "groom", "fashion", "selfie",
+             "model", "portrait", "couple", "kid", "kids", "child", "children", "elderly", "senior", "lady", "girl", "boy",
+             "yoga", "beach", "bikini", "pet", "flower", "flowers", "food", "dessert"}
 
 def _is_bad(txt):
     import re
