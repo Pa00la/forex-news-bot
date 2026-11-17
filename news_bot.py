@@ -334,6 +334,8 @@ def run_news(state, now, out):
         if res:
             label = translate_ar(res["name"]) or res["name"]
             extra = ("img", lambda r=res, l=label: C().card_result("", l, r["actual"], r["forecast"], r["prev"], r["verdict"]))
+        if extra is None:
+            extra = ("img", lambda a=ar, t=title, sr=name: C().card_news(a, t, sr))
         out.append((None, text, extra))
         state["titles"].append(" ".join(sorted(norm(title))))
         used += 1
