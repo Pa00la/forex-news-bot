@@ -192,11 +192,42 @@ def _crop_sq(data):
     w, h = im.size; m = min(w, h)
     return im.crop(((w - m) // 2, (h - m) // 2, (w - m) // 2 + m, (h - m) // 2 + m)).resize((W, W))
 
+TOPICS = [  # (regex on the English headline, photo searches) - checked before the broad category
+    (r"nvidia|chip|semiconductor|\bai\b|artificial intelligence", ["semiconductor chip", "computer processor close up", "data center servers"]),
+    (r"tesla|electric vehicle|\bev\b", ["electric car charging", "electric car"]),
+    (r"apple|iphone", ["smartphone close up", "technology gadgets"]),
+    (r"housing|mortgage|real estate|home sales|homebuilder", ["houses neighborhood aerial", "real estate buildings"]),
+    (r"shipping|port|container|supply chain|freight", ["cargo ship", "shipping containers port"]),
+    (r"inflation|cpi|prices|grocery|consumer", ["supermarket shelves", "shopping cart supermarket"]),
+    (r"jobs|payroll|unemployment|hiring|labor", ["office building windows", "city skyline day"]),
+    (r"treasury|yield|bond", ["us treasury building", "government building columns"]),
+    (r"bank|banks|lender", ["bank building columns", "bank building exterior"]),
+    (r"dollar|dxy|greenback", ["us dollar banknotes", "dollar bills close up"]),
+    (r"\beuro\b|eurozone", ["euro banknotes", "european union flags"]),
+    (r"yen|japan", ["tokyo skyline", "japanese yen banknotes"]),
+    (r"pound|sterling|britain|\buk\b", ["london skyline", "british pound banknotes"]),
+    (r"tariff|trade war|china", ["shipping containers port", "cargo ship"]),
+    (r"retail sales|retail", ["shopping mall interior", "shopping street"]),
+]
+_BAD_TAGS = {"woman", "man", "girl", "boy", "people", "person", "child", "children", "portrait", "model", "face", "horse",
+             "rider", "couple", "baby", "wedding", "fashion", "selfie", "dog", "cat"}
+
+def topic_queries(title, cat):
+    import re
+    t = (title or "").lower()
+    if cat in ("الذهب", "النفط", "الفيدرالي", "المركزي الأوروبي", "بنك إنجلترا", "بنك اليابان", "ترامب"):
+        return QUERIES[cat]  # strong categories keep their own scenes
+    for rx, qs in TOPICS:
+        if re.search(rx, t):
+            return qs
+    return QUERIES.get(cat) or QUERIES["عاجل"]
+
 def _links_pexels(key, q):
     import json, urllib.request, urllib.parse
     url = "https://api.pexels.com/v1/search?" + urllib.parse.urlencode({"query": q, "per_page": 30, "orientation": "square"})
     req = urllib.request.Request(url, headers={"Authorization": key, "User-Agent": "Mozilla/5.0"})
-    return [p_["src"]["large"] for p_ in json.loads(urllib.request.urlopen(req, timeout=20).read()).get("photos") or []]
+    ph = json.loads(urllib.request.urlopen(req, timeout=20).read()).get("photos") or []
+    return [p_["src"]["large"] for p_ in ph if not (set((p_.get("alt") or "").lower().replace(",", " ").split()) & _BAD_TAGS)]
 
 def _links_pixabay(key, q):
     import json, urllib.request, urllib.parse
@@ -204,6 +235,7 @@ def _links_pixabay(key, q):
         url = "https://pixabay.com/api/?" + urllib.parse.urlencode({"key": key, "q": q, "image_type": "photo", "per_page": 50,
                                                                     "safesearch": "true", "min_width": 1000, **extra})
         hits = json.loads(urllib.request.urlopen(urllib.request.Request(url, headers={"User-Agent": "Mozilla/5.0"}), timeout=20).read()).get("hits") or []
+        hits = [h for h in hits if not ({t_.strip() for t_ in (h.get("tags") or "").lower().split(",")} & _BAD_TAGS)]
         if hits:
             return [h["largeImageURL"] for h in hits]
     return []
@@ -216,7 +248,7 @@ def _links_openverse(key, q):
     res = json.loads(urllib.request.urlopen(urllib.request.Request(url, headers={"User-Agent": "Mozilla/5.0"}), timeout=20).read()).get("results") or []
     return [r["url"] for r in res if r.get("url")]
 
-def fetch_bg(cat, seed):
+def fetch_bg(cat, seed, title=""):
     """Optional royalty-free photo. Uses every library that has a key (PEXELS_KEY, PIXABAY_KEY), in a
     per-news random order, and falls back to the next one if a library fails. Places/objects only."""
     providers = []
@@ -226,7 +258,7 @@ def fetch_bg(cat, seed):
     rnd = random.Random(zlib.crc32(str(seed).encode()))
     rnd.shuffle(providers)
     providers.append(("openverse", _links_openverse, ""))  # keyless last resort
-    qs = QUERIES.get(cat) or QUERIES["عاجل"]
+    qs = topic_queries(title, cat)
     for name, fn, key in providers:
         try:
             links = fn(key, rnd.choice(qs))
@@ -303,7 +335,7 @@ def card_news(headline_ar, english_title="", source="", layout=None):
     v = seed % N_LAYOUTS if layout is None else layout
     bgs = [(11, 18, 32), (14, 14, 28), (10, 24, 30), (22, 14, 20)]
     base_bg = bgs[(seed // 10) % len(bgs)]
-    photo = fetch_bg(name, english_title or headline_ar)
+    photo = fetch_bg(name, english_title or headline_ar, english_title)
     if photo is not None:
         img = Image.blend(photo, Image.new("RGB", (W, W), (8, 12, 22)), 0.6 if v not in (5,) else 0.4)
     else:
