@@ -184,30 +184,34 @@ QUERIES = {
 }
 
 def fetch_bg(cat, seed):
-    """Optional royalty-free photo from Pexels (needs PEXELS_KEY). Never people photos of public figures:
-    queries are places/objects only. Returns a PIL image or None."""
-    key = os.environ.get("PEXELS_KEY", "").strip()
-    if not key:
+    """Optional royalty-free photo (Pexels or Pixabay, whichever key exists). Places/objects only,
+    never photos of public figures. Returns a PIL image or None."""
+    pex = os.environ.get("PEXELS_KEY", "").strip()
+    pix = os.environ.get("PIXABAY_KEY", "").strip()
+    if not (pex or pix):
         return None
     import json, random, urllib.request, urllib.parse, zlib
     try:
         qs = QUERIES.get(cat) or QUERIES["عاجل"]
         rnd = random.Random(zlib.crc32(str(seed).encode()))
         q = rnd.choice(qs)
-        url = "https://api.pexels.com/v1/search?" + urllib.parse.urlencode({"query": q, "per_page": 30, "orientation": "square"})
-        req = urllib.request.Request(url, headers={"Authorization": key, "User-Agent": "Mozilla/5.0"})
-        res = json.loads(urllib.request.urlopen(req, timeout=20).read())
-        photos = res.get("photos") or []
-        if not photos:
+        if pex:
+            url = "https://api.pexels.com/v1/search?" + urllib.parse.urlencode({"query": q, "per_page": 30, "orientation": "square"})
+            req = urllib.request.Request(url, headers={"Authorization": pex, "User-Agent": "Mozilla/5.0"})
+            photos = json.loads(urllib.request.urlopen(req, timeout=20).read()).get("photos") or []
+            links = [p_["src"]["large"] for p_ in photos]
+        else:
+            url = "https://pixabay.com/api/?" + urllib.parse.urlencode({"key": pix, "q": q, "image_type": "photo", "per_page": 50, "safesearch": "true"})
+            hits = json.loads(urllib.request.urlopen(urllib.request.Request(url, headers={"User-Agent": "Mozilla/5.0"}), timeout=20).read()).get("hits") or []
+            links = [h["largeImageURL"] for h in hits]
+        if not links:
             return None
-        ph = rnd.choice(photos)
-        data = urllib.request.urlopen(urllib.request.Request(ph["src"]["large"], headers={"User-Agent": "Mozilla/5.0"}), timeout=25).read()
+        data = urllib.request.urlopen(urllib.request.Request(rnd.choice(links), headers={"User-Agent": "Mozilla/5.0"}), timeout=25).read()
         im = Image.open(io.BytesIO(data)).convert("RGB")
         w, h = im.size; m = min(w, h)
-        im = im.crop(((w - m) // 2, (h - m) // 2, (w - m) // 2 + m, (h - m) // 2 + m)).resize((W, W))
-        return im
+        return im.crop(((w - m) // 2, (h - m) // 2, (w - m) // 2 + m, (h - m) // 2 + m)).resize((W, W))
     except Exception as ex:
-        print("pexels failed:", ex)
+        print("photo fetch failed:", ex)
         return None
 
 PERSON_CATS = ("ترامب", "الفيدرالي", "المركزي الأوروبي", "بنك إنجلترا", "بنك اليابان")
