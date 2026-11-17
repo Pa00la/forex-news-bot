@@ -1,0 +1,45 @@
+name: news-bot-loop
+on:
+  schedule:
+    - cron: "*/10 * * * *"
+  workflow_dispatch:
+    inputs:
+      test:
+        description: "Send a test message (yes or no)"
+        default: "no"
+permissions:
+  contents: write
+  actions: write
+concurrency:
+  group: news-bot
+  cancel-in-progress: false
+jobs:
+  run:
+    runs-on: ubuntu-latest
+    timeout-minutes: 355
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Install image libraries
+        run: pip install --quiet pillow arabic-reshaper python-bidi
+      - name: Run bot loop
+        env:
+          BOT_TOKEN: ${{ secrets.BOT_TOKEN }}
+          CHAT_ID: ${{ secrets.CHAT_ID }}
+          TEST_RUN: ${{ inputs.test }}
+          LOOP_MINUTES: "335"
+        run: python news_bot.py
+      - name: Save state
+        if: always()
+        run: |
+          git config user.name "news-bot"
+          git config user.email "bot@users.noreply.github.com"
+          git add state.json
+          git diff --staged --quiet || (git commit -m "update state" && git pull --rebase -X theirs -q && git push)
+      - name: Start next run
+        if: always()
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: gh workflow run run.yml --ref main
