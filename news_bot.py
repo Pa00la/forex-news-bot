@@ -126,10 +126,10 @@ _LATIN = re.compile(r"[A-Za-z0-9][A-Za-z0-9&%.,:'+\-/_$ ]*[A-Za-z0-9%$]|[A-Za-z0
 
 def fix_bidi(text):
     """Keep English/number runs in their natural order inside Arabic lines (tags and links untouched)."""
-    parts = re.split(r"(<[^>]+>)", text)
+    parts = re.split(r"(<[^>]+>|&#?\w+;|[0-9#*]\ufe0f?\u20e3)", text)
     out = []
     for part in parts:
-        if part.startswith("<") and part.endswith(">"):
+        if (part.startswith("<") and part.endswith(">")) or re.fullmatch(r"&#?\w+;|[0-9#*]\ufe0f?\u20e3", part):
             out.append(part)
         else:
             out.append(_LATIN.sub(lambda m: LRI + m.group(0).rstrip() + PDI + (" " if m.group(0).endswith(" ") else ""), part))
@@ -233,18 +233,24 @@ def cal_events(events):
         except Exception:
             continue
 
+MEDIUM_PER_DAY = 12
+
 def medium_events(events, high_dates):
-    """Medium-impact USD releases (e.g. business inventories): lighter alerts, only when no high-impact event shares the time."""
-    seen = set()
+    """Medium-impact releases of the main currencies: lighter alerts (5 min before + released now),
+    only when no high-impact event shares the time, capped per day by importance."""
+    by_day, seen = {}, set()
     for e in events:
-        if e.get("impact") != "Medium" or e.get("country") != "USD": continue
+        if e.get("impact") != "Medium" or e.get("country") not in CURRENCIES or e.get("country") == "CNY": continue
         d = e.get("date")
         if d in high_dates or d in seen: continue
         seen.add(d)
-        try:
-            yield e, datetime.fromisoformat(d).astimezone(DUBAI)
-        except Exception:
-            continue
+        by_day.setdefault((d or "")[:10], []).append(e)
+    for day, lst in by_day.items():
+        for e in sorted(lst, key=ev_score, reverse=True)[:MEDIUM_PER_DAY]:
+            try:
+                yield e, datetime.fromisoformat(e["date"]).astimezone(DUBAI)
+            except Exception:
+                continue
 
 def ev_key(e):
     return f'{e.get("date")}|{e.get("country")}|{e.get("title")}'
@@ -517,7 +523,7 @@ def run_news(state, now, out):
         res = parse_result(title) if is_result else None
         src = name
         head = "📊 <b>نتيجة</b>" if is_result else pick(NEWS_POOL, title)
-        text = f"{head}\n{esc(ar)}\n📰 {esc(src)}\n{LINK}"
+        text = f"{head}\n{esc(ar)}\n📰 {esc(src)}"
         extra = None
         if res:
             label = translate_ar(res["name"]) or res["name"]
@@ -786,7 +792,7 @@ def deliver(state, out):
                     send_photo(extra[1](), text)
                 except Exception as ex:
                     print("image failed, sending text:", ex)
-                    send(text)
+                    send(text if "t.me/forex_news_M1" in text else text + "\n\n" + LINK)
             else:
                 send(text)
             if key: state["sent"].append(key)

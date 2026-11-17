@@ -180,7 +180,7 @@ QUERIES = {
     "بنك اليابان": ["tokyo skyline", "japanese yen", "tokyo night"],
     "الذهب": ["gold bars", "gold coins", "gold bullion"],
     "النفط": ["oil refinery", "oil drilling rig", "oil pump sunset"],
-    "الأسهم": ["stock market chart", "wall street", "trading screen"],
+    "الأسهم": ["stock exchange", "stock market chart", "financial charts"],
     "الصين والتجارة": ["shipping containers port", "shanghai skyline", "cargo ship"],
     "جيوسياسة": ["city skyline night", "world map", "stormy sky"],
     "بيانات اقتصادية": ["stock market chart", "financial charts screen", "trading screen"],
@@ -200,9 +200,21 @@ def _links_pexels(key, q):
 
 def _links_pixabay(key, q):
     import json, urllib.request, urllib.parse
-    url = "https://pixabay.com/api/?" + urllib.parse.urlencode({"key": key, "q": q, "image_type": "photo", "per_page": 50, "safesearch": "true"})
-    hits = json.loads(urllib.request.urlopen(urllib.request.Request(url, headers={"User-Agent": "Mozilla/5.0"}), timeout=20).read()).get("hits") or []
-    return [h["largeImageURL"] for h in hits]
+    for extra in ({"editors_choice": "true", "category": "business"}, {"editors_choice": "true"}, {}):
+        url = "https://pixabay.com/api/?" + urllib.parse.urlencode({"key": key, "q": q, "image_type": "photo", "per_page": 50,
+                                                                    "safesearch": "true", "min_width": 1000, **extra})
+        hits = json.loads(urllib.request.urlopen(urllib.request.Request(url, headers={"User-Agent": "Mozilla/5.0"}), timeout=20).read()).get("hits") or []
+        if hits:
+            return [h["largeImageURL"] for h in hits]
+    return []
+
+def _links_openverse(key, q):
+    """No key needed. CC0 / public-domain photographs only, so no attribution is required."""
+    import json, urllib.request, urllib.parse
+    url = "https://api.openverse.org/v1/images/?" + urllib.parse.urlencode(
+        {"q": q, "license": "cc0,pdm", "category": "photograph", "size": "large", "page_size": 20})
+    res = json.loads(urllib.request.urlopen(urllib.request.Request(url, headers={"User-Agent": "Mozilla/5.0"}), timeout=20).read()).get("results") or []
+    return [r["url"] for r in res if r.get("url")]
 
 def fetch_bg(cat, seed):
     """Optional royalty-free photo. Uses every library that has a key (PEXELS_KEY, PIXABAY_KEY), in a
@@ -210,11 +222,10 @@ def fetch_bg(cat, seed):
     providers = []
     if os.environ.get("PEXELS_KEY", "").strip(): providers.append(("pexels", _links_pexels, os.environ["PEXELS_KEY"].strip()))
     if os.environ.get("PIXABAY_KEY", "").strip(): providers.append(("pixabay", _links_pixabay, os.environ["PIXABAY_KEY"].strip()))
-    if not providers:
-        return None
     import random, urllib.request, zlib
     rnd = random.Random(zlib.crc32(str(seed).encode()))
     rnd.shuffle(providers)
+    providers.append(("openverse", _links_openverse, ""))  # keyless last resort
     qs = QUERIES.get(cat) or QUERIES["عاجل"]
     for name, fn, key in providers:
         try:
