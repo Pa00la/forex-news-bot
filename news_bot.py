@@ -73,7 +73,7 @@ TITLE_AR = {
 DAYS_AR = ["الاثنين", "الثلاثاء", "الأربعاء", "الخميس", "الجمعة", "السبت", "الأحد"]
 DISCLAIMER = "للمعلومات فقط وليس توصية. التداول ينطوي على مخاطر عالية."
 LINE = "━━━━━━━━━━━━━━"
-FOOTER = "📢 انضم للقناة 👈 t.me/forex_news_M1"
+FOOTER = "📚 لمتابعة أخبار الذهب والدولار والعملات لحظة بلحظة، انضم للقناة من الرابط:\n\nt.me/forex_news_M1"
 LINK = FOOTER
 TAGS = "#أخبار_الفوركس #الذهب #الدولار"
 FOOTER = TAGS + "\n" + FOOTER
@@ -233,6 +233,19 @@ def cal_events(events):
         except Exception:
             continue
 
+def medium_events(events, high_dates):
+    """Medium-impact USD releases (e.g. business inventories): lighter alerts, only when no high-impact event shares the time."""
+    seen = set()
+    for e in events:
+        if e.get("impact") != "Medium" or e.get("country") != "USD": continue
+        d = e.get("date")
+        if d in high_dates or d in seen: continue
+        seen.add(d)
+        try:
+            yield e, datetime.fromisoformat(d).astimezone(DUBAI)
+        except Exception:
+            continue
+
 def ev_key(e):
     return f'{e.get("date")}|{e.get("country")}|{e.get("title")}'
 
@@ -243,6 +256,19 @@ def fc_line(e):
     fc, pv = (e.get("forecast") or "").strip(), (e.get("previous") or "").strip()
     parts = ([f"التوقع: {fc}"] if fc else []) + ([f"السابق: {pv}"] if pv else [])
     return " | ".join(parts)
+
+TITLE_AR.update({
+    "Business Inventories m/m": "مخزون الشركات", "Existing Home Sales": "مبيعات المنازل القائمة",
+    "Pending Home Sales m/m": "مبيعات المنازل المعلقة", "New Home Sales": "مبيعات المنازل الجديدة",
+    "Housing Starts": "بدء بناء المنازل", "Building Permits": "تصاريح البناء",
+    "Durable Goods Orders m/m": "طلبيات السلع المعمرة", "Core Durable Goods Orders m/m": "طلبيات السلع المعمرة الأساسية",
+    "Trade Balance": "الميزان التجاري", "Crude Oil Inventories": "مخزونات النفط الخام",
+    "CB Consumer Confidence": "ثقة المستهلك (كونفرنس بورد)", "Prelim UoM Consumer Sentiment": "ثقة المستهلك (ميشيجان)",
+    "Empire State Manufacturing Index": "مؤشر إمباير ستيت للتصنيع", "Philly Fed Manufacturing Index": "مؤشر فيلادلفيا للتصنيع",
+    "Richmond Manufacturing Index": "مؤشر ريتشموند للتصنيع", "Industrial Production m/m": "الإنتاج الصناعي",
+    "Capacity Utilization Rate": "معدل استخدام الطاقة الإنتاجية", "Fed Chair Powell Speaks": "تصريحات رئيس الفيدرالي باول",
+    "Natural Gas Storage": "مخزونات الغاز الطبيعي", "Treasury Currency Report": "تقرير العملات الأمريكي",
+})
 
 STAGE_AR = {60: "بعد ساعة تقريبًا", 5: "بعد 5 دقايق", 1: "بعد دقيقة"}
 
@@ -284,19 +310,21 @@ def run_calendar(state, now, events, out):
     mkey = f"morning:{today}"
     if todays and now.hour >= MORNING_HOUR and now.hour < MORNING_HOUR + 6 and mkey not in state["sent"]:
         out.append((mkey, msg_morning(todays, now)))
-    for e, when in items:
-        left = (when - now).total_seconds() / 60
-        due = [st for st in LEAD_STAGES if left <= st]
-        if left > 0 and due:
-            stage = min(due)  # if a run is late, only send the stage that still makes sense
-            key = f"pre{stage}:" + ev_key(e)
-            if key not in state["sent"]:
-                for bigger in LEAD_STAGES:
-                    if bigger > stage:
-                        state["sent"].append(f"pre{bigger}:" + ev_key(e))  # skip stages already passed
-                out.append((key, msg_prealert(e, when, stage)))
-        elif -8 <= left <= 0 and ("now:" + ev_key(e)) not in state["sent"]:
-            out.append(("now:" + ev_key(e), msg_now(e, when)))
+    mediums = list(medium_events(events, {e.get("date") for e, _ in items}))
+    for stages, group in ((LEAD_STAGES, items), ([5], mediums)):
+        for e, when in group:
+            left = (when - now).total_seconds() / 60
+            due = [st for st in stages if left <= st]
+            if left > 0 and due:
+                stage = min(due)  # if a run is late, only send the stage that still makes sense
+                key = f"pre{stage}:" + ev_key(e)
+                if key not in state["sent"]:
+                    for bigger in stages:
+                        if bigger > stage:
+                            state["sent"].append(f"pre{bigger}:" + ev_key(e))  # skip stages already passed
+                    out.append((key, msg_prealert(e, when, stage)))
+            elif -8 <= left <= 0 and ("now:" + ev_key(e)) not in state["sent"]:
+                out.append(("now:" + ev_key(e), msg_now(e, when)))
 
 
 # ---------------- market reaction after a US release (measured, not predicted) ----------------

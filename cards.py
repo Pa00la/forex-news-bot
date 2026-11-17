@@ -240,6 +240,12 @@ def draw_silhouette(img, col):
     o.polygon([(cx - 30, by - 320), (cx + 30, by - 320), (cx + 15, by - 200), (cx - 15, by - 200)], fill=(255, 255, 255, 60))
     return Image.alpha_composite(img.convert("RGBA"), ov).convert("RGB")
 
+def _ctext(d, cx, cy, s_, size, fill):
+    """Center text on its real ink box (anchor 'mm' leaves big capital letters sitting too high)."""
+    f = font(size)
+    l, t, r, b = d.textbbox((0, 0), ar(s_), font=f, anchor="la")
+    d.text((cx - (l + r) / 2, cy - (t + b) / 2), ar(s_), font=f, fill=fill, anchor="la")
+
 def _footer(d, source, dark=True):
     d.rectangle([0, W - 110, W, W], fill=PANEL)
     d.text((40, W - 55), BRAND, font=font(36), fill=GOLD, anchor="lm")
@@ -299,7 +305,7 @@ def card_news(headline_ar, english_title="", source="", layout=None):
     big = photo is None and name not in PERSON_CATS
 
     if v == 0:      # classic: side bar + corner pills
-        if big: d.text((W // 2 - 20, W // 2 + 40), glyph, font=font(560), fill=_shade(base_bg, 1.8), anchor="mm")
+        if big: _ctext(d, W // 2, W // 2, glyph, 560 if len(glyph) <= 2 else 420, _shade(base_bg, 1.8))
         d.polygon([(0, 0), (W, 0), (W, 120), (0, 260)], fill=PANEL)
         d.rectangle([0, 0, 18, W], fill=col)
         d.rounded_rectangle([W - 330, 40, W - 40, 130], 20, fill=(200, 40, 40))
@@ -310,7 +316,7 @@ def card_news(headline_ar, english_title="", source="", layout=None):
         y = (W - len(lines) * int(size * 1.45)) // 2 + 70
         _lines(d, lines, size, W - 65, y)
     elif v == 1:    # centered with pill on top
-        if big: d.text((W // 2, W // 2), glyph, font=font(620), fill=_shade(base_bg, 1.6), anchor="mm")
+        if big: _ctext(d, W // 2, W // 2, glyph, 620 if len(glyph) <= 2 else 440, _shade(base_bg, 1.6))
         _pill(d, (W // 2, 120), "عاجل", 54, (200, 40, 40))
         text(d, (W // 2, 235), name, 46, GOLD, "mm")
         d.rectangle([W // 2 - 90, 280, W // 2 + 90, 286], fill=col)
@@ -319,7 +325,7 @@ def card_news(headline_ar, english_title="", source="", layout=None):
         _lines(d, lines, size, W // 2, y, "ma")
     elif v == 2:    # split: color block top
         d.rectangle([0, 0, W, 400], fill=col)
-        d.text((W // 2 - 20, 210), glyph, font=font(420), fill=_shade(col, 0.82), anchor="mm")
+        _ctext(d, W // 2, 205, glyph, 420 if len(glyph) <= 2 else 330, _shade(col, 0.82))
         text(d, (W - 60, 90), name, 84, WHITE, "rm")
         _pill(d, (170, 90), "عاجل", 40, (200, 40, 40))
         size, lines = _fit(d, headline_ar, W - 130, 5, (64, 56, 50))
@@ -367,7 +373,7 @@ def card_news(headline_ar, english_title="", source="", layout=None):
         _pill(d, (W - 190, 810), name, 40, col)
     elif v == 8:    # big circle badge
         d.ellipse([40, 40, 300, 300], fill=col)
-        d.text((170, 172), glyph, font=font(150 if len(glyph) <= 1 else (110 if len(glyph) == 2 else 78)), fill=WHITE, anchor="mm")
+        _ctext(d, 170, 170, glyph, 150 if len(glyph) <= 1 else (110 if len(glyph) == 2 else 78), WHITE)
         text(d, (W - 60, 120), "عاجل", 70, (230, 60, 60), "rm")
         text(d, (W - 60, 215), name, 48, GOLD, "rm")
         size, lines = _fit(d, headline_ar, W - 130, 6, (62, 56, 50))
