@@ -43,12 +43,13 @@
   "asia china chip east hit how new restrictions south will",
   "and estate has invest nvidia real sell should spooked stocks turmoil",
   "continued futures gain oil risks shipping",
-  "are based bets halt kalshi remarks that trump"
+  "are based bets halt kalshi remarks that trump",
+  "bond edge eurozone lower treasury u.s. yields"
  ],
  "daily": {},
  "news_count": {
   "2026-11-16": 4,
-  "2026-11-17": 15
+  "2026-11-17": 16
  },
  "day_news": {
   "2026-11-17": [
@@ -59,6 +60,10 @@
    {
     "ar": "كالشي ستوقف الرهانات التي تستند إلى تصريحات ترامب",
     "score": 1
+   },
+   {
+    "ar": "انخفاض عائدات سندات الخزانة الأمريكية وسندات منطقة اليورو",
+    "score": 0
    }
   ]
  }
