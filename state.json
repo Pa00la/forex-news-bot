@@ -62,13 +62,14 @@
   "again earn for shift. shorter term this treasurys want watch",
   "0.04% 98.42 dollar falls index wsj",
   "dollar fed gold keep treads water weighing",
-  "edges lower mideast offset oil prospects supply surplus tensions"
+  "edges lower mideast offset oil prospects supply surplus tensions",
+  "and china meet putin things three trump watch"
  ],
  "daily": {},
  "news_count": {
   "2026-11-16": 4,
   "2026-11-17": 23,
-  "2026-11-18": 4
+  "2026-11-18": 5
  },
  "day_news": {
   "2026-11-17": [
@@ -128,6 +129,10 @@
    },
    {
     "ar": "انخفاض أسعار النفط مع تعويض التوقعات بفائض المعروض للتوترات في الشرق الأوسط",
+    "score": 1
+   },
+   {
+    "ar": "ثلاثة أمور يجب مراقبتها خلال لقاء ترامب وشي وج بوتين في الصين",
     "score": 1
    }
   ]
