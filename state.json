@@ -140,13 +140,14 @@
   "3380k 58k expect inventory oil weekly",
   "found lower next oil run seller trad upside what will yesterday",
   "china gather here putin takeaway top trump watched",
-  "april chinese concern copper demand lowest market since turmoil"
+  "april chinese concern copper demand lowest market since turmoil",
+  "copper extend fall gold loss silver"
  ],
  "daily": {},
  "news_count": {
   "2026-11-16": 4,
   "2026-11-17": 23,
-  "2026-11-18": 51
+  "2026-11-18": 52
  },
  "day_news": {
   "2026-11-17": [
@@ -394,6 +395,10 @@
    },
    {
     "ar": "النحاس عند أدنى مستوى له منذ أبريل وسط اضطرابات سوق الذكاء الاصطناعي ومخاوف بشأن الطلب الصيني",
+    "score": 1
+   },
+   {
+    "ar": "الذهب والفضة يوسعان الخسائر مع تراجع النحاس",
     "score": 1
    }
   ]
