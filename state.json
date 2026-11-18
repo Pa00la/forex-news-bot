@@ -58,7 +58,8 @@
   "asset:GC=F:2026-11-18",
   "asset:BZ=F:2026-11-18",
   "close:eu:2026-11-18",
-  "poll:2026-11-18"
+  "poll:2026-11-18",
+  "pre60:2026-11-18T14:00:00-05:00|USD|FOMC Meeting Minutes"
  ],
  "titles": [
   "for futures global lower oil outlook start surplus week",
@@ -143,13 +144,14 @@
   "april chinese concern copper demand lowest market since turmoil",
   "copper extend fall gold loss silver",
   "bipartisan block china chip fuel huang jensen push sale scandal",
-  "republican security senator shut social"
+  "republican security senator shut social",
+  "consumer daly fed high hold inflation long spend too"
  ],
  "daily": {},
  "news_count": {
   "2026-11-16": 4,
   "2026-11-17": 23,
-  "2026-11-18": 54
+  "2026-11-18": 55
  },
  "day_news": {
   "2026-11-17": [
@@ -410,6 +412,10 @@
    {
     "ar": "يقول هذا السيناتور الجمهوري إنه يجب إغلاق الضمان الاجتماعي",
     "score": 0
+   },
+   {
+    "ar": "تقول دالي من بنك الاحتياطي الفيدرالي إن التضخم كان مرتفعًا للغاية لفترة طويلة جدًا حيث ظل الإنفاق الاستهلاكي ثابتًا",
+    "score": 1
    }
   ]
  }
