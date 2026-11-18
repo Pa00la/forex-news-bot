@@ -43,7 +43,8 @@
   "open5:لندن:2026-11-18",
   "tip:2026-11-18",
   "pre5:2026-11-18T04:00:00-05:00|EUR|ECB Financial Stability Review",
-  "now:2026-11-18T04:00:00-05:00|EUR|ECB Financial Stability Review"
+  "now:2026-11-18T04:00:00-05:00|EUR|ECB Financial Stability Review",
+  "snap:2026-11-18:12"
  ],
  "titles": [
   "for futures global lower oil outlook start surplus week",
@@ -98,13 +99,15 @@
   "bearish data expectations inventory oil pressured prices report surplus u.s.",
   "2.5% bets dollar down firmer gold hike rate",
   "bets dollar high hike month rate rises",
-  "but carries dollar downside fed firms minutes policy prospects risks"
+  "but carries dollar downside fed firms minutes policy prospects risks",
+  "analysis bottom gold interesting may potential shows zone",
+  "443 again bills energy forecast from inflation january rises year"
  ],
  "daily": {},
  "news_count": {
   "2026-11-16": 4,
   "2026-11-17": 23,
-  "2026-11-18": 26
+  "2026-11-18": 28
  },
  "day_news": {
   "2026-11-17": [
@@ -252,6 +255,14 @@
    },
    {
     "ar": "شركات الدولار تتحدث عن توقعات سياسة بنك الاحتياطي الفيدرالي، لكن محضر الاجتماع يحمل مخاطر هبوطية",
+    "score": 1
+   },
+   {
+    "ar": "يظهر تحليل الذهب أننا قد نكون في منطقة قاع محتملة مثيرة للاهتمام",
+    "score": 1
+   },
+   {
+    "ar": "من المتوقع أن ترتفع فواتير الطاقة بمقدار 443 جنيهًا إسترلينيًا سنويًا اعتبارًا من يناير مع ارتفاع التضخم في المملكة المتحدة مرة أخرى",
     "score": 1
    }
   ]
