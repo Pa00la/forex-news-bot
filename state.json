@@ -160,13 +160,18 @@
   "claim credit death deserv fall house make mislead overdose white who",
   "boom coming dollar month seen support",
   "fed grow inflation minut outlook show unease",
-  "canada car carney china come industry look pressure why"
+  "canada car carney china come industry look pressure why",
+  "decline expect extend futur oil supply surplu",
+  "democratic future hold house montana race secret strategist think wins",
+  "fed four hawkish kashkari market official raise see turn voic",
+  "america bigger dec fed investinglive minut news nov play put raise waller wrap"
  ],
  "daily": {},
  "news_count": {
   "2026-11-16": 4,
   "2026-11-17": 23,
-  "2026-11-18": 60
+  "2026-11-18": 60,
+  "2026-11-19": 4
  },
  "day_news": {
   "2026-11-17": [
@@ -451,6 +456,24 @@
    {
     "ar": "لماذا يتطلع كارني إلى الصين مع تعرض صناعة السيارات الكندية لضغوط أمريكية؟",
     "score": 0
+   }
+  ],
+  "2026-11-19": [
+   {
+    "ar": "العقود الآجلة للنفط تواصل الانخفاض بسبب توقعات فائض المعروض",
+    "score": 1
+   },
+   {
+    "ar": "يعتقد الاستراتيجيون الديمقراطيون أن سباق مجلس النواب في مونتانا قد يحمل سر الانتصارات المستقبلية",
+    "score": 0
+   },
+   {
+    "ar": "يقول كاشكاري إن الأسواق ترى المزيد من رفع الفائدة من قبل بنك الاحتياطي الفيدرالي أكثر مما يراه المسؤولون حيث يتحول أربعة أصوات في بنك الاحتياطي الفيدرالي إلى موقف متشدد",
+    "score": 1
+   },
+   {
+    "ar": "ملخص أخبار الفوركس في الأمريكيتين من إنفستينج لايف 18 نوفمبر: والر/محضر اجتماع بنك الاحتياطي الفيدرالي يضع رفعًا أكبر للفائدة في ديسمبر على الطاولة",
+    "score": 1
    }
   ]
  }
