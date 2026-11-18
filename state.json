@@ -101,13 +101,14 @@
   "bets dollar high hike month rate rises",
   "but carries dollar downside fed firms minutes policy prospects risks",
   "analysis bottom gold interesting may potential shows zone",
-  "443 again bills energy forecast from inflation january rises year"
+  "443 again bills energy forecast from inflation january rises year",
+  "changes concerns could crude culprit demand despite east extends losses middle oil the"
  ],
  "daily": {},
  "news_count": {
   "2026-11-16": 4,
   "2026-11-17": 23,
-  "2026-11-18": 28
+  "2026-11-18": 29
  },
  "day_news": {
   "2026-11-17": [
@@ -263,6 +264,10 @@
    },
    {
     "ar": "من المتوقع أن ترتفع فواتير الطاقة بمقدار 443 جنيهًا إسترلينيًا سنويًا اعتبارًا من يناير مع ارتفاع التضخم في المملكة المتحدة مرة أخرى",
+    "score": 1
+   },
+   {
+    "ar": "النفط الخام يواصل خسائره على الرغم من عدم حدوث تغييرات في الشرق الأوسط؛ وقد تكون المخاوف بشأن الطلب هي السبب",
     "score": 1
    }
   ]
