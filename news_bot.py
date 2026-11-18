@@ -611,16 +611,51 @@ def parse_feed(raw):
         if title: items.append((title, dt))
     return items
 
+_DUP_STOP = set("""the and for with from that this have has had are was were will would could should about after before over under into than
+says said say new more most also amid as at by of on in to is it its be been not but out up down""".split())
+
+_SYN = {"crude": "oil", "drops": "fall", "drop": "fall", "falls": "fall", "slides": "fall", "slumps": "fall", "declines": "fall",
+        "tumbles": "fall", "retreats": "fall", "slips": "fall", "dips": "fall", "climbs": "rise", "jumps": "rise", "surges": "rise",
+        "rises": "rise", "gains": "rise", "rallies": "rise", "advances": "rise", "november": "nov", "december": "dec",
+        "october": "oct", "stronger": "strong", "strength": "strong", "greenback": "dollar", "usd": "dollar", "ahead": "await",
+        "awaits": "await", "expectations": "expect", "expected": "expect", "expects": "expect", "bets": "expect", "hike": "raise", "hikes": "raise"}
+
+def _stem(w):
+    w = _SYN.get(w, w)
+    if w.endswith("ies") and len(w) > 5: w = w[:-3] + "y"
+    for suf in ("ing", "es", "s"):
+        if w.endswith(suf) and len(w) - len(suf) >= 4:
+            return w[: -len(suf)]
+    return w
+
 def norm(t):
-    return set(w for w in re.findall(r"[a-z0-9$%.]+", t.lower()) if len(w) > 2)
+    toks = (w.strip(".") for w in re.findall(r"[a-z0-9$%.]+", t.lower()))
+    return set(_stem(w) for w in toks if len(w) > 2 and w not in _DUP_STOP)
+
+def _same_story(a, b):
+    """Same event reported with different wording by different outlets."""
+    if not a or not b: return False
+    inter = a & b
+    if not inter: return False
+    jac = len(inter) / len(a | b)
+    ovl = len(inter) / min(len(a), len(b))
+    nums = {w for w in inter if any(ch.isdigit() for ch in w)}
+    if jac >= 0.45: return True
+    if ovl >= 0.6 and len(inter) >= 4: return True
+    if nums and len(inter) >= 3 and ovl >= 0.4: return True   # same figure + same topic words
+    if len(inter) >= 3 and ovl >= 0.4: return True              # 3+ shared topic words covering 40% of the shorter title
+    return False
 
 def is_dup(title, seen):
     a = norm(title)
-    for s in seen:
-        b = set(s.split())
-        if a and b and len(a & b) / max(1, len(a | b)) >= 0.6:
-            return True
-    return False
+    return any(_same_story(a, set(s.split())) for s in seen)
+
+def ar_tokens(t):
+    return {w for w in re.findall(r"[\u0600-\u06FFa-zA-Z0-9%.]+", t or "") if len(w) > 3}
+
+def is_dup_ar(ar, day_items):
+    a = ar_tokens(ar)
+    return any(_same_story(a, ar_tokens(it.get("ar"))) for it in day_items)
 
 def relevant(title):
     tl = title.lower() + " "
@@ -657,6 +692,9 @@ def run_news(state, now, out):
         if not ar:
             continue  # Arabic only
         ar = re.sub(r"^(?:investing\s?live|InvestingLive)\s*[:\-–]?\s*", "", ar, flags=re.I).strip()
+        if is_dup_ar(ar, state.get("day_news", {}).get(day, [])):
+            state["titles"].append(" ".join(sorted(norm(title))))  # remember it so it is not translated again
+            continue
         res = parse_result(title) if is_result else None
         src = name
         urgent = news_score(title) >= URGENT_MIN_SCORE
