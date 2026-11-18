@@ -64,13 +64,14 @@
   "dollar fed gold keep treads water weighing",
   "edges lower mideast offset oil prospects supply surplus tensions",
   "and china meet putin things three trump watch",
-  "anchored around boj december hike inflation keeps play ueda wants"
+  "anchored around boj december hike inflation keeps play ueda wants",
+  "currencies dollar further growth may most other resilient rise tailwinds u.s. vs."
  ],
  "daily": {},
  "news_count": {
   "2026-11-16": 4,
   "2026-11-17": 23,
-  "2026-11-18": 6
+  "2026-11-18": 7
  },
  "day_news": {
   "2026-11-17": [
@@ -139,6 +140,10 @@
    {
     "ar": "يُبقي أويِدا على احتمال رفع الفائدة في ديسمبر حيث يرغب بنك اليابان في تثبيت التضخم عند حوالي 2%",
     "score": 2
+   },
+   {
+    "ar": "قد يرتفع الدولار أكثر مقابل معظم العملات بسبب النمو القوي في الولايات المتحدة وعوامل الدعم الأخرى",
+    "score": 0
    }
   ]
  }
