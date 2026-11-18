@@ -58,13 +58,14 @@
   "futures gains modest oil post",
   "drag market retail sales slower",
   "again earn for shift. shorter term this treasurys want watch",
-  "0.04% 98.42 dollar falls index wsj"
+  "0.04% 98.42 dollar falls index wsj",
+  "dollar fed gold keep treads water weighing"
  ],
  "daily": {},
  "news_count": {
   "2026-11-16": 4,
   "2026-11-17": 23,
-  "2026-11-18": 2
+  "2026-11-18": 3
  },
  "day_news": {
   "2026-11-17": [
@@ -117,6 +118,10 @@
    {
     "ar": "مؤشر وول ستريت جورنال للدولار ينخفض بنسبة 0.04% إلى 98.42",
     "score": 0
+   },
+   {
+    "ar": "الذهب يترنح مع توجه بنك الاحتياطي الفيدرالي، والدولار يواصل الضغط",
+    "score": 1
    }
   ]
  }
