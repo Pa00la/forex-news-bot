@@ -145,13 +145,14 @@
   "copper extend fall gold loss silver",
   "bipartisan block china chip fuel huang jensen push sale scandal",
   "republican security senator shut social",
-  "consumer daly fed high hold inflation long spend too"
+  "consumer daly fed high hold inflation long spend too",
+  "oil rise second stockpil straight u.s week"
  ],
  "daily": {},
  "news_count": {
   "2026-11-16": 4,
   "2026-11-17": 23,
-  "2026-11-18": 55
+  "2026-11-18": 56
  },
  "day_news": {
   "2026-11-17": [
@@ -415,6 +416,10 @@
    },
    {
     "ar": "تقول دالي من بنك الاحتياطي الفيدرالي إن التضخم كان مرتفعًا للغاية لفترة طويلة جدًا حيث ظل الإنفاق الاستهلاكي ثابتًا",
+    "score": 1
+   },
+   {
+    "ar": "ارتفاع مخزونات النفط الخام الأمريكية للأسبوع الثاني على التوالي",
     "score": 1
    }
   ]
