@@ -59,7 +59,14 @@
   "asset:BZ=F:2026-11-18",
   "close:eu:2026-11-18",
   "poll:2026-11-18",
-  "pre60:2026-11-18T14:00:00-05:00|USD|FOMC Meeting Minutes"
+  "pre60:2026-11-18T14:00:00-05:00|USD|FOMC Meeting Minutes",
+  "pre60:2026-11-18T14:00:00-05:00|USD|FOMC Meeting Minutes",
+  "pre5:2026-11-18T14:00:00-05:00|USD|FOMC Meeting Minutes",
+  "pre60:2026-11-18T14:00:00-05:00|USD|FOMC Meeting Minutes",
+  "pre5:2026-11-18T14:00:00-05:00|USD|FOMC Meeting Minutes",
+  "pre1:2026-11-18T14:00:00-05:00|USD|FOMC Meeting Minutes",
+  "now:2026-11-18T14:00:00-05:00|USD|FOMC Meeting Minutes",
+  "snap:2026-11-18:21"
  ],
  "titles": [
   "for futures global lower oil outlook start surplus week",
@@ -147,13 +154,14 @@
   "republican security senator shut social",
   "consumer daly fed high hold inflation long spend too",
   "oil rise second stockpil straight u.s week",
-  "claim credit death deserv fall house make mislead overdose white who"
+  "claim credit death deserv fall house make mislead overdose white who",
+  "boom coming dollar month seen support"
  ],
  "daily": {},
  "news_count": {
   "2026-11-16": 4,
   "2026-11-17": 23,
-  "2026-11-18": 57
+  "2026-11-18": 58
  },
  "day_news": {
   "2026-11-17": [
@@ -425,6 +433,10 @@
    },
    {
     "ar": "مع انخفاض وفيات الجرعات الزائدة، يدلي البيت الأبيض بتصريحات مضللة حول من يستحق الفضل",
+    "score": 0
+   },
+   {
+    "ar": "من المتوقع أن يدعم ازدهار الذكاء الاصطناعي الدولار في الأشهر القادمة",
     "score": 0
    }
   ]
