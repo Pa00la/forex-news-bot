@@ -301,6 +301,29 @@ def _fc_pv(e):
 def impact_tag(e):
     return "🔴 <b>تأثير عالي</b>" if e.get("impact") == "High" else "🟡 <b>تأثير متوسط</b>"
 
+
+def explain_lines(e):
+    """Plain, conditional explanation shown in the 1-hour pre-alert (not a prediction)."""
+    t = (e.get("title") or "").lower()
+    cur = e.get("country")
+    if "minutes" in t and "fomc" in t:
+        return ["📝 محضر اجتماع الفيدرالي بيكشف نقاش اللجنة عن الفائدة والتضخم.",
+                "🔺 نبرة أكثر تشددًا: ضغط على الذهب والأسهم ودعم للدولار",
+                "▫️ دون مفاجآت: تأثير محدود",
+                "🔻 نبرة أكثر تيسيرًا: دعم للذهب والأسهم وضغط على الدولار"]
+    if any(k in t for k in ("interest rate", "federal funds", "rate statement", "official bank rate", "main refinancing", "monetary policy")):
+        return ["🏛️ قرار الفائدة من أهم الأحداث على العملة والذهب.",
+                f"🔺 قرار أو نبرة أكثر تشددًا: دعم للعملة ({cur}) وضغط على الذهب",
+                "▫️ مطابق للتوقعات: تأثير محدود",
+                f"🔻 قرار أو نبرة أكثر تيسيرًا: ضغط على العملة ({cur}) ودعم للذهب"]
+    if cur == "USD" and any(k in t for k in ("unemployment", "jobless", "claims")):
+        return ["🔺 بطالة أعلى من المتوقع: ضغط على الدولار ودعم للذهب",
+                "🔻 بطالة أقل من المتوقع: دعم للدولار وضغط على الذهب"]
+    if cur == "USD" and any(k in t for k in ("cpi", "ppi", "pce", "non-farm", "retail sales", "gdp", "pmi", "payroll")):
+        return ["🔺 رقم أعلى من المتوقع: دعم للدولار وغالبًا ضغط على الذهب",
+                "🔻 رقم أقل من المتوقع: ضغط على الدولار وغالبًا دعم للذهب"]
+    return []
+
 def msg_prealert(e, when, stage=60):
     c, t = ev_names(e)
     flag = FLAGS.get(e["country"], "")
@@ -311,6 +334,9 @@ def msg_prealert(e, when, stage=60):
     lines = [head, f"{flag} {esc(t)}", impact_tag(e)]
     line = _fc_pv(e)
     if line: lines.append(line)
+    if stage == 60 and e.get("impact") == "High":
+        ex = explain_lines(e)
+        if ex: lines += ["", *ex, f"ℹ️ {DISCLAIMER}"]
     lines.append(LINK)
     return "\n".join(lines)
 
@@ -426,6 +452,61 @@ def run_top3(state, now, out):
     lines += [LINE, f"ℹ️ {DISCLAIMER}", FOOTER]
     out.append((key, "\n".join(lines)))
 
+
+# ---------------- price cards, record levels ----------------
+ASSET_CARDS = [("GC=F", "الذهب", "XAUUSD"), ("BZ=F", "خام برنت", "UKOIL")]
+AR_MONTHS = ["يناير", "فبراير", "مارس", "أبريل", "مايو", "يونيو", "يوليو", "أغسطس", "سبتمبر", "أكتوبر", "نوفمبر", "ديسمبر"]
+
+def asset_data(symbol):
+    url = f"https://query1.finance.yahoo.com/v8/finance/chart/{symbol}?interval=5m&range=1d"
+    res = json.loads(http_get(url, 20))["chart"]["result"][0]
+    closes = [c for c in res["indicators"]["quote"][0]["close"] if c is not None]
+    price = res["meta"]["regularMarketPrice"]
+    prev = res["meta"].get("chartPreviousClose") or closes[0]
+    return price, price - prev, (price / prev - 1) * 100, closes
+
+def record_context_from(rows, price, now_ts):
+    """rows: [(epoch, close)] older -> newer (without today). Notable only if the level was last seen 200+ days ago."""
+    at_or_below = [t for t, c in rows if c <= price]
+    at_or_above = [t for t, c in rows if c >= price]
+    if not at_or_below or now_ts - max(at_or_below) > 200 * 86400:   # price is a long-term LOW
+        if not at_or_below: return "📉 أدنى مستوى في أكثر من سنتين"
+        d = datetime.fromtimestamp(max(at_or_below), timezone.utc)
+        return f"📉 أدنى مستوى منذ {AR_MONTHS[d.month - 1]} {d.year}"
+    if not at_or_above or now_ts - max(at_or_above) > 200 * 86400:   # long-term HIGH
+        if not at_or_above: return "📈 أعلى مستوى في أكثر من سنتين"
+        d = datetime.fromtimestamp(max(at_or_above), timezone.utc)
+        return f"📈 أعلى مستوى منذ {AR_MONTHS[d.month - 1]} {d.year}"
+    return ""
+
+def record_context(symbol, price):
+    try:
+        url = f"https://query1.finance.yahoo.com/v8/finance/chart/{symbol}?interval=1d&range=2y"
+        res = json.loads(http_get(url, 20))["chart"]["result"][0]
+        rows = [(t, c) for t, c in zip(res["timestamp"], res["indicators"]["quote"][0]["close"]) if c is not None][:-1]
+        if len(rows) < 60: return ""
+        return record_context_from(rows, price, time.time())
+    except Exception as ex:
+        print("record_context failed:", ex)
+    return ""
+
+def run_assets(state, now, out):
+    """Gold and Brent price cards once a day at 17:00."""
+    if now.weekday() >= 5 or not (17 <= now.hour < 20): return
+    for sym, nm, code in ASSET_CARDS:
+        key = f"asset:{sym}:{now.date().isoformat()}"
+        if key in state["sent"]: continue
+        try:
+            price, chg, pct, series = asset_data(sym)
+        except Exception as ex:
+            print("asset failed:", sym, ex); continue
+        sub = f"{DAYS_AR[now.weekday()]} {now.day}/{now.month} - {fmt_time(now)}"
+        lines = [f"{'🥇' if sym == 'GC=F' else '🛢️'} <b>{nm}</b> ({code})", f"{'🟢' if chg >= 0 else '🔴'} السعر: <b>{price:,.2f}</b> ({pct:+.2f}%)"]
+        rc = record_context(sym, price) if sym == "GC=F" else ""
+        if rc: lines.append(rc)
+        lines += [LINE, f"ℹ️ {DISCLAIMER}", LINK]
+        out.append((key, "\n".join(lines), ("img", lambda n=nm, c=code, p=price, ch=chg, pc=pct, sr=series, sb=sub: C().card_asset(n, c, p, ch, pc, sr, sb))))
+
 GOLD_MOVE_PCT = 0.30
 _gold_last = [0.0]
 
@@ -453,8 +534,12 @@ def run_goldmove(state, now, out):
     verb = "يقفز" if pct > 0 else "يهبط"
     msg = "\n".join([f"⚡ <b>الذهب {verb} بسرعة</b>",
                      f"{arrow} <b>{abs(p_last - p0):.1f}$</b> ({pct:+.2f}%) خلال 15 دقيقة",
-                     f"🥇 السعر الآن: <b>{p_last:,.2f}</b>", LINE, f"ℹ️ {DISCLAIMER}", LINK])
-    out.append((key, msg))
+                     f"🥇 السعر الآن: <b>{p_last:,.2f}</b>"] + ([rc] if (rc := record_context("GC=F", p_last)) else []) + [LINE, f"ℹ️ {DISCLAIMER}", LINK])
+    sub = f"{DAYS_AR[now.weekday()]} {now.day}/{now.month} - {fmt_time(now)}"
+    def _gcard(sb=sub):
+        price, chg, pc, sr = asset_data("GC=F")
+        return C().card_asset("الذهب", "XAUUSD", price, chg, pc, sr, sb)
+    out.append((key, msg, ("img", _gcard)))
 
 # ---------------- RSS news ----------------
 NUM = r"[+\-]?\d[\d.,]*\s?[%KMB]?"
@@ -667,17 +752,25 @@ def run_sessions(state, now, out):
         left = (op - now).total_seconds() / 60
         key = f"open5:{name}:{today}"
         if -3 < left <= 6 and key not in state["sent"]:
-            out.append((key, msg_open_alert(name, flag, op, left)))
+            hint = {"سيدني": "Australia Sydney", "طوكيو": "Japan Tokyo yen", "لندن": "Britain London pound", "الأمريكي": "Wall Street stocks"}[name]
+            sub = {"سيدني": "بداية يوم التداول في آسيا والمحيط الهادئ", "طوكيو": "الين والأسهم اليابانية في الواجهة",
+                   "لندن": "السيولة بتزيد والتذبذب بيرتفع مع بداية الجلسة الأوروبية",
+                   "الأمريكي": "أقوى سيولة في اليوم مع افتتاح وول ستريت"}[name]
+            nm_full = "سوق " + name if name != "الأمريكي" else "السوق الأمريكي"
+            out.append((key, msg_open_alert(name, flag, op, left), ("img", lambda a=nm_full, b=sub, h=hint: C().card_poster(a, b, h))))
         if name == "الأمريكي":
             after = -left
             ikey = f"usidx:{today}"
             if 2 <= after <= 25 and ikey not in state["sent"]:
-                rows = []
+                rows, trows = [], []
                 for sym, nm in INDICES:
-                    try: rows.append((sym, nm, yahoo_change(sym)[1]))
+                    try:
+                        pr, chg = yahoo_change(sym)
+                        rows.append((sym, nm, chg)); trows.append((nm, f"{pr:,.2f}", chg))
                     except Exception as ex: print("index failed:", sym, ex)
                 if len(rows) >= 3:
-                    out.append((ikey, msg_indices(rows)))
+                    sub = f"{DAYS_AR[now.weekday()]} {now.day}/{now.month} - {fmt_time(now)}"
+                    out.append((ikey, msg_indices(rows), ("img", lambda r=trows, sb=sub: C().card_table("المؤشرات الأمريكية", sb, r))))
 
 
 # ---------------- closes, weekly, tips, polls ----------------
@@ -836,7 +929,7 @@ def run_once(state, with_news=True):
     if with_news:
         try: run_news(state, now, out)
         except Exception as ex: print("news error:", ex)
-    for fn in (run_snapshot, run_sessions, run_closes, run_weekly, run_engagement, run_top3, run_goldmove):
+    for fn in (run_snapshot, run_assets, run_sessions, run_closes, run_weekly, run_engagement, run_top3, run_goldmove):
         try: fn(state, now, out)
         except Exception as ex: print(fn.__name__, "error:", ex)
     return deliver(state, out)

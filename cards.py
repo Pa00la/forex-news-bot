@@ -193,6 +193,7 @@ def _crop_sq(data):
     return im.crop(((w - m) // 2, (h - m) // 2, (w - m) // 2 + m, (h - m) // 2 + m)).resize((W, W))
 
 TOPICS = [  # (regex on the English headline, photo searches) - checked before the broad category
+    (r"australia|sydney|aussie", ["sydney skyline", "sydney harbour"]),
     (r"summit|meeting|talks|visit|xi\b|putin|biden|president", ["flags diplomacy meeting room", "us china flags", "world leaders flags"]),
     (r"oil|crude|opec|brent|inventor", ["oil refinery", "oil storage tanks", "oil drilling rig"]),
     (r"singapore|asia|asian", ["asian city skyline", "singapore skyline"]),
@@ -391,7 +392,7 @@ def _gradient_bottom(img, y0, strength=235):
         o.line([(0, y), (W, y)], fill=(5, 8, 16, a))
     return Image.alpha_composite(img.convert("RGBA"), ov).convert("RGB")
 
-N_LAYOUTS = 10
+N_LAYOUTS = 11
 
 def card_news(headline_ar, english_title="", source="", layout=None, urgent=True):
     import zlib
@@ -401,7 +402,14 @@ def card_news(headline_ar, english_title="", source="", layout=None, urgent=True
     v = seed % N_LAYOUTS if layout is None else layout
     bgs = [(11, 18, 32), (14, 14, 28), (10, 24, 30), (22, 14, 20)]
     base_bg = bgs[(seed // 10) % len(bgs)]
+    ppl = _people_imgs(english_title)
+    if ppl:
+        return _card_people(ppl, headline_ar, name, source, urgent)
     photo = fetch_bg(name, english_title or headline_ar, english_title)
+    if v == 10 and photo is not None:
+        return _card_photo_top(photo, headline_ar, name, source, urgent, col)
+    if v == 10:
+        v = 3
     if photo is not None:
         img = Image.blend(photo, Image.new("RGB", (W, W), (8, 12, 22)), 0.6 if v not in (5,) else 0.4)
     else:
@@ -500,4 +508,134 @@ def card_news(headline_ar, english_title="", source="", layout=None, urgent=True
         y = 290 + (500 - len(lines) * int(size * 1.45)) // 2
         _lines(d, lines, size, W - 65, y)
     _footer(d, source)
+    return to_png(img)
+
+
+# ---------------- people photos (only files the owner puts in the "people" folder) ----------------
+PEOPLE_DIR = os.environ.get("PEOPLE_DIR", os.path.join(HERE, "people"))
+PEOPLE = [("trump", r"\btrump\b"), ("xi", r"\bxi\b|xi jinping"), ("putin", r"\bputin\b"), ("powell", r"\bpowell\b"),
+          ("bessent", r"\bbessent\b"), ("lagarde", r"\blagarde\b"), ("bailey", r"\bbailey\b"), ("ueda", r"\bueda\b"),
+          ("biden", r"\bbiden\b"), ("warsh", r"\bwarsh\b"), ("waller", r"\bwaller\b"), ("zelensky", r"\bzelensky\b"),
+          ("netanyahu", r"\bnetanyahu\b"), ("musk", r"\bmusk\b")]
+
+def _people_imgs(title):
+    import re
+    t = (title or "").lower()
+    out = []
+    for key, rx in PEOPLE:
+        if not re.search(rx, t): continue
+        for ext in ("jpg", "jpeg", "png", "webp"):
+            p = os.path.join(PEOPLE_DIR, f"{key}.{ext}")
+            if os.path.exists(p):
+                try: out.append(Image.open(p).convert("RGB"))
+                except Exception as ex: print("people image failed:", key, ex)
+                break
+    return out[:3]
+
+def _crop_to(im, w, h, top_bias=0.25):
+    s = max(w / im.width, h / im.height)
+    im = im.resize((max(w, int(im.width * s)), max(h, int(im.height * s))))
+    x = (im.width - w) // 2
+    y = int((im.height - h) * top_bias)
+    return im.crop((x, y, x + w, y + h))
+
+def _label(urgent):
+    return ("عاجل", (200, 40, 40)) if urgent else ("خبر", (45, 70, 110))
+
+def _card_people(imgs, headline_ar, name, source, urgent):
+    img = Image.new("RGB", (W, W), (8, 12, 22))
+    n = len(imgs); pw = W // n; ph = 640
+    for i, im in enumerate(imgs):
+        img.paste(_crop_to(im, pw, ph), (i * pw, 0))
+    d = ImageDraw.Draw(img)
+    for i in range(1, n):
+        d.rectangle([i * pw - 3, 0, i * pw + 3, ph], fill=(8, 12, 22))
+    lab, lc = _label(urgent)
+    d.rectangle([0, ph, W, W], fill=(245, 246, 249))
+    d.rectangle([W - 215, ph, W, W - 110], fill=lc)
+    text(d, (W - 108, ph + (W - 110 - ph) // 2), lab, 76, WHITE, "mm")
+    size, lines = _fit(d, headline_ar, W - 215 - 90, 4, (56, 50, 44, 40))
+    h = len(lines) * int(size * 1.4)
+    _lines(d, lines, size, W - 250, ph + (W - 110 - ph - h) // 2 + 6, "ra", (18, 22, 36))
+    d.rounded_rectangle([30, 30, 30 + 40 + int(d.textlength(ar(name), font=font(36))), 100], 18, fill=(0, 0, 0))
+    text(d, (50, 65), name, 36, GOLD, "lm")
+    d.rectangle([0, W - 110, W, W], fill=PANEL)
+    d.text((45, W - 55), BRAND, font=font(40), fill=GOLD, anchor="lm")
+    d.text((W - 45, W - 55), HANDLE, font=font(32), fill=WHITE, anchor="rm")
+    if source:
+        text(d, (W - 250, W - 135), "المصدر: " + source, 26, (90, 98, 120), "ra")
+    return to_png(img)
+
+def _card_photo_top(photo, headline_ar, name, source, urgent, col):
+    img = Image.new("RGB", (W, W), (245, 246, 249))
+    img.paste(photo.resize((W, W)).crop((0, 80, W, 80 + 640)) if photo.height >= W else _crop_to(photo, W, 640), (0, 0))
+    d = ImageDraw.Draw(img)
+    lab, lc = _label(urgent)
+    ph = 640
+    d.rounded_rectangle([30, 30, 30 + 44 + int(d.textlength(ar(name), font=font(38))), 104], 18, fill=col)
+    text(d, (52, 67), name, 38, WHITE, "lm")
+    d.rectangle([W - 215, ph + 30, W - 40 + 40, W - 110], fill=lc)
+    text(d, (W - 108, ph + 30 + (W - 110 - ph - 30) // 2), lab, 76, WHITE, "mm")
+    size, lines = _fit(d, headline_ar, W - 215 - 90, 4, (56, 50, 44, 40))
+    h = len(lines) * int(size * 1.4)
+    _lines(d, lines, size, W - 250, ph + 30 + (W - 110 - ph - 30 - h) // 2 + 6, "ra", (18, 22, 36))
+    d.rectangle([0, W - 110, W, W], fill=PANEL)
+    d.text((45, W - 55), BRAND, font=font(40), fill=GOLD, anchor="lm")
+    d.text((W - 45, W - 55), HANDLE, font=font(32), fill=WHITE, anchor="rm")
+    if source:
+        text(d, (W - 250, W - 135), "المصدر: " + source, 26, (90, 98, 120), "ra")
+    return to_png(img)
+
+
+# ---------------- price card (gold / oil ...) and opening poster ----------------
+def card_asset(name_ar, code, price, change, pct, series, subtitle=""):
+    img, d = base(W, name_ar, subtitle)
+    col = GREEN if change >= 0 else RED
+    d.text((W - 60, 245), code, font=font(46), fill=GREY, anchor="rm")
+    d.text((60, 330), f"{price:,.2f}", font=font(150), fill=WHITE, anchor="lm")
+    tri = [(60, 495), (110, 495), (85, 445)] if change >= 0 else [(60, 445), (110, 445), (85, 495)]
+    d.polygon(tri, fill=col)
+    d.text((135, 470), f"{abs(change):,.2f}   ({pct:+.2f}%)", font=font(58), fill=col, anchor="lm")
+    d.rounded_rectangle([40, 560, W - 40, W - 120], 24, fill=PANEL)
+    pts = [v for v in series if v is not None]
+    if len(pts) > 160:
+        step = len(pts) / 160
+        pts = [pts[int(i * step)] for i in range(160)] + [pts[-1]]
+    if len(pts) >= 2:
+        x0, x1, y0, y1 = 80, W - 80, 610, W - 170
+        lo, hi = min(pts), max(pts); rng = (hi - lo) or 1
+        xy = [(x0 + (x1 - x0) * i / (len(pts) - 1), y1 - (y1 - y0) * (v - lo) / rng) for i, v in enumerate(pts)]
+        base_y = y1 - (y1 - y0) * (pts[0] - lo) / rng
+        for x in range(x0, x1, 22):
+            d.line([(x, base_y), (x + 10, base_y)], fill=(90, 100, 125), width=2)
+        d.line(xy, fill=col, width=6, joint="curve")
+        d.ellipse([xy[-1][0] - 10, xy[-1][1] - 10, xy[-1][0] + 10, xy[-1][1] + 10], fill=col)
+        d.text((x1, y0 - 22), f"{hi:,.2f}", font=font(28), fill=GREY, anchor="rm")
+        d.text((x1, y1 + 30), f"{lo:,.2f}", font=font(28), fill=GREY, anchor="rm")
+        text(d, (x0, W - 165), "حركة اليوم", 28, GREY, "la")
+    return to_png(img)
+
+def card_poster(session_name, sub, english_hint, chips=("الذهب", "الدولار", "الأسهم")):
+    photo = fetch_bg("عاجل", session_name, english_hint)
+    if photo is not None:
+        img = Image.blend(photo, Image.new("RGB", (W, W), (6, 10, 22)), 0.58)
+    else:
+        img = Image.new("RGB", (W, W), (11, 18, 32))
+    img = _gradient_bottom(img, 420, 215)
+    d = ImageDraw.Draw(img)
+    d.rounded_rectangle([W // 2 - 210, 90, W // 2 + 210, 170], 24, fill=(200, 40, 40))
+    text(d, (W // 2, 130), "افتتاح السوق", 50, WHITE, "mm")
+    size = 130
+    while size > 60 and d.textlength(ar(session_name), font=font(size)) > W - 120: size -= 6
+    text(d, (W // 2, 400), session_name, size, WHITE, "mm")
+    d.rectangle([W // 2 - 110, 490, W // 2 + 110, 498], fill=GOLD)
+    for k, ln in enumerate(wrap(d, sub, 46, W - 200)[:3]):
+        text(d, (W // 2, 560 + k * 70), ln, 46, (225, 230, 240), "mm")
+    for i, ch in enumerate(chips):
+        x = int(W // 2 + ((len(chips) - 1) / 2 - i) * 280)
+        d.rounded_rectangle([x - 125, 790, x + 125, 870], 40, fill=(245, 185, 66))
+        text(d, (x, 830), ch, 40, (20, 24, 36), "mm")
+    d.rectangle([0, W - 110, W, W], fill=PANEL)
+    d.text((45, W - 55), BRAND, font=font(40), fill=GOLD, anchor="lm")
+    d.text((W - 45, W - 55), HANDLE, font=font(32), fill=WHITE, anchor="rm")
     return to_png(img)
