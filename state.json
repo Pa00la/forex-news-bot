@@ -132,13 +132,14 @@
   "fedspeak hawkish rise treasury yield",
   "100 basi cool fed high how inflation interest must point possibly rate waller",
   "auto canada chinese industry investment tariff threaten weigh",
-  "admin aren closely connected insist outag recent tech timed trump"
+  "admin aren closely connected insist outag recent tech timed trump",
+  "ally democrat house investigation record save their trump upcom warn"
  ],
  "daily": {},
  "news_count": {
   "2026-11-16": 4,
   "2026-11-17": 23,
-  "2026-11-18": 46
+  "2026-11-18": 47
  },
  "day_news": {
   "2026-11-17": [
@@ -367,6 +368,10 @@
    {
     "ar": "يصر مشرف لعبة Trum على أن انقطاعات التكنولوجيا الأخيرة في أوقات متقاربة ليست مرتبطة",
     "score": 1
+   },
+   {
+    "ar": "عضو ديمقراطي في مجلس النواب يحذر 13 من حلفاء ترامب من ضرورة الاحتفاظ بسجلاتهم للتحقيقات القادمة",
+    "score": 2
    }
   ]
  }
