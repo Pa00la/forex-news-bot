@@ -165,14 +165,15 @@
   "decline expect extend futur oil supply surplu",
   "democratic future hold house montana race secret strategist think wins",
   "fed four hawkish kashkari market official raise see turn voic",
-  "america bigger dec fed investinglive minut news nov play put raise waller wrap"
+  "america bigger dec fed investinglive minut news nov play put raise waller wrap",
+  "1.50% boj dec first raise three tipped year"
  ],
  "daily": {},
  "news_count": {
   "2026-11-16": 4,
   "2026-11-17": 23,
   "2026-11-18": 60,
-  "2026-11-19": 4
+  "2026-11-19": 5
  },
  "day_news": {
   "2026-11-17": [
@@ -474,6 +475,10 @@
    },
    {
     "ar": "ملخص أخبار الفوركس في الأمريكيتين من إنفستينج لايف 18 نوفمبر: والر/محضر اجتماع بنك الاحتياطي الفيدرالي يضع رفعًا أكبر للفائدة في ديسمبر على الطاولة",
+    "score": 1
+   },
+   {
+    "ar": "من المتوقع أن يرفع بنك اليابان الفائدة إلى 1.50% في ديسمبر، وهو أول عام يشهد ثلاث زيادات في 37 عامًا",
     "score": 1
    }
   ]
