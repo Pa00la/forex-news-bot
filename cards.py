@@ -150,6 +150,7 @@ def card_tip(title, body, kicker="فكرة اليوم"):
 
 
 CATS = [
+    (("election", "elections", "midterm", "midterms", "senate", "congress", "ballot", "voters", "democrats", "republicans", "speaker"), "الانتخابات", "VOTE", (60, 90, 200)),
     (("trump", "white house", "biden"), "ترامب", "$", (200, 50, 50)),
     (("fed ", "powell", "fomc", "warsh", "federal reserve", "waller", "fed's"), "الفيدرالي", "%", (52, 120, 220)),
     (("ecb", "lagarde"), "المركزي الأوروبي", "€", (40, 90, 200)),
@@ -173,6 +174,7 @@ def pick_cat(english_title):
     return "عاجل", "!", (200, 50, 50)
 
 QUERIES = {
+    "الانتخابات": ["us capitol building", "voting ballot box", "american flag"],
     "ترامب": ["white house building", "american flag", "washington dc capitol"],
     "الفيدرالي": ["federal reserve building", "us dollar bills", "wall street"],
     "المركزي الأوروبي": ["euro banknotes", "frankfurt skyline", "european union flags"],
@@ -193,6 +195,7 @@ def _crop_sq(data):
     return im.crop(((w - m) // 2, (h - m) // 2, (w - m) // 2 + m, (h - m) // 2 + m)).resize((W, W))
 
 TOPICS = [  # (regex on the English headline, photo searches) - checked before the broad category
+    (r"election|midterm|senate|congress|ballot|voters|democrat|republican|speaker", ["us capitol building", "voting ballot box", "american flag"]),
     (r"australia|sydney|aussie", ["sydney skyline", "sydney harbour"]),
     (r"summit|meeting|talks|visit|xi\b|putin|biden|president", ["flags diplomacy meeting room", "us china flags", "world leaders flags"]),
     (r"oil|crude|opec|brent|inventor", ["oil refinery", "oil storage tanks", "oil drilling rig"]),
@@ -291,10 +294,29 @@ def _words(txt):
     import re
     return {w[:6] for w in re.findall(r"[a-z]+", (txt or "").lower()) if len(w) > 3 and w not in _STOP}
 
+def _local_scene(title):
+    """Owner-provided scene photos in the 'people' folder (e.g. whitehouse.jpg, whitehouse2.jpg)."""
+    import re, zlib
+    t = (title or "").lower()
+    for key, rx in (("whitehouse", r"white house"),):
+        if re.search(rx, t):
+            try:
+                cand = sorted(f for f in os.listdir(PEOPLE_DIR) if re.fullmatch(rf"{key}\d*\.(jpg|jpeg|png|webp)", f.lower()))
+                if cand:
+                    im = Image.open(os.path.join(PEOPLE_DIR, cand[zlib.crc32(t.encode()) % len(cand)])).convert("RGB")
+                    w, h = im.size; m = min(w, h)
+                    return im.crop(((w - m) // 2, (h - m) // 2, (w - m) // 2 + m, (h - m) // 2 + m)).resize((W, W))
+            except Exception as ex:
+                print("local scene failed:", ex)
+    return None
+
 def fetch_bg(cat, seed, title=""):
     """Royalty-free photo that matches the headline. For every library with a key we search several queries
     (topic scenes + keywords taken from the headline), then rank the results by how many words of their
     description/tags match the headline, and pick one of the best matches."""
+    loc = _local_scene(title)
+    if loc is not None:
+        return loc
     providers = []
     if os.environ.get("PEXELS_KEY", "").strip(): providers.append(("pexels", _links_pexels, os.environ["PEXELS_KEY"].strip()))
     if os.environ.get("PIXABAY_KEY", "").strip(): providers.append(("pixabay", _links_pixabay, os.environ["PIXABAY_KEY"].strip()))
@@ -519,17 +541,20 @@ PEOPLE = [("trump", r"\btrump\b"), ("xi", r"\bxi\b|xi jinping"), ("putin", r"\bp
           ("netanyahu", r"\bnetanyahu\b"), ("musk", r"\bmusk\b")]
 
 def _people_imgs(title):
-    import re
+    """One photo per person from the 'people' folder. Several files per person are allowed for variety:
+    trump.jpg, trump2.jpg, trump_3.png ... one of them is picked per news item."""
+    import re, zlib
     t = (title or "").lower()
     out = []
+    try: files = os.listdir(PEOPLE_DIR)
+    except Exception: return out
     for key, rx in PEOPLE:
         if not re.search(rx, t): continue
-        for ext in ("jpg", "jpeg", "png", "webp"):
-            p = os.path.join(PEOPLE_DIR, f"{key}.{ext}")
-            if os.path.exists(p):
-                try: out.append(Image.open(p).convert("RGB"))
-                except Exception as ex: print("people image failed:", key, ex)
-                break
+        cand = sorted(f for f in files if re.fullmatch(rf"{key}[_\-]?\d*\.(jpg|jpeg|png|webp)", f.lower()))
+        if not cand: continue
+        pick = cand[zlib.crc32((t + key).encode()) % len(cand)]
+        try: out.append(Image.open(os.path.join(PEOPLE_DIR, pick)).convert("RGB"))
+        except Exception as ex: print("people image failed:", pick, ex)
     return out[:3]
 
 def _crop_to(im, w, h, top_bias=0.25):
@@ -635,6 +660,61 @@ def card_poster(session_name, sub, english_hint, chips=("الذهب", "الدو�
         x = int(W // 2 + ((len(chips) - 1) / 2 - i) * 280)
         d.rounded_rectangle([x - 125, 790, x + 125, 870], 40, fill=(245, 185, 66))
         text(d, (x, 830), ch, 40, (20, 24, 36), "mm")
+    d.rectangle([0, W - 110, W, W], fill=PANEL)
+    d.text((45, W - 55), BRAND, font=font(40), fill=GOLD, anchor="lm")
+    d.text((W - 45, W - 55), HANDLE, font=font(32), fill=WHITE, anchor="rm")
+    return to_png(img)
+
+
+def _poster_bg(hint, seed, dark=0.6):
+    photo = fetch_bg("عاجل", seed, hint)
+    if photo is not None:
+        img = Image.blend(photo, Image.new("RGB", (W, W), (6, 10, 22)), dark)
+    else:
+        img = Image.new("RGB", (W, W), (11, 18, 32))
+    return _gradient_bottom(img, 380, 215)
+
+def _chip_row(d, items, y=800):
+    n = len(items); gap = 20; bw = (W - 80 - gap * (n - 1)) // n
+    x = W - 40
+    for it in items:
+        x0 = x - bw
+        d.rounded_rectangle([x0, y, x, y + 130], 24, fill=(14, 20, 36), outline=(70, 80, 105), width=2)
+        for k, ln in enumerate(wrap(d, it, 30, bw - 30)[:2]):
+            text(d, ((x0 + x) // 2, y + 45 + k * 42), ln, 30, WHITE, "mm")
+        x = x0 - gap
+
+def card_event(abbr, english, arabic, hint, chips):
+    """Poster for a big scheduled release (CPI, NFP, FOMC ...): giant acronym over a flag/skyline photo."""
+    img = _poster_bg(hint, abbr + english)
+    d = ImageDraw.Draw(img)
+    size = 330
+    while size > 110 and d.textlength(abbr, font=font(size)) > W - 100: size -= 10
+    d.text((W // 2, 300), abbr, font=font(size), fill=(238, 240, 246), anchor="mm")
+    d.rounded_rectangle([60, 470, W - 60, 560], 14, fill=(190, 30, 36))
+    fs = 46
+    while fs > 24 and d.textlength(english, font=font(fs)) > W - 160: fs -= 2
+    d.text((W // 2, 515), english, font=font(fs), fill=WHITE, anchor="mm")
+    size2 = 70
+    while size2 > 40 and d.textlength(ar(arabic), font=font(size2)) > W - 120: size2 -= 4
+    text(d, (W // 2, 640), arabic, size2, WHITE, "mm")
+    text(d, (W // 2, 725), "الأهم في هذا الأسبوع" if False else "حدث مهم للأسواق", 38, GOLD, "mm")
+    _chip_row(d, chips, 800)
+    d.rectangle([0, W - 110, W, W], fill=PANEL)
+    d.text((45, W - 55), BRAND, font=font(40), fill=GOLD, anchor="lm")
+    d.text((W - 45, W - 55), HANDLE, font=font(32), fill=WHITE, anchor="rm")
+    return to_png(img)
+
+def card_greeting(title, sub, hint):
+    img = _poster_bg(hint, title, 0.38)
+    d = ImageDraw.Draw(img)
+    size = 190
+    while size > 80 and d.textlength(ar(title), font=font(size)) > W - 100: size -= 8
+    d.text((W // 2 + 3, 303), ar(title), font=font(size), fill=(0, 0, 0), anchor="mm")
+    text(d, (W // 2, 300), title, size, (230, 255, 190), "mm")
+    d.rectangle([W // 2 - 120, 430, W // 2 + 120, 438], fill=GOLD)
+    for k, ln in enumerate(wrap(d, sub, 46, W - 200)[:2]):
+        text(d, (W // 2, 500 + k * 70), ln, 46, WHITE, "mm")
     d.rectangle([0, W - 110, W, W], fill=PANEL)
     d.text((45, W - 55), BRAND, font=font(40), fill=GOLD, anchor="lm")
     d.text((W - 45, W - 55), HANDLE, font=font(32), fill=WHITE, anchor="rm")

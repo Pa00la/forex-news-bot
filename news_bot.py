@@ -29,7 +29,7 @@ LEAD_STAGES = [60, 5, 1]      # pre-alerts: 1 hour, 5 minutes and 1 minute befor
 MORNING_HOUR = 8              # Dubai hour for the daily calendar post
 SNAPSHOT_HOURS = [12, 17, 21] # Dubai hours for gold + currency strength posts (weekdays)
 MAX_NEWS_PER_RUN = 3
-MAX_NEWS_PER_DAY = 40
+MAX_NEWS_PER_DAY = 60
 NEWS_MAX_AGE_MIN = 45
 
 FEEDS = {  # name -> url (a failing feed is simply skipped)
@@ -43,12 +43,17 @@ FEEDS = {  # name -> url (a failing feed is simply skipped)
     "ECB": "https://www.ecb.europa.eu/rss/press.html",
     "Bank of England": "https://www.bankofengland.co.uk/rss/news",
     "BBC Business": "https://feeds.bbci.co.uk/news/business/rss.xml",
+    "CNBC Politics": "https://search.cnbc.com/rs/search/combinedcms/view.xml?partnerId=wrss01&id=10000113",
+    "BBC US & Canada": "https://feeds.bbci.co.uk/news/world/us_and_canada/rss.xml",
+    "NPR Politics": "https://feeds.npr.org/1014/rss.xml",
 }
 KEYWORDS = ["gold", "xau", "fed ", "fomc", "powell", "trump", "nfp", "payroll", "cpi", "inflation", "pce", "ppi",
             "gdp", "unemployment", "jobs report", "jobless", "rate cut", "rate hike", "rate decision", "interest rate",
             "bank of england", "boe", "ecb", "boj", "lagarde", "bailey", "ueda", "treasury", "yield", "dollar", "dxy",
             "oil", "opec", "tariff", "sanction", "iran", "israel", "ceasefire", "retail sales", "pmi", "ism",
-            "china", "safe haven", "central bank"]
+            "china", "safe haven", "central bank",
+            "election", "midterm", "senate", "congress", "ballot", "democrat", "republican", "white house", "treasury secretary",
+            "bessent", "warsh", "waller", "shutdown", "debt ceiling", "supreme court", "zelensky", "putin", "xi jinping", "netanyahu"]
 SKIP = ["should i ", "moneyist", "my husband", "my wife", "my mother", "my father", "my parents", "my daughter", "my son", "bitcoin", "crypto", "ethereum", "xrp", "dogecoin", "stock picks", "sponsored", "earnings call", "podcast",
         "singapore", "sgd", "malaysia", "ringgit", "thai ", "baht", "indonesia", "rupiah", "philippine", "taiwan", "korean won", "south korea", "vietnam", "rupee", "turkish lira", "south african rand", "brazilian real", "mexican peso", "hong kong dollar"]
 RESULT_WORDS = ["nfp", "payroll", "cpi", "ppi", "pce", "gdp", "retail sales", "unemployment rate", "jobless claims",
@@ -324,6 +329,26 @@ def explain_lines(e):
                 "🔻 رقم أقل من المتوقع: ضغط على الدولار وغالبًا دعم للذهب"]
     return []
 
+EVENT_POSTERS = [(r"fomc meeting minutes", "FOMC", "MEETING MINUTES"), (r"cpi", "CPI", "CONSUMER PRICE INDEX"),
+                 (r"non-farm|nfp", "NFP", "NON-FARM PAYROLLS"), (r"federal funds|fomc|rate statement", "FED", "INTEREST RATE DECISION"),
+                 (r"ppi", "PPI", "PRODUCER PRICE INDEX"), (r"pce", "PCE", "PCE PRICE INDEX"), (r"gdp", "GDP", "GROSS DOMESTIC PRODUCT"),
+                 (r"retail sales", "RETAIL", "RETAIL SALES"), (r"unemployment|jobless", "JOBS", "UNEMPLOYMENT DATA"),
+                 (r"official bank rate", "BOE", "BANK RATE DECISION"), (r"main refinancing", "ECB", "INTEREST RATE DECISION"),
+                 (r"boj", "BOJ", "POLICY RATE DECISION")]
+EVENT_HINT = {"USD": "American flag USA", "GBP": "Britain London flag", "EUR": "European Union flags", "JPY": "Japan Tokyo yen"}
+
+def event_poster(e, when):
+    """Image args for the 1-hour pre-alert of a big release, or None."""
+    t = (e.get("title") or "").lower()
+    for rx, abbr, eng in EVENT_POSTERS:
+        if re.search(rx, t):
+            c, name_ar = ev_names(e)
+            cur = e.get("country")
+            who = "الدولار والأسواق" if cur == "USD" else "العملة والأسواق"
+            chips = ["ترقب عالي من الأسواق", f"الموعد {_t12(when.astimezone(DUBAI))} مصر", f"تأثير مباشر على {who}"]
+            return ("img", lambda a=abbr, g=eng, n=name_ar, h=EVENT_HINT.get(cur, "world map finance"), ch=chips: C().card_event(a, g, n, h, ch))
+    return None
+
 def msg_prealert(e, when, stage=60):
     c, t = ev_names(e)
     flag = FLAGS.get(e["country"], "")
@@ -377,7 +402,8 @@ def run_calendar(state, now, events, out):
                     for bigger in stages:
                         if bigger > stage:
                             state["sent"].append(f"pre{bigger}:" + ev_key(e))  # skip stages already passed
-                    out.append((key, msg_prealert(e, when, stage)))
+                    poster = event_poster(e, when) if (stage == 60 and e.get("impact") == "High") else None
+                    out.append((key, msg_prealert(e, when, stage), poster) if poster else (key, msg_prealert(e, when, stage)))
             elif -8 <= left <= 0 and ("now:" + ev_key(e)) not in state["sent"]:
                 out.append(("now:" + ev_key(e), msg_now(e, when)))
 
@@ -604,9 +630,11 @@ def relevant(title):
 IMPORTANT_WORDS = ["fed ", "powell", "trump", "cpi", "nfp", "payroll", "rate cut", "rate hike", "interest rate", "inflation",
                    "gold", "tariff", "opec", "oil", "ecb", "boj", "bank of england", "war", "ceasefire", "recession", "gdp", "jobs"]
 
+ELECTION_WORDS = ["election", "midterm", "senate", "congress"]  # focus topic: counts double, so it earns the red "عاجل" label
+
 def news_score(title):
     tl = title.lower() + " "
-    return sum(1 for w in IMPORTANT_WORDS if w in tl)
+    return sum(1 for w in IMPORTANT_WORDS if w in tl) + 2 * sum(1 for w in ELECTION_WORDS if w in tl)
 
 def run_news(state, now, out):
     day = now.date().isoformat()
@@ -871,6 +899,12 @@ def run_engagement(state, now, out):
         q, opts = content.POLLS[day_no % len(content.POLLS)]
         out.append((key, "", ("poll", q, opts)))
 
+def run_friday(state, now, out):
+    key = f"friday:{now.date().isoformat()}"
+    if now.weekday() == 4 and 8 <= now.hour < 12 and key not in state["sent"]:
+        cap = "🕌 <b>جمعة مباركة</b>\nنتمنى لكم يوم مبارك وأسواق هادية ومربحة بإذن الله.\n" + LINK
+        out.append((key, cap, ("img", lambda: C().card_greeting("جمعة مباركة", "من فريق Forex News", "mosque minarets sky"))))
+
 # ---------------- diagnosis (manual run only) ----------------
 def diagnose():
     print("=== DIAGNOSIS ===")
@@ -929,7 +963,7 @@ def run_once(state, with_news=True):
     if with_news:
         try: run_news(state, now, out)
         except Exception as ex: print("news error:", ex)
-    for fn in (run_snapshot, run_assets, run_sessions, run_closes, run_weekly, run_engagement, run_top3, run_goldmove):
+    for fn in (run_snapshot, run_assets, run_friday, run_sessions, run_closes, run_weekly, run_engagement, run_top3, run_goldmove):
         try: fn(state, now, out)
         except Exception as ex: print(fn.__name__, "error:", ex)
     return deliver(state, out)
