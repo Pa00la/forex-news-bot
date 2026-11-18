@@ -41,7 +41,9 @@
   "pre5:2026-11-18T02:30:00-05:00|GBP|BOE Gov Bailey Speaks",
   "now:2026-11-18T02:30:00-05:00|GBP|BOE Gov Bailey Speaks",
   "open5:لندن:2026-11-18",
-  "tip:2026-11-18"
+  "tip:2026-11-18",
+  "pre5:2026-11-18T04:00:00-05:00|EUR|ECB Financial Stability Review",
+  "now:2026-11-18T04:00:00-05:00|EUR|ECB Financial Stability Review"
  ],
  "titles": [
   "for futures global lower oil outlook start surplus week",
@@ -91,13 +93,14 @@
   "after data falls inflation sterling u.k.",
   "bond early eurozone fall trade yields",
   "after boe fall forecast gilt inflation services u.k. undershoots yields",
-  "council heating oil payments speed urges"
+  "council heating oil payments speed urges",
+  "amid east expectations fall middle oil prices supply surplus tensions"
  ],
  "daily": {},
  "news_count": {
   "2026-11-16": 4,
   "2026-11-17": 23,
-  "2026-11-18": 21
+  "2026-11-18": 22
  },
  "day_news": {
   "2026-11-17": [
@@ -225,6 +228,10 @@
    },
    {
     "ar": "نائب في البرلمان يحث المجلس على تسريع دفعات زيت التدفئة",
+    "score": 1
+   },
+   {
+    "ar": "انخفاض أسعار النفط وسط توقعات بفائض المعروض والتوترات في الشرق الأوسط",
     "score": 1
    }
   ]
