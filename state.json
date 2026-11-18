@@ -61,13 +61,14 @@
   "drag market retail sales slower",
   "again earn for shift. shorter term this treasurys want watch",
   "0.04% 98.42 dollar falls index wsj",
-  "dollar fed gold keep treads water weighing"
+  "dollar fed gold keep treads water weighing",
+  "edges lower mideast offset oil prospects supply surplus tensions"
  ],
  "daily": {},
  "news_count": {
   "2026-11-16": 4,
   "2026-11-17": 23,
-  "2026-11-18": 3
+  "2026-11-18": 4
  },
  "day_news": {
   "2026-11-17": [
@@ -123,6 +124,10 @@
    },
    {
     "ar": "الذهب يترنح مع توجه بنك الاحتياطي الفيدرالي، والدولار يواصل الضغط",
+    "score": 1
+   },
+   {
+    "ar": "انخفاض أسعار النفط مع تعويض التوقعات بفائض المعروض للتوترات في الشرق الأوسط",
     "score": 1
    }
   ]
