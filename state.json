@@ -31,7 +31,13 @@
   "pre5:2026-11-17T19:30:00-05:00|AUD|Wage Price Index q/q",
   "now:2026-11-17T19:30:00-05:00|AUD|Wage Price Index q/q",
   "morning:2026-11-18",
-  "pre60:2026-11-18T02:00:00-05:00|GBP|CPI y/y"
+  "pre60:2026-11-18T02:00:00-05:00|GBP|CPI y/y",
+  "pre60:2026-11-18T02:00:00-05:00|GBP|CPI y/y",
+  "pre5:2026-11-18T02:00:00-05:00|GBP|CPI y/y",
+  "pre60:2026-11-18T02:00:00-05:00|GBP|CPI y/y",
+  "pre5:2026-11-18T02:00:00-05:00|GBP|CPI y/y",
+  "pre1:2026-11-18T02:00:00-05:00|GBP|CPI y/y",
+  "now:2026-11-18T02:00:00-05:00|GBP|CPI y/y"
  ],
  "titles": [
   "for futures global lower oil outlook start surplus week",
@@ -71,13 +77,16 @@
   "amid dollar off risk sentiment singapore slightly weakens",
   "east enemy from gold headlines middle not now right the treasury worst yield",
   "ahead behind competition falling industry losing meeting putin says trump with",
-  "800 asia below breaks gold investinglive market news pacific"
+  "800 asia below breaks gold investinglive market news pacific",
+  "bets ease fed hike likely next strengthen year yen",
+  "elevated french german likely persist spreads yield",
+  "3.6% cpi expected october"
  ],
  "daily": {},
  "news_count": {
   "2026-11-16": 4,
   "2026-11-17": 23,
-  "2026-11-18": 11
+  "2026-11-18": 14
  },
  "day_news": {
   "2026-11-17": [
@@ -165,6 +174,18 @@
    },
    {
     "ar": "أخبار سوق آسيا والمحيط الهادئ من investingLive: انخفاض سعر الذهب إلى ما دون 3800 دولار",
+    "score": 1
+   },
+   {
+    "ar": "من المرجح أن يرتفع الين العام المقبل مع تراجع التوقعات برفع الفائدة من قبل بنك الاحتياطي الفيدرالي",
+    "score": 1
+   },
+   {
+    "ar": "من المرجح أن يستمر ارتفاع فروق العائد بين فرنسا وألمانيا",
+    "score": 0
+   },
+   {
+    "ar": "مؤشر أسعار المستهلك في المملكة المتحدة لشهر أكتوبر +3.6% مقابل +3.6% على أساس سنوي متوقع",
     "score": 1
    }
   ]
