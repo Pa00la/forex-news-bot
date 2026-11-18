@@ -89,13 +89,15 @@
   "3.6% and diesel higher inflation petrol prices push",
   "3.6% diesel drive high inflation prices record year",
   "after data falls inflation sterling u.k.",
-  "bond early eurozone fall trade yields"
+  "bond early eurozone fall trade yields",
+  "after boe fall forecast gilt inflation services u.k. undershoots yields",
+  "council heating oil payments speed urges"
  ],
  "daily": {},
  "news_count": {
   "2026-11-16": 4,
   "2026-11-17": 23,
-  "2026-11-18": 19
+  "2026-11-18": 21
  },
  "day_news": {
   "2026-11-17": [
@@ -216,6 +218,14 @@
    {
     "ar": "انخفاض عائدات سندات منطقة اليورو في بداية التداول",
     "score": 0
+   },
+   {
+    "ar": "انخفاض عائدات السندات الحكومية البريطانية بعد أن جاء معدل تضخم الخدمات في المملكة المتحدة أقل من توقعات بنك إنجلترا",
+    "score": 1
+   },
+   {
+    "ar": "نائب في البرلمان يحث المجلس على تسريع دفعات زيت التدفئة",
+    "score": 1
    }
   ]
  }
