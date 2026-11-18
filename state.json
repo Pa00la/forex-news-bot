@@ -66,7 +66,8 @@
   "pre5:2026-11-18T14:00:00-05:00|USD|FOMC Meeting Minutes",
   "pre1:2026-11-18T14:00:00-05:00|USD|FOMC Meeting Minutes",
   "now:2026-11-18T14:00:00-05:00|USD|FOMC Meeting Minutes",
-  "snap:2026-11-18:21"
+  "snap:2026-11-18:21",
+  "react:2026-11-18T14:00:00-05:00|USD|FOMC Meeting Minutes"
  ],
  "titles": [
   "for futures global lower oil outlook start surplus week",
@@ -155,13 +156,14 @@
   "consumer daly fed high hold inflation long spend too",
   "oil rise second stockpil straight u.s week",
   "claim credit death deserv fall house make mislead overdose white who",
-  "boom coming dollar month seen support"
+  "boom coming dollar month seen support",
+  "fed grow inflation minut outlook show unease"
  ],
  "daily": {},
  "news_count": {
   "2026-11-16": 4,
   "2026-11-17": 23,
-  "2026-11-18": 58
+  "2026-11-18": 59
  },
  "day_news": {
   "2026-11-17": [
@@ -438,6 +440,10 @@
    {
     "ar": "من المتوقع أن يدعم ازدهار الذكاء الاصطناعي الدولار في الأشهر القادمة",
     "score": 0
+   },
+   {
+    "ar": "محاضر مجلس الاحتياطي الفيدرالي تُظهر قلقًا متزايدًا بشأن توقعات التضخم",
+    "score": 2
    }
   ]
  }
