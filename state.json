@@ -29,7 +29,9 @@
   "open5:سيدني:2026-11-18",
   "open5:طوكيو:2026-11-18",
   "pre5:2026-11-17T19:30:00-05:00|AUD|Wage Price Index q/q",
-  "now:2026-11-17T19:30:00-05:00|AUD|Wage Price Index q/q"
+  "now:2026-11-17T19:30:00-05:00|AUD|Wage Price Index q/q",
+  "morning:2026-11-18",
+  "pre60:2026-11-18T02:00:00-05:00|GBP|CPI y/y"
  ],
  "titles": [
   "for futures global lower oil outlook start surplus week",
