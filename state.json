@@ -96,13 +96,15 @@
   "council heating oil payments speed urges",
   "amid east expectations fall middle oil prices supply surplus tensions",
   "bearish data expectations inventory oil pressured prices report surplus u.s.",
-  "2.5% bets dollar down firmer gold hike rate"
+  "2.5% bets dollar down firmer gold hike rate",
+  "bets dollar high hike month rate rises",
+  "but carries dollar downside fed firms minutes policy prospects risks"
  ],
  "daily": {},
  "news_count": {
   "2026-11-16": 4,
   "2026-11-17": 23,
-  "2026-11-18": 24
+  "2026-11-18": 26
  },
  "day_news": {
   "2026-11-17": [
@@ -242,6 +244,14 @@
    },
    {
     "ar": "الذهب ينخفض بنسبة 2.5% بسبب ارتفاع الدولار وتوقعات رفع أسعار الفائدة",
+    "score": 1
+   },
+   {
+    "ar": "الدولار يرتفع إلى أعلى مستوى له منذ 19 شهرًا بفضل رهانات رفع أسعار الفائدة",
+    "score": 0
+   },
+   {
+    "ar": "شركات الدولار تتحدث عن توقعات سياسة بنك الاحتياطي الفيدرالي، لكن محضر الاجتماع يحمل مخاطر هبوطية",
     "score": 1
    }
   ]
