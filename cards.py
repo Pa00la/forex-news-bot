@@ -1,7 +1,7 @@
 """Image cards for the channel (Pillow). Free, runs inside GitHub Actions, no accounts needed."""
 import io, os, subprocess, sys
 
-BRAND = "Maged | Forex News"
+BRAND = "Forex News"
 HANDLE = "t.me/forex_news_M1"
 
 try:
@@ -156,7 +156,7 @@ CATS = [
     (("bank of england", "boe", "bailey"), "بنك إنجلترا", "£", (140, 60, 170)),
     (("boj", "ueda", "yen"), "بنك اليابان", "¥", (200, 70, 90)),
     (("nvidia", "stocks", "stock market", "wall street", "s&p", "nasdaq", "dow jones", "tesla", "apple", "microsoft", "tech "), "الأسهم", "STK", (40, 150, 120)),
-    (("gold", "xau"), "الذهب", "Au", (230, 170, 40)),
+    (("gold", "xau"), "الذهب", "XAU", (230, 170, 40)),
     (("oil", "opec", "crude", "brent"), "النفط", "OIL", (90, 90, 100)),
     (("china", "xi ", "beijing", "tariff"), "الصين والتجارة", "CN", (210, 60, 40)),
     (("iran", "israel", "war", "ceasefire", "russia", "ukraine", "sanction"), "جيوسياسة", "!", (170, 60, 60)),
@@ -193,6 +193,10 @@ def _crop_sq(data):
     return im.crop(((w - m) // 2, (h - m) // 2, (w - m) // 2 + m, (h - m) // 2 + m)).resize((W, W))
 
 TOPICS = [  # (regex on the English headline, photo searches) - checked before the broad category
+    (r"summit|meeting|talks|visit|xi\b|putin|biden|president", ["flags diplomacy meeting room", "us china flags", "world leaders flags"]),
+    (r"oil|crude|opec|brent|inventor", ["oil refinery", "oil storage tanks", "oil drilling rig"]),
+    (r"singapore|asia|asian", ["asian city skyline", "singapore skyline"]),
+    (r"war|ceasefire|iran|israel|ukraine|russia", ["world map conflict", "flags diplomacy", "city skyline night"]),
     (r"nvidia|chip|semiconductor|\bai\b|artificial intelligence", ["semiconductor chip", "computer processor close up", "data center servers"]),
     (r"tesla|electric vehicle|\bev\b", ["electric car charging", "electric car"]),
     (r"apple|iphone", ["smartphone close up", "technology gadgets"]),
@@ -232,7 +236,7 @@ def _links_pexels(key, q):
     url = "https://api.pexels.com/v1/search?" + urllib.parse.urlencode({"query": q, "per_page": 30, "orientation": "square"})
     req = urllib.request.Request(url, headers={"Authorization": key, "User-Agent": "Mozilla/5.0"})
     ph = json.loads(urllib.request.urlopen(req, timeout=20).read()).get("photos") or []
-    return [p_["src"]["large"] for p_ in ph if not _is_bad(p_.get("alt"))]
+    return [(p_["src"]["large"], p_.get("alt") or "") for p_ in ph if not _is_bad(p_.get("alt"))]
 
 def _links_pixabay(key, q):
     import json, urllib.request, urllib.parse
@@ -242,7 +246,7 @@ def _links_pixabay(key, q):
         hits = json.loads(urllib.request.urlopen(urllib.request.Request(url, headers={"User-Agent": "Mozilla/5.0"}), timeout=20).read()).get("hits") or []
         hits = [h for h in hits if not _is_bad(h.get("tags"))]
         if hits:
-            return [h["largeImageURL"] for h in hits]
+            return [(h["largeImageURL"], h.get("tags") or "") for h in hits]
     return []
 
 def _links_openverse(key, q):
@@ -251,11 +255,45 @@ def _links_openverse(key, q):
     url = "https://api.openverse.org/v1/images/?" + urllib.parse.urlencode(
         {"q": q, "license": "cc0,pdm", "category": "photograph", "size": "large", "page_size": 20})
     res = json.loads(urllib.request.urlopen(urllib.request.Request(url, headers={"User-Agent": "Mozilla/5.0"}), timeout=20).read()).get("results") or []
-    return [r["url"] for r in res if r.get("url")]
+    out = []
+    for r in res:
+        txt = (r.get("title") or "") + " " + " ".join((t.get("name") or "") for t in (r.get("tags") or []))
+        if r.get("url") and not _is_bad(txt):
+            out.append((r["url"], txt))
+    return out
+
+_STOP = set("""the a an and or of to in on for with from by at as is are was were be been it its this that these those after before over under
+amid into than then but not new says say said will would could should may might more most less least up down out off about
+us u s per vs year years month week day today stocks stock market markets news report reports data expected expect
+expects rise rises fall falls higher lower""".split())
+_VISUAL = {"inventories": "warehouse inventory", "inventory": "warehouse inventory", "surplus": "oil storage tanks",
+           "crude": "oil refinery", "treasury": "treasury building", "yields": "bonds", "jobless": "unemployment office",
+           "claims": "unemployment office", "payrolls": "workers", "payroll": "workers", "hiring": "job interview",
+           "mortgage": "houses", "housing": "houses", "rates": "interest rates bank", "rate": "interest rate bank",
+           "tariffs": "shipping containers", "tariff": "shipping containers", "sanctions": "flags", "summit": "flags diplomacy",
+           "meeting": "flags diplomacy", "talks": "flags diplomacy", "ceasefire": "flags diplomacy", "inflation": "supermarket prices",
+           "prices": "price tags", "retail": "shopping store", "consumer": "shopping store", "manufacturing": "factory production",
+           "factory": "factory production", "pmi": "factory production", "growth": "economy growth chart", "recession": "economy downturn",
+           "bank": "bank building", "banks": "bank building", "chip": "semiconductor", "chips": "semiconductor", "dollar": "dollar banknotes"}
+
+def keyword_query(title):
+    import re
+    words = [w for w in re.findall(r"[a-z]+", (title or "").lower()) if len(w) > 3 and w not in _STOP]
+    seen, out = set(), []
+    for w in words:
+        v = _VISUAL.get(w, w)
+        if v not in seen:
+            seen.add(v); out.append(v)
+    return " ".join(out[:3])
+
+def _words(txt):
+    import re
+    return {w[:6] for w in re.findall(r"[a-z]+", (txt or "").lower()) if len(w) > 3 and w not in _STOP}
 
 def fetch_bg(cat, seed, title=""):
-    """Optional royalty-free photo. Uses every library that has a key (PEXELS_KEY, PIXABAY_KEY), in a
-    per-news random order, and falls back to the next one if a library fails. Places/objects only."""
+    """Royalty-free photo that matches the headline. For every library with a key we search several queries
+    (topic scenes + keywords taken from the headline), then rank the results by how many words of their
+    description/tags match the headline, and pick one of the best matches."""
     providers = []
     if os.environ.get("PEXELS_KEY", "").strip(): providers.append(("pexels", _links_pexels, os.environ["PEXELS_KEY"].strip()))
     if os.environ.get("PIXABAY_KEY", "").strip(): providers.append(("pixabay", _links_pixabay, os.environ["PIXABAY_KEY"].strip()))
@@ -263,16 +301,30 @@ def fetch_bg(cat, seed, title=""):
     rnd = random.Random(zlib.crc32(str(seed).encode()))
     rnd.shuffle(providers)
     providers.append(("openverse", _links_openverse, ""))  # keyless last resort
-    qs = topic_queries(title, cat)
+    topic_qs = topic_queries(title, cat)
+    kq = keyword_query(title)
+    queries = [(q, 2) for q in topic_qs[:2]] + ([(kq, 1)] if kq else [])
+    want = _words(title) | _words(" ".join(topic_qs))
     for name, fn, key in providers:
-        try:
-            links = fn(key, rnd.choice(qs))
-            if not links:
-                continue
-            data = urllib.request.urlopen(urllib.request.Request(rnd.choice(links), headers={"User-Agent": "Mozilla/5.0"}), timeout=25).read()
-            return _crop_sq(data)
-        except Exception as ex:
-            print(f"{name} failed:", ex)
+        pool = []
+        for q, bonus in queries:
+            try:
+                for url, txt in fn(key, q):
+                    pool.append((len(_words(txt) & want) + bonus, rnd.random(), url))
+            except Exception as ex:
+                print(f"{name} failed ({q}):", ex)
+        if not pool:
+            continue
+        pool.sort(reverse=True)
+        top = pool[:4]
+        rnd.shuffle(top)
+        for sc, _, url in top:
+            try:
+                data = urllib.request.urlopen(urllib.request.Request(url, headers={"User-Agent": "Mozilla/5.0"}), timeout=25).read()
+                print(f"photo: {name} score={sc} q={queries[0][0]}")
+                return _crop_sq(data)
+            except Exception as ex:
+                print(f"{name} download failed:", ex)
     return None
 
 PERSON_CATS = ("ترامب", "الفيدرالي", "المركزي الأوروبي", "بنك إنجلترا", "بنك اليابان")

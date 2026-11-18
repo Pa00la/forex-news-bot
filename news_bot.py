@@ -49,7 +49,8 @@ KEYWORDS = ["gold", "xau", "fed ", "fomc", "powell", "trump", "nfp", "payroll", 
             "bank of england", "boe", "ecb", "boj", "lagarde", "bailey", "ueda", "treasury", "yield", "dollar", "dxy",
             "oil", "opec", "tariff", "sanction", "iran", "israel", "ceasefire", "retail sales", "pmi", "ism",
             "china", "safe haven", "central bank"]
-SKIP = ["should i ", "moneyist", "my husband", "my wife", "my mother", "my father", "my parents", "my daughter", "my son", "bitcoin", "crypto", "ethereum", "xrp", "dogecoin", "stock picks", "sponsored", "earnings call", "podcast"]
+SKIP = ["should i ", "moneyist", "my husband", "my wife", "my mother", "my father", "my parents", "my daughter", "my son", "bitcoin", "crypto", "ethereum", "xrp", "dogecoin", "stock picks", "sponsored", "earnings call", "podcast",
+        "singapore", "sgd", "malaysia", "ringgit", "thai ", "baht", "indonesia", "rupiah", "philippine", "taiwan", "korean won", "south korea", "vietnam", "rupee", "turkish lira", "south african rand", "brazilian real", "mexican peso", "hong kong dollar"]
 RESULT_WORDS = ["nfp", "payroll", "cpi", "ppi", "pce", "gdp", "retail sales", "unemployment rate", "jobless claims",
                 "pmi", "ism", "rate decision", "holds rates", "cuts rates", "raises rates", "keeps rates"]
 
@@ -194,7 +195,18 @@ def _tr_mymemory(text):
     out = data["responseData"]["translatedText"]
     return "" if "MYMEMORY WARNING" in out.upper() else unesc(out).strip()
 
+NAMES_AR = [(r"\bXi Jinping\b|\bXi\b", "شي جين بينغ"), (r"\bPutin\b", "بوتين"), (r"\bTrump\b", "ترامب"),
+            (r"\bBiden\b", "بايدن"), (r"\bPowell\b", "باول"), (r"\bLagarde\b", "لاغارد"), (r"\bBailey\b", "بايلي"),
+            (r"\bUeda\b", "أويدا"), (r"\bWarsh\b", "وورش"), (r"\bZelensky\b", "زيلينسكي"), (r"\bNetanyahu\b", "نتنياهو"),
+            (r"\bBessent\b", "بيسنت"), (r"\bWaller\b", "والر"), (r"\bMusk\b", "ماسك"), (r"\bModi\b", "مودي")]
+
+def fix_names(text):
+    for rx, ar_ in NAMES_AR:
+        text = re.sub(rx, ar_, text)
+    return text
+
 def translate_ar(text, verbose=False):
+    text = fix_names(text)
     for fn in (_tr_google, _tr_google_mobile, _tr_mymemory):
         try:
             out = fn(text)
@@ -236,6 +248,7 @@ def cal_events(events):
             continue
 
 MEDIUM_PER_DAY = 12
+MEDIUM_ALERTS = False  # medium events have no actual value in the calendar feed; results are posted from the news feed instead
 
 def medium_events(events, high_dates):
     """Medium-impact releases of the main currencies: lighter alerts (5 min before + released now),
@@ -326,7 +339,7 @@ def run_calendar(state, now, events, out):
     mkey = f"morning:{today}"
     if todays and now.hour >= MORNING_HOUR and now.hour < MORNING_HOUR + 6 and mkey not in state["sent"]:
         out.append((mkey, msg_morning(todays, now)))
-    mediums = list(medium_events(events, {e.get("date") for e, _ in items}))
+    mediums = list(medium_events(events, {e.get("date") for e, _ in items})) if MEDIUM_ALERTS else []
     for stages, group in ((LEAD_STAGES, items), ([5], mediums)):
         for e, when in group:
             left = (when - now).total_seconds() / 60
@@ -500,7 +513,8 @@ def is_dup(title, seen):
 
 def relevant(title):
     tl = title.lower() + " "
-    return any(k in tl for k in KEYWORDS) and not any(s in tl for s in SKIP)
+    if any(s in tl for s in SKIP): return False
+    return any(k in tl for k in KEYWORDS) or bool(parse_result(title))  # any data release with actual vs expected
 
 IMPORTANT_WORDS = ["fed ", "powell", "trump", "cpi", "nfp", "payroll", "rate cut", "rate hike", "interest rate", "inflation",
                    "gold", "tariff", "opec", "oil", "ecb", "boj", "bank of england", "war", "ceasefire", "recession", "gdp", "jobs"]
