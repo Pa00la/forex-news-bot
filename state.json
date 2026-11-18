@@ -104,13 +104,14 @@
   "443 again bills energy forecast from inflation january rises year",
   "changes concerns could crude culprit demand despite east extends losses middle oil the",
   "contained could growth inflationary pressures sterling support u.k.",
-  "and argues bonds buy economy fed perfect setup slowing that the this tightening trader"
+  "and argues bonds buy economy fed perfect setup slowing that the this tightening trader",
+  "amid and but extends fed hawkish headwinds iran persist recovery significant tensions zcash"
  ],
  "daily": {},
  "news_count": {
   "2026-11-16": 4,
   "2026-11-17": 23,
-  "2026-11-18": 31
+  "2026-11-18": 32
  },
  "day_news": {
   "2026-11-17": [
@@ -278,6 +279,10 @@
    },
    {
     "ar": "يجادل هذا المتداول بأن بنك الاحتياطي الفيدرالي يقوم بتشديد السياسة النقدية، والاقتصاد يتباطأ — وهذا هو الوضع المثالي لشراء السندات",
+    "score": 1
+   },
+   {
+    "ar": "عملة Zcash تواصل التعافي ولكنها تواجه رياحًا معاكسة قوية وسط سياسة الاحتياطي الفيدرالي المتشددة والتوترات الأمريكية الإيرانية",
     "score": 1
    }
   ]
