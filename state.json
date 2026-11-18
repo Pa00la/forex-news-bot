@@ -39,7 +39,9 @@
   "pre1:2026-11-18T02:00:00-05:00|GBP|CPI y/y",
   "now:2026-11-18T02:00:00-05:00|GBP|CPI y/y",
   "pre5:2026-11-18T02:30:00-05:00|GBP|BOE Gov Bailey Speaks",
-  "now:2026-11-18T02:30:00-05:00|GBP|BOE Gov Bailey Speaks"
+  "now:2026-11-18T02:30:00-05:00|GBP|BOE Gov Bailey Speaks",
+  "open5:لندن:2026-11-18",
+  "tip:2026-11-18"
  ],
  "titles": [
   "for futures global lower oil outlook start surplus week",
@@ -86,13 +88,14 @@
   "3.6% fuel higher inflation prices push",
   "3.6% and diesel higher inflation petrol prices push",
   "3.6% diesel drive high inflation prices record year",
-  "after data falls inflation sterling u.k."
+  "after data falls inflation sterling u.k.",
+  "bond early eurozone fall trade yields"
  ],
  "daily": {},
  "news_count": {
   "2026-11-16": 4,
   "2026-11-17": 23,
-  "2026-11-18": 18
+  "2026-11-18": 19
  },
  "day_news": {
   "2026-11-17": [
@@ -209,6 +212,10 @@
    {
     "ar": "الجنيه الإسترليني ينخفض بعد بيانات التضخم في المملكة المتحدة",
     "score": 1
+   },
+   {
+    "ar": "انخفاض عائدات سندات منطقة اليورو في بداية التداول",
+    "score": 0
    }
   ]
  }
