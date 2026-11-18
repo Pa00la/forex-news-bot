@@ -46,7 +46,8 @@
   "now:2026-11-18T04:00:00-05:00|EUR|ECB Financial Stability Review",
   "snap:2026-11-18:12",
   "pre60:2026-11-18T10:00:00-05:00|GBP|BOE Gov Bailey Speaks",
-  "open5:الأمريكي:2026-11-18"
+  "open5:الأمريكي:2026-11-18",
+  "usidx:2026-11-18"
  ],
  "titles": [
   "for futures global lower oil outlook start surplus week",
@@ -119,13 +120,16 @@
   "agreed appear banking before chairman committee has huang jensen says scott senate",
   "bps case futur kickstart lift make morn nasdaq nvidia waller",
   "1.245m 1.309m expect hous oct start",
-  "fedspeak hawkish rise treasury yield"
+  "fedspeak hawkish rise treasury yield",
+  "100 basi cool fed high how inflation interest must point possibly rate waller",
+  "auto canada chinese industry investment tariff threaten weigh",
+  "admin aren closely connected insist outag recent tech timed trump"
  ],
  "daily": {},
  "news_count": {
   "2026-11-16": 4,
   "2026-11-17": 23,
-  "2026-11-18": 44
+  "2026-11-18": 46
  },
  "day_news": {
   "2026-11-17": [
@@ -346,6 +350,14 @@
    {
     "ar": "ارتفاع عائدات سندات الخزانة وسط تصريحات متشددة من بنك الاحتياطي الفيدرالي",
     "score": 0
+   },
+   {
+    "ar": "تدرس كندا الاستثمار الصيني حيث تهدد التعريفات الأمريكية صناعة السيارات لديها",
+    "score": 1
+   },
+   {
+    "ar": "يصر مشرف لعبة Trum على أن انقطاعات التكنولوجيا الأخيرة في أوقات متقاربة ليست مرتبطة",
+    "score": 1
    }
   ]
  }
