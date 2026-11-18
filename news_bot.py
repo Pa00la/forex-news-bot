@@ -205,10 +205,44 @@ NAMES_AR = [(r"\bXi Jinping\b|\bXi\b", "شي جين بينغ"), (r"\bPutin\b", "
             (r"\bUeda\b", "أويدا"), (r"\bWarsh\b", "وورش"), (r"\bZelensky\b", "زيلينسكي"), (r"\bNetanyahu\b", "نتنياهو"),
             (r"\bBessent\b", "بيسنت"), (r"\bWaller\b", "والر"), (r"\bMusk\b", "ماسك"), (r"\bModi\b", "مودي")]
 
+NAMES_AR += [(r"\bJensen Huang\b", "جنسن هوانغ"), (r"\bTim Scott\b", "تيم سكوت"), (r"\bHoward Lutnick\b", "هوارد لوتنيك"),
+             (r"\bJanet Yellen\b", "جانيت يلين"), (r"\bMike Johnson\b", "مايك جونسون"), (r"\bChuck Schumer\b", "تشاك شومر"),
+             (r"\bJohn Thune\b", "جون ثون"), (r"\bKevin Hassett\b", "كيفن هاسيت"), (r"\bJamieson Greer\b", "جيميسون غير"),
+             (r"\bSam Altman\b", "سام ألتمان"), (r"\bTim Cook\b", "تيم كوك"), (r"\bJamie Dimon\b", "جيمي ديمون"),
+             (r"\bFed Chair(?:man)?\b", "رئيس الفيدرالي"), (r"\bTreasury Secretary\b", "وزير الخزانة"),
+             (r"\bSenate Banking Committee\b", "لجنة الشؤون المصرفية في مجلس الشيوخ"),
+             (r"\bSenate Finance Committee\b", "لجنة المالية في مجلس الشيوخ"),
+             (r"\bHouse Financial Services Committee\b", "لجنة الخدمات المالية في مجلس النواب"),
+             (r"\bSenate Majority Leader\b", "زعيم الأغلبية في مجلس الشيوخ"), (r"\bHouse Speaker\b|\bSpeaker of the House\b", "رئيس مجلس النواب")]
+
 def fix_names(text):
+    low = text.lower()
     for rx, ar_ in NAMES_AR:
         text = re.sub(rx, ar_, text)
+    if "committee" in low or "لجنة" in text:
+        text = re.sub(r"\bChair(?:man|woman|person)?\b", "رئيس اللجنة", text)      # committee chair, not a president
+        text = re.sub(r"\b(?:agreed to |will |to )?appear before\b", "الإدلاء بشهادته أمام", text)
+    text = re.sub(r"\btestif(?:y|ies|ied|ying)\b", "الإدلاء بشهادته", text)
     return text
+
+# unclear terms: replace a clumsy translation, or add a short explanation in brackets (first use only)
+GLOSS = [("المثول أمام", "الإدلاء بشهادته أمام"),
+         ("سقف الدين", "سقف الدين (الحد الأقصى لاقتراض الحكومة)"),
+         ("التيسير الكمي", "التيسير الكمي (شراء البنك المركزي للسندات لضخ السيولة)"),
+         ("التشديد الكمي", "التشديد الكمي (تقليص البنك المركزي لمشترياته من السندات)"),
+         ("الركود التضخمي", "الركود التضخمي (تضخم مرتفع مع ضعف النمو)"),
+         ("منحنى العائد", "منحنى العائد (الفرق بين عوائد السندات قصيرة وطويلة الأجل)"),
+         ("الإغلاق الحكومي", "الإغلاق الحكومي (توقف الجهات الحكومية بسبب عدم إقرار الميزانية)"),
+         ("الميزانية العمومية", "الميزانية العمومية (حجم أصول البنك المركزي)"),
+         ("الدولار الأمريكي مؤشر", "مؤشر الدولار"),
+         ("تجنب المخاطر", "تجنب المخاطر (ميل المستثمرين للأصول الآمنة)"),
+         ("شهية المخاطرة", "شهية المخاطرة (ميل المستثمرين للأصول الأعلى مخاطرة)")]
+
+def polish_ar(t):
+    for a, b in GLOSS:
+        if a in t and (b not in t) and (a + " (") not in t:
+            t = t.replace(a, b, 1)
+    return t
 
 def translate_ar(text, verbose=False):
     text = fix_names(text)
@@ -216,7 +250,7 @@ def translate_ar(text, verbose=False):
         try:
             out = fn(text)
             if out and out != text:
-                return out
+                return polish_ar(out)
         except Exception as ex:
             if verbose: print(f"translate {fn.__name__} failed: {ex}")
     return None
