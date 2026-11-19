@@ -209,14 +209,16 @@
   "2027 dollar stay strong",
   "197k 203k claim estimate initial jobles",
   "20.0 6.3 expect fed nov philly",
-  "american bottom get outag relax scrambl trump washington"
+  "american bottom get outag relax scrambl trump washington",
+  "heat household oil reliant support",
+  "dollar fed further peer raise rally scope"
  ],
  "daily": {},
  "news_count": {
   "2026-11-16": 4,
   "2026-11-17": 23,
   "2026-11-18": 60,
-  "2026-11-19": 31
+  "2026-11-19": 32
  },
  "day_news": {
   "2026-11-17": [
@@ -626,6 +628,10 @@
    },
    {
     "ar": "يقول ترامب إنه يجب على الأمريكيين \"الاسترخاء\" بينما تسعى واشنطن جاهدة للوصول إلى أسباب انقطاع التيار الكهربائي",
+    "score": 1
+   },
+   {
+    "ar": "مزيد من الدعم للأسر التي تعتمد على زيت التدفئة",
     "score": 1
    }
   ]
