@@ -195,6 +195,9 @@ def _crop_sq(data):
     return im.crop(((w - m) // 2, (h - m) // 2, (w - m) // 2 + m, (h - m) // 2 + m)).resize((W, W))
 
 TOPICS = [  # (regex on the English headline, photo searches) - checked before the broad category
+    (r"supreme court", ["us supreme court building", "supreme court washington"]),
+    (r"wall street|stock market|stocks|nasdaq|s&p|dow jones", ["wall street new york stock exchange", "new york stock exchange building", "stock market trading floor"]),
+    (r"federal reserve building|fed headquarters", ["federal reserve building washington", "marriner eccles building"]),
     (r"election|midterm|senate|congress|ballot|voters|democrat|republican|speaker", ["us capitol building", "voting ballot box", "american flag"]),
     (r"australia|sydney|aussie", ["sydney skyline", "sydney harbour"]),
     (r"summit|meeting|talks|visit|xi\b|putin|biden|president", ["flags diplomacy meeting room", "us china flags", "world leaders flags"]),
@@ -294,11 +297,23 @@ def _words(txt):
     import re
     return {w[:6] for w in re.findall(r"[a-z]+", (txt or "").lower()) if len(w) > 3 and w not in _STOP}
 
+def _scene_file(key, title):
+    import re, zlib
+    try:
+        cand = sorted(f for f in os.listdir(PEOPLE_DIR) if re.fullmatch(rf"{key}\d*\.(jpg|jpeg|png|webp)", f.lower()))
+        if cand:
+            im = Image.open(os.path.join(PEOPLE_DIR, cand[zlib.crc32((title or "").encode()) % len(cand)])).convert("RGB")
+            w, h = im.size; m = min(w, h)
+            return im.crop(((w - m) // 2, (h - m) // 2, (w - m) // 2 + m, (h - m) // 2 + m)).resize((W, W))
+    except Exception as ex:
+        print("scene failed:", ex)
+    return None
+
 def _local_scene(title):
     """Owner-provided scene photos in the 'people' folder (e.g. whitehouse.jpg, whitehouse2.jpg)."""
     import re, zlib
     t = (title or "").lower()
-    for key, rx in (("whitehouse", r"white house|election|midterm|senate|congress|democrat|republican|house speaker|speaker|ballot|campaign|capitol|voters?\b|shutdown|debt ceiling|supreme court|lawmakers?|house of representatives|\bgop\b"),):
+    for key, rx in (("whitehouse", r"white house"),):
         if re.search(rx, t):
             try:
                 cand = sorted(f for f in os.listdir(PEOPLE_DIR) if re.fullmatch(rf"{key}\d*\.(jpg|jpeg|png|webp)", f.lower()))
@@ -317,8 +332,7 @@ def fetch_bg(cat, seed, title=""):
     loc = _local_scene(title)
     if loc is not None:
         return loc
-    if cat == "الانتخابات":
-        return None   # never a random stock photo for politics: plain card instead
+    strict = cat == "الانتخابات"   # politics: only a stock photo that clearly shows the Capitol / a government building
     providers = []
     if os.environ.get("PEXELS_KEY", "").strip(): providers.append(("pexels", _links_pexels, os.environ["PEXELS_KEY"].strip()))
     if os.environ.get("PIXABAY_KEY", "").strip(): providers.append(("pixabay", _links_pixabay, os.environ["PIXABAY_KEY"].strip()))
@@ -341,6 +355,8 @@ def fetch_bg(cat, seed, title=""):
         if not pool:
             continue
         pool.sort(reverse=True)
+        if strict: pool = [p for p in pool if p[0] >= 5]
+        if not pool: continue
         top = pool[:4]
         rnd.shuffle(top)
         for sc, _, url in top:
@@ -350,6 +366,8 @@ def fetch_bg(cat, seed, title=""):
                 return _crop_sq(data)
             except Exception as ex:
                 print(f"{name} download failed:", ex)
+    if strict:
+        return _scene_file("whitehouse", title)
     return None
 
 PERSON_CATS = ("ترامب", "الفيدرالي", "المركزي الأوروبي", "بنك إنجلترا", "بنك اليابان")
