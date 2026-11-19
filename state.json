@@ -201,14 +201,16 @@
   "$500 billion deployed dollar nvidia pledged street wall",
   "big democrat despite divided frustrated midterm party remain winn",
   "2026 bank call deutsche dollar got now shift tack why wrong",
-  "2027 dollar stay strong"
+  "2027 dollar stay strong",
+  "197k 203k claim estimate initial jobles",
+  "20.0 6.3 expect fed nov philly"
  ],
  "daily": {},
  "news_count": {
   "2026-11-16": 4,
   "2026-11-17": 23,
   "2026-11-18": 60,
-  "2026-11-19": 28
+  "2026-11-19": 30
  },
  "day_news": {
   "2026-11-17": [
@@ -607,6 +609,14 @@
    {
     "ar": "يمكن أن يظل الدولار قويًا في عام 2027",
     "score": 0
+   },
+   {
+    "ar": "طلبات إعانة البطالة الأولية في الولايات المتحدة 203 ألف مقابل تقدير 197 ألف",
+    "score": 0
+   },
+   {
+    "ar": "بنك الاحتياطي الفيدرالي في فيلادلفيا بالولايات المتحدة لشهر نوفمبر 6.3 مقابل 20.0 متوقع",
+    "score": 1
    }
   ]
  }
