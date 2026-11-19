@@ -92,7 +92,8 @@
   "poll:2026-11-19",
   "snap:2026-11-19:21",
   "top3:2026-11-19",
-  "close:us:2026-11-19"
+  "close:us:2026-11-19",
+  "open5:سيدني:2026-11-20"
  ],
  "titles": [
   "for futures global lower oil outlook start surplus week",
@@ -230,7 +231,8 @@
   "anthropic appetite fail fall risk sustain treasury yield",
   "chance congres game gett member office prime",
   "call dec done dropp fed j.p morgan now raise sees straight three",
-  "625 behind buyer five forc four gold haven off quit reason sell"
+  "625 behind buyer five forc four gold haven off quit reason sell",
+  "$1.08 $1.10 bank below break build election euro french next risk see three"
  ],
  "daily": {},
  "news_count": {
@@ -238,7 +240,7 @@
   "2026-11-17": 23,
   "2026-11-18": 60,
   "2026-11-19": 43,
-  "2026-11-20": 2
+  "2026-11-20": 3
  },
  "day_news": {
   "2026-11-17": [
@@ -707,6 +709,10 @@
    {
     "ar": "الذهب عند 3625 دولارًا: خمس قوى وراء عمليات البيع وأربعة أسباب لعدم انسحاب المشترين",
     "score": 1
+   },
+   {
+    "ar": "اليورو ينخفض إلى ما دون 1.10 دولار مع تزايد مخاطر الانتخابات الفرنسية؛ وثلاثة بنوك تتوقع انخفاضه إلى 1.08 دولار بعد ذلك",
+    "score": 2
    }
   ]
  }
