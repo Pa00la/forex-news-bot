@@ -189,14 +189,15 @@
   "dollar elevated prospect rate remain rise u.s",
   "against dollar euro further risk stabiliz weaken",
   "broader commodity expect gold pressured raise rate retreat",
-  "center great meet prais putin relationship stage take trump ukraine war"
+  "center great meet prais putin relationship stage take trump ukraine war",
+  "china discus historic meet nuclear positioned reduc russia trump u.s uniquely weapon"
  ],
  "daily": {},
  "news_count": {
   "2026-11-16": 4,
   "2026-11-17": 23,
   "2026-11-18": 60,
-  "2026-11-19": 17
+  "2026-11-19": 18
  },
  "day_news": {
   "2026-11-17": [
@@ -551,6 +552,10 @@
    {
     "ar": "ترامب يثني على \"العلاقة الرائعة\" مع بوتين بعد لقائهما، بينما تحتل حرب أوكرانيا الصدارة",
     "score": 2
+   },
+   {
+    "ar": "ترامب يقول إن الولايات المتحدة والصين وروسيا \"في وضع فريد\" لمناقشة خفض الأسلحة النووية في اجتماع تاريخي",
+    "score": 1
    }
   ]
  }
