@@ -186,14 +186,15 @@
   "await historic hold meet putin separately talk their trilateral trump",
   "albeit bond french last now one relief see spread unlikely yield",
   "apec day distance final hand kept photo putin shake takaichi trump",
-  "dollar elevated prospect rate remain rise u.s"
+  "dollar elevated prospect rate remain rise u.s",
+  "against dollar euro further risk stabiliz weaken"
  ],
  "daily": {},
  "news_count": {
   "2026-11-16": 4,
   "2026-11-17": 23,
   "2026-11-18": 60,
-  "2026-11-19": 14
+  "2026-11-19": 15
  },
  "day_news": {
   "2026-11-17": [
@@ -535,6 +536,10 @@
    },
    {
     "ar": "الدولار يظل مرتفعًا بسبب توقعات رفع أسعار الفائدة الأمريكية",
+    "score": 0
+   },
+   {
+    "ar": "استقرار اليورو مقابل الدولار ولكنه معرض لمزيد من الضعف",
     "score": 0
    }
   ]
