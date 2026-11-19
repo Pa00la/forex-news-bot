@@ -227,14 +227,15 @@
   "canada cbc deal end interim report seek tariff u.s year",
   "bank central chipmaker crisi leadership nvidia peterson role test",
   "end flat futur near oil session volatile",
-  "anthropic appetite fail fall risk sustain treasury yield"
+  "anthropic appetite fail fall risk sustain treasury yield",
+  "chance congres game gett member office prime"
  ],
  "daily": {},
  "news_count": {
   "2026-11-16": 4,
   "2026-11-17": 23,
   "2026-11-18": 60,
-  "2026-11-19": 42
+  "2026-11-19": 43
  },
  "day_news": {
   "2026-11-17": [
@@ -689,6 +690,10 @@
    {
     "ar": "انخفاض عائدات سندات الخزانة مع فشل أنثروبيك في الحفاظ على الرغبة في المخاطرة",
     "score": 0
+   },
+   {
+    "ar": "بالنسبة للأعضاء الجدد في الكونجرس، فإن الحصول على منصب رئيسي هو لعبة حظ",
+    "score": 2
    }
   ]
  }
