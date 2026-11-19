@@ -298,7 +298,7 @@ def _local_scene(title):
     """Owner-provided scene photos in the 'people' folder (e.g. whitehouse.jpg, whitehouse2.jpg)."""
     import re, zlib
     t = (title or "").lower()
-    for key, rx in (("whitehouse", r"white house"),):
+    for key, rx in (("whitehouse", r"white house|election|midterm|senate|congress|democrat|republican|house speaker|speaker|ballot|campaign|capitol|voters?\b|shutdown|debt ceiling|supreme court|lawmakers?|house of representatives|\bgop\b"),):
         if re.search(rx, t):
             try:
                 cand = sorted(f for f in os.listdir(PEOPLE_DIR) if re.fullmatch(rf"{key}\d*\.(jpg|jpeg|png|webp)", f.lower()))
@@ -317,6 +317,8 @@ def fetch_bg(cat, seed, title=""):
     loc = _local_scene(title)
     if loc is not None:
         return loc
+    if cat == "الانتخابات":
+        return None   # never a random stock photo for politics: plain card instead
     providers = []
     if os.environ.get("PEXELS_KEY", "").strip(): providers.append(("pexels", _links_pexels, os.environ["PEXELS_KEY"].strip()))
     if os.environ.get("PIXABAY_KEY", "").strip(): providers.append(("pixabay", _links_pixabay, os.environ["PIXABAY_KEY"].strip()))
@@ -590,11 +592,11 @@ def _crop_to(im, w, h, top_bias=0.25):
     s = max(w / im.width, h / im.height)
     if fc:   # keep the face large and centered: zoom in a little when the face is small
         cx, cy, fh = fc
-        s = min(max(s, 0.36 * h / (fh * im.height)), s * 1.8)
+        s = min(max(s, 0.24 * h / (fh * im.height)), s * 1.25)   # face stays fairly small and fully visible
     im2 = im.resize((max(w, int(im.width * s)), max(h, int(im.height * s))))
     if fc:
         x = int(cx * im2.width - w / 2)
-        y = int(cy * im2.height - 0.42 * h)
+        y = int(cy * im2.height - 0.40 * h)
         x = min(max(x, 0), im2.width - w); y = min(max(y, 0), im2.height - h)
     else:
         x = (im2.width - w) // 2
@@ -619,8 +621,6 @@ def _card_people(imgs, headline_ar, name, source, urgent):
     size, lines = _fit(d, headline_ar, W - 215 - 90, 4, (56, 50, 44, 40))
     h = len(lines) * int(size * 1.4)
     _lines(d, lines, size, W - 250, ph + (W - 110 - ph - h) // 2 + 6, "ra", (18, 22, 36))
-    d.rounded_rectangle([30, 30, 30 + 40 + int(d.textlength(ar(name), font=font(36))), 100], 18, fill=(0, 0, 0))
-    text(d, (50, 65), name, 36, GOLD, "lm")
     d.rectangle([0, W - 110, W, W], fill=PANEL)
     d.text((45, W - 55), BRAND, font=font(40), fill=GOLD, anchor="lm")
     d.text((W - 45, W - 55), HANDLE, font=font(32), fill=WHITE, anchor="rm")

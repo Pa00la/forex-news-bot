@@ -559,7 +559,7 @@ def run_top3(state, now, out):
 
 
 # ---------------- price cards, record levels ----------------
-ASSET_CARDS = [("GC=F", "الذهب", "XAUUSD"), ("BZ=F", "خام برنت", "UKOIL")]
+ASSET_CARDS = [("GC=F", "الذهب", "XAUUSD"), ("CL=F", "النفط الأمريكي (WTI)", "USOIL")]
 AR_MONTHS = ["يناير", "فبراير", "مارس", "أبريل", "مايو", "يونيو", "يوليو", "أغسطس", "سبتمبر", "أكتوبر", "نوفمبر", "ديسمبر"]
 
 def asset_data(symbol):
@@ -596,7 +596,7 @@ def record_context(symbol, price):
     return ""
 
 def run_assets(state, now, out):
-    """Gold and Brent price cards once a day at 17:00."""
+    """Gold and US oil (WTI) price cards once a day at 17:00."""
     if now.weekday() >= 5 or not (17 <= now.hour < 20): return
     for sym, nm, code in ASSET_CARDS:
         key = f"asset:{sym}:{now.date().isoformat()}"
@@ -750,11 +750,24 @@ def news_score(title):
     tl = title.lower() + " "
     return sum(1 for w in IMPORTANT_WORDS if w in tl) + 2 * sum(1 for w in ELECTION_WORDS if w in tl)
 
-def run_news(state, now, out):
+FAST_FEEDS = ("investingLive", "US BLS", "Federal Reserve")
+
+def hot_window(now):
+    """True from 1 minute before to 15 minutes after a high-impact release: the actual number is expected."""
+    try:
+        for e, when in cal_events(calendar_cached()):
+            m = (now - when).total_seconds() / 60
+            if -1 <= m <= 15: return True
+    except Exception:
+        pass
+    return False
+
+def run_news(state, now, out, fast=False):
     day = now.date().isoformat()
     count = state["news_count"].get(day, 0)
     found, used = [], 0
     for name, url in FEEDS.items():
+        if fast and name not in FAST_FEEDS: continue
         try:
             items = parse_feed(http_get(url))
         except Exception as ex:
@@ -1074,7 +1087,7 @@ def deliver(state, out):
             print("send failed:", ex)
     return sent
 
-def run_once(state, with_news=True):
+def run_once(state, with_news=True, fast=False):
     now = now_dubai()
     out = []
     try: run_calendar(state, now, calendar_cached(), out)
@@ -1082,7 +1095,7 @@ def run_once(state, with_news=True):
     try: run_reaction(state, now, calendar_cached(), out)
     except Exception as ex: print("reaction error:", ex)
     if with_news:
-        try: run_news(state, now, out)
+        try: run_news(state, now, out, fast=fast)
         except Exception as ex: print("news error:", ex)
     for fn in (run_snapshot, run_assets, run_friday, run_sessions, run_closes, run_weekly, run_engagement, run_top3, run_goldmove):
         try: fn(state, now, out)
@@ -1127,8 +1140,10 @@ def main():
     last_git, i = time.time(), 0
     while time.time() < end:
         t0 = time.time()
+        hot = False
         try:
-            n = run_once(state, with_news=(i % 2 == 0))
+            hot = hot_window(now_dubai())
+            n = run_once(state, with_news=(hot or i % 2 == 0), fast=hot)
             save_state(state)
             if n: print(f"sent {n}")
         except Exception as ex:
@@ -1136,7 +1151,7 @@ def main():
         i += 1
         if time.time() - last_git > 900:
             git_save(); last_git = time.time()
-        time.sleep(max(1, 30 - (time.time() - t0)))
+        time.sleep(max(1, (10 if hot else 30) - (time.time() - t0)))
     print("loop finished")
 
 if __name__ == "__main__":
