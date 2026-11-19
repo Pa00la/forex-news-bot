@@ -78,7 +78,8 @@
   "pre60:2026-11-18T19:30:00-05:00|AUD|Unemployment Rate",
   "pre5:2026-11-18T19:30:00-05:00|AUD|Unemployment Rate",
   "pre1:2026-11-18T19:30:00-05:00|AUD|Unemployment Rate",
-  "now:2026-11-18T19:30:00-05:00|AUD|Unemployment Rate"
+  "now:2026-11-18T19:30:00-05:00|AUD|Unemployment Rate",
+  "morning:2026-11-19"
  ],
  "titles": [
   "for futures global lower oil outlook start surplus week",
