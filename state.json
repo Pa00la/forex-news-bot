@@ -234,7 +234,8 @@
   "625 behind buyer five forc four gold haven off quit reason sell",
   "$1.08 $1.10 bank below break build election euro french next risk see three",
   "attorney california china chip diversion general issu nvidia probe subpoena",
-  "baseball legend pardon pete posthumously rose trump"
+  "baseball legend pardon pete posthumously rose trump",
+  "2.2% cooler core expect far highest inflation japan oct report year"
  ],
  "daily": {},
  "news_count": {
@@ -242,7 +243,7 @@
   "2026-11-17": 23,
   "2026-11-18": 60,
   "2026-11-19": 43,
-  "2026-11-20": 5
+  "2026-11-20": 6
  },
  "day_news": {
   "2026-11-17": [
@@ -722,6 +723,10 @@
    },
    {
     "ar": "روم يعفو بعد وفاته عن أسطورة البيسبول الأمريكي بيت روز",
+    "score": 1
+   },
+   {
+    "ar": "سجلت اليابان معدل تضخم أساسي أقل من المتوقع في أكتوبر بنسبة 2.2% - ولكنه الأعلى هذا العام حتى الآن",
     "score": 1
    }
   ]
