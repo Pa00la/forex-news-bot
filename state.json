@@ -233,7 +233,8 @@
   "call dec done dropp fed j.p morgan now raise sees straight three",
   "625 behind buyer five forc four gold haven off quit reason sell",
   "$1.08 $1.10 bank below break build election euro french next risk see three",
-  "attorney california china chip diversion general issu nvidia probe subpoena"
+  "attorney california china chip diversion general issu nvidia probe subpoena",
+  "baseball legend pardon pete posthumously rose trump"
  ],
  "daily": {},
  "news_count": {
@@ -241,7 +242,7 @@
   "2026-11-17": 23,
   "2026-11-18": 60,
   "2026-11-19": 43,
-  "2026-11-20": 4
+  "2026-11-20": 5
  },
  "day_news": {
   "2026-11-17": [
@@ -718,6 +719,10 @@
    {
     "ar": "المدعي العام في كاليفورنيا يصدر أمر استدعاء لشركة Nvidia في التحقيق في تسريب الرقائق في الصين",
     "score": 0
+   },
+   {
+    "ar": "روم يعفو بعد وفاته عن أسطورة البيسبول الأمريكي بيت روز",
+    "score": 1
    }
   ]
  }
