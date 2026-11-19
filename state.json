@@ -90,7 +90,8 @@
   "asset:CL=F:2026-11-19",
   "close:eu:2026-11-19",
   "poll:2026-11-19",
-  "snap:2026-11-19:21"
+  "snap:2026-11-19:21",
+  "top3:2026-11-19"
  ],
  "titles": [
   "for futures global lower oil outlook start surplus week",
@@ -220,14 +221,16 @@
   "fed goolsbee higher inflation job market stable target way",
   "bought deal federal grew house nvidia palantir september spacex ties trump white",
   "$3682.10 1.46% comex gold lower settl",
-  "another hormuz iran mount oversea return risk shipp strike trip trump washington weigh"
+  "another hormuz iran mount oversea return risk shipp strike trip trump washington weigh",
+  "arch course days golf hold judg matter only put trump",
+  "canada cbc deal end interim report seek tariff u.s year"
  ],
  "daily": {},
  "news_count": {
   "2026-11-16": 4,
   "2026-11-17": 23,
   "2026-11-18": 60,
-  "2026-11-19": 38
+  "2026-11-19": 40
  },
  "day_news": {
   "2026-11-17": [
@@ -665,6 +668,14 @@
    },
    {
     "ar": "يفكر برم في توجيه ضربة أخرى لإيران مع تزايد مخاطر الشحن في هرمز. يعود إلى واشنطن بعد رحلة خارجية.",
+    "score": 1
+   },
+   {
+    "ar": "قام القضاة بتعليق ملعب ترامب للغولف والقوس، ولكن لبضعة أيام فقط",
+    "score": 1
+   },
+   {
+    "ar": "أفادت هيئة الإذاعة الكندية أن كندا تسعى إلى التوصل إلى اتفاق مؤقت بشأن التعريفات الجمركية مع الولايات المتحدة بحلول نهاية العام",
     "score": 1
    }
   ]
