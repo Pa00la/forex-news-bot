@@ -228,14 +228,17 @@
   "bank central chipmaker crisi leadership nvidia peterson role test",
   "end flat futur near oil session volatile",
   "anthropic appetite fail fall risk sustain treasury yield",
-  "chance congres game gett member office prime"
+  "chance congres game gett member office prime",
+  "call dec done dropp fed j.p morgan now raise sees straight three",
+  "625 behind buyer five forc four gold haven off quit reason sell"
  ],
  "daily": {},
  "news_count": {
   "2026-11-16": 4,
   "2026-11-17": 23,
   "2026-11-18": 60,
-  "2026-11-19": 43
+  "2026-11-19": 43,
+  "2026-11-20": 2
  },
  "day_news": {
   "2026-11-17": [
@@ -694,6 +697,16 @@
    {
     "ar": "بالنسبة للأعضاء الجدد في الكونجرس، فإن الحصول على منصب رئيسي هو لعبة حظ",
     "score": 2
+   }
+  ],
+  "2026-11-20": [
+   {
+    "ar": "ويشهد بنك جيه بي مورجان الآن ثلاث زيادات متتالية من بنك الاحتياطي الفيدرالي، متخليًا عن توقعاته التي تقول \"ديسمبر وانتهى\".",
+    "score": 1
+   },
+   {
+    "ar": "الذهب عند 3625 دولارًا: خمس قوى وراء عمليات البيع وأربعة أسباب لعدم انسحاب المشترين",
+    "score": 1
    }
   ]
  }
