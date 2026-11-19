@@ -232,7 +232,8 @@
   "chance congres game gett member office prime",
   "call dec done dropp fed j.p morgan now raise sees straight three",
   "625 behind buyer five forc four gold haven off quit reason sell",
-  "$1.08 $1.10 bank below break build election euro french next risk see three"
+  "$1.08 $1.10 bank below break build election euro french next risk see three",
+  "attorney california china chip diversion general issu nvidia probe subpoena"
  ],
  "daily": {},
  "news_count": {
@@ -240,7 +241,7 @@
   "2026-11-17": 23,
   "2026-11-18": 60,
   "2026-11-19": 43,
-  "2026-11-20": 3
+  "2026-11-20": 4
  },
  "day_news": {
   "2026-11-17": [
@@ -713,6 +714,10 @@
    {
     "ar": "اليورو ينخفض إلى ما دون 1.10 دولار مع تزايد مخاطر الانتخابات الفرنسية؛ وثلاثة بنوك تتوقع انخفاضه إلى 1.08 دولار بعد ذلك",
     "score": 2
+   },
+   {
+    "ar": "المدعي العام في كاليفورنيا يصدر أمر استدعاء لشركة Nvidia في التحقيق في تسريب الرقائق في الصين",
+    "score": 0
    }
   ]
  }
