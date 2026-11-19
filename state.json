@@ -72,7 +72,9 @@
   "close:us:2026-11-18",
   "open5:سيدني:2026-11-19",
   "pre60:2026-11-18T19:30:00-05:00|AUD|Unemployment Rate",
-  "open5:طوكيو:2026-11-19"
+  "open5:طوكيو:2026-11-19",
+  "pre60:2026-11-18T19:30:00-05:00|AUD|Unemployment Rate",
+  "pre5:2026-11-18T19:30:00-05:00|AUD|Unemployment Rate"
  ],
  "titles": [
   "for futures global lower oil outlook start surplus week",
@@ -168,14 +170,15 @@
   "democratic future hold house montana race secret strategist think wins",
   "fed four hawkish kashkari market official raise see turn voic",
   "america bigger dec fed investinglive minut news nov play put raise waller wrap",
-  "1.50% boj dec first raise three tipped year"
+  "1.50% boj dec first raise three tipped year",
+  "asian consolidate currency drag expect face fed rate"
  ],
  "daily": {},
  "news_count": {
   "2026-11-16": 4,
   "2026-11-17": 23,
   "2026-11-18": 60,
-  "2026-11-19": 5
+  "2026-11-19": 6
  },
  "day_news": {
   "2026-11-17": [
@@ -481,6 +484,10 @@
    },
    {
     "ar": "من المتوقع أن يرفع بنك اليابان الفائدة إلى 1.50% في ديسمبر، وهو أول عام يشهد ثلاث زيادات في 37 عامًا",
+    "score": 1
+   },
+   {
+    "ar": "العملات الآسيوية تتعزز، لكنها تواجه ضغوطًا من رهانات أسعار الفائدة الفيدرالية",
     "score": 1
    }
   ]
