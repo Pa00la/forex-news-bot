@@ -196,14 +196,16 @@
   "ben conservative future media party republican shapiro",
   "anthropic await debut futur improv optimism rise stock trad",
   "bank central circular economy goes money nvidia see where",
-  "deal denmark diplomatic greenland month ratify security tension trump"
+  "deal denmark diplomatic greenland month ratify security tension trump",
+  "concern downside extend growth keep limited loss oil risk strik",
+  "$500 billion deployed dollar nvidia pledged street wall"
  ],
  "daily": {},
  "news_count": {
   "2026-11-16": 4,
   "2026-11-17": 23,
   "2026-11-18": 60,
-  "2026-11-19": 23
+  "2026-11-19": 25
  },
  "day_news": {
   "2026-11-17": [
@@ -582,6 +584,14 @@
    {
     "ar": "الدنمارك تصدق على اتفاقية ترامب الأمنية بشأن غرينلاند بعد أشهر من التوترات الدبلوماسية",
     "score": 1
+   },
+   {
+    "ar": "يواصل النفط الخام خسائره وسط مخاوف بشأن النمو، لكن خطر الضربات الأمريكية يبقي الاتجاه الهبوطي محدودًا",
+    "score": 1
+   },
+   {
+    "ar": "وول ستريت تتعهد بمبلغ 500 مليار دولار لشراء إنفيديا لم يتم نشر أي دولار.",
+    "score": 0
    }
   ]
  }
