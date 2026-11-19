@@ -195,14 +195,15 @@
   "congres markwayne mullin nationwide outag sery tech testify",
   "ben conservative future media party republican shapiro",
   "anthropic await debut futur improv optimism rise stock trad",
-  "bank central circular economy goes money nvidia see where"
+  "bank central circular economy goes money nvidia see where",
+  "deal denmark diplomatic greenland month ratify security tension trump"
  ],
  "daily": {},
  "news_count": {
   "2026-11-16": 4,
   "2026-11-17": 23,
   "2026-11-18": 60,
-  "2026-11-19": 22
+  "2026-11-19": 23
  },
  "day_news": {
   "2026-11-17": [
@@ -577,6 +578,10 @@
    {
     "ar": "إنفيديا هي البنك المركزي للاقتصاد الدائري للذكاء الاصطناعي. انظر إلى أين تذهب الأموال.",
     "score": 0
+   },
+   {
+    "ar": "الدنمارك تصدق على اتفاقية ترامب الأمنية بشأن غرينلاند بعد أشهر من التوترات الدبلوماسية",
+    "score": 1
    }
   ]
  }
