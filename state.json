@@ -217,14 +217,15 @@
   "either largest midterm party win year",
   "barack bigger election mississippi obama race reflect scholar senate",
   "fed goolsbee higher inflation job market stable target way",
-  "bought deal federal grew house nvidia palantir september spacex ties trump white"
+  "bought deal federal grew house nvidia palantir september spacex ties trump white",
+  "$3682.10 1.46% comex gold lower settl"
  ],
  "daily": {},
  "news_count": {
   "2026-11-16": 4,
   "2026-11-17": 23,
   "2026-11-18": 60,
-  "2026-11-19": 36
+  "2026-11-19": 37
  },
  "day_news": {
   "2026-11-17": [
@@ -654,6 +655,10 @@
    },
    {
     "ar": "اشترى ترامب شركة Nvidia، وPalantir، وSpaceX في سبتمبر/أيلول مع تزايد الصفقات الفيدرالية، ونمو العلاقات مع البيت الأبيض",
+    "score": 1
+   },
+   {
+    "ar": "استقر مؤشر كومكس للذهب على انخفاض بنسبة 1.46% عند 3682.10 دولارًا",
     "score": 1
    }
   ]
