@@ -215,14 +215,16 @@
   "heat household oil reliant support",
   "dollar fed further peer raise rally scope",
   "either largest midterm party win year",
-  "barack bigger election mississippi obama race reflect scholar senate"
+  "barack bigger election mississippi obama race reflect scholar senate",
+  "fed goolsbee higher inflation job market stable target way",
+  "bought deal federal grew house nvidia palantir september spacex ties trump white"
  ],
  "daily": {},
  "news_count": {
   "2026-11-16": 4,
   "2026-11-17": 23,
   "2026-11-18": 60,
-  "2026-11-19": 34
+  "2026-11-19": 36
  },
  "day_news": {
   "2026-11-17": [
@@ -645,6 +647,14 @@
    {
     "ar": "\"أكبر من انتخابات باراك أوباما\": علماء يفكرون في سباق مجلس الشيوخ في ميسيسيبي",
     "score": 4
+   },
+   {
+    "ar": "غولسبي من بنك الاحتياطي الفيدرالي: سوق العمل مستقر، لكن التضخم \"أعلى بكثير\" من هدف بنك الاحتياطي الفيدرالي البالغ 2%",
+    "score": 1
+   },
+   {
+    "ar": "اشترى ترامب شركة Nvidia، وPalantir، وSpaceX في سبتمبر/أيلول مع تزايد الصفقات الفيدرالية، ونمو العلاقات مع البيت الأبيض",
+    "score": 1
    }
   ]
  }
