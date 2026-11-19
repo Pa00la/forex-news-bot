@@ -89,7 +89,8 @@
   "asset:GC=F:2026-11-19",
   "asset:CL=F:2026-11-19",
   "close:eu:2026-11-19",
-  "poll:2026-11-19"
+  "poll:2026-11-19",
+  "snap:2026-11-19:21"
  ],
  "titles": [
   "for futures global lower oil outlook start surplus week",
@@ -218,14 +219,15 @@
   "barack bigger election mississippi obama race reflect scholar senate",
   "fed goolsbee higher inflation job market stable target way",
   "bought deal federal grew house nvidia palantir september spacex ties trump white",
-  "$3682.10 1.46% comex gold lower settl"
+  "$3682.10 1.46% comex gold lower settl",
+  "another hormuz iran mount oversea return risk shipp strike trip trump washington weigh"
  ],
  "daily": {},
  "news_count": {
   "2026-11-16": 4,
   "2026-11-17": 23,
   "2026-11-18": 60,
-  "2026-11-19": 37
+  "2026-11-19": 38
  },
  "day_news": {
   "2026-11-17": [
@@ -659,6 +661,10 @@
    },
    {
     "ar": "استقر مؤشر كومكس للذهب على انخفاض بنسبة 1.46% عند 3682.10 دولارًا",
+    "score": 1
+   },
+   {
+    "ar": "يفكر برم في توجيه ضربة أخرى لإيران مع تزايد مخاطر الشحن في هرمز. يعود إلى واشنطن بعد رحلة خارجية.",
     "score": 1
    }
   ]
