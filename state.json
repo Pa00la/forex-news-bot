@@ -74,7 +74,11 @@
   "pre60:2026-11-18T19:30:00-05:00|AUD|Unemployment Rate",
   "open5:طوكيو:2026-11-19",
   "pre60:2026-11-18T19:30:00-05:00|AUD|Unemployment Rate",
-  "pre5:2026-11-18T19:30:00-05:00|AUD|Unemployment Rate"
+  "pre5:2026-11-18T19:30:00-05:00|AUD|Unemployment Rate",
+  "pre60:2026-11-18T19:30:00-05:00|AUD|Unemployment Rate",
+  "pre5:2026-11-18T19:30:00-05:00|AUD|Unemployment Rate",
+  "pre1:2026-11-18T19:30:00-05:00|AUD|Unemployment Rate",
+  "now:2026-11-18T19:30:00-05:00|AUD|Unemployment Rate"
  ],
  "titles": [
   "for futures global lower oil outlook start surplus week",
@@ -171,14 +175,15 @@
   "fed four hawkish kashkari market official raise see turn voic",
   "america bigger dec fed investinglive minut news nov play put raise waller wrap",
   "1.50% boj dec first raise three tipped year",
-  "asian consolidate currency drag expect face fed rate"
+  "asian consolidate currency drag expect face fed rate",
+  "breath catch gold lows one stay year"
  ],
  "daily": {},
  "news_count": {
   "2026-11-16": 4,
   "2026-11-17": 23,
   "2026-11-18": 60,
-  "2026-11-19": 6
+  "2026-11-19": 7
  },
  "day_news": {
   "2026-11-17": [
@@ -488,6 +493,10 @@
    },
    {
     "ar": "العملات الآسيوية تتعزز، لكنها تواجه ضغوطًا من رهانات أسعار الفائدة الفيدرالية",
+    "score": 1
+   },
+   {
+    "ar": "الذهب يستعيد أنفاسه ولكنه يظل عند أدنى مستوياته منذ أكثر من عام",
     "score": 1
    }
   ]
