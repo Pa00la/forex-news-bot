@@ -181,14 +181,15 @@
   "4.7% 4.9% against australian expect oct rate rise unemployment",
   "elon foolish midterm musk pretty record spend",
   "boj can financ further low raise rate real still ueda withstand",
-  "await historic hold meet putin separately talk their trilateral trump"
+  "await historic hold meet putin separately talk their trilateral trump",
+  "albeit bond french last now one relief see spread unlikely yield"
  ],
  "daily": {},
  "news_count": {
   "2026-11-16": 4,
   "2026-11-17": 23,
   "2026-11-18": 60,
-  "2026-11-19": 11
+  "2026-11-19": 12
  },
  "day_news": {
   "2026-11-17": [
@@ -519,6 +520,10 @@
    {
     "ar": "ترامب يجري محادثات منفصلة مع بوتين وشي جين بينغ قبل اجتماعهما الثلاثي التاريخي",
     "score": 1
+   },
+   {
+    "ar": "يمكن أن يشهد انتشار عائد السندات الفرنسية انتعاشًا، وإن كان من غير المرجح أن يكون دائمًا في الوقت الحالي",
+    "score": 0
    }
   ]
  }
