@@ -361,6 +361,49 @@ def explain_lines(e):
     if cur == "USD" and any(k in t for k in ("cpi", "ppi", "pce", "non-farm", "retail sales", "gdp", "pmi", "payroll")):
         return ["🔺 رقم أعلى من المتوقع: دعم للدولار وغالبًا ضغط على الذهب",
                 "🔻 رقم أقل من المتوقع: ضغط على الدولار وغالبًا دعم للذهب"]
+    if cur != "USD" and cur in CUR_AR and any(k in t for k in ("unemployment", "jobless", "employment", "cpi", "retail sales", "gdp", "pmi", "wage", "inflation")):
+        inv = _inverse(t)
+        up, dn = ("🔺 رقم أعلى من المتوقع", "🔻 رقم أقل من المتوقع")
+        good, bad = (dn, up) if inv else (up, dn)
+        return [f"{good}: دعم {lam(CUR_AR[cur])} وضغط خفيف على الدولار الأمريكي ودعم خفيف للذهب",
+                f"{bad}: ضغط على {CUR_AR[cur]} ودعم خفيف للدولار الأمريكي وضغط خفيف على الذهب",
+                "ℹ️ تأثير الحدث الأساسي على عملته، وعلى الذهب والدولار غير مباشر وأضعف"]
+    return []
+
+CUR_AR = {"USD": "الدولار الأمريكي", "AUD": "الدولار الأسترالي", "NZD": "الدولار النيوزيلندي", "CAD": "الدولار الكندي",
+          "GBP": "الجنيه الإسترليني", "EUR": "اليورو", "JPY": "الين الياباني", "CHF": "الفرنك السويسري"}
+_CUR_WORDS = [("australia", "AUD"), ("aussie", "AUD"), ("new zealand", "NZD"), ("kiwi", "NZD"), ("canada", "CAD"), ("canadian", "CAD"),
+              ("uk ", "GBP"), ("u.k.", "GBP"), ("britain", "GBP"), ("british", "GBP"), ("eurozone", "EUR"), ("euro zone", "EUR"),
+              ("germany", "EUR"), ("german", "EUR"), ("france", "EUR"), ("japan", "JPY"), ("swiss", "CHF"), ("switzerland", "CHF"),
+              ("us ", "USD"), ("u.s.", "USD"), ("united states", "USD"), ("american", "USD"), ("fed ", "USD"), ("nonfarm", "USD"), ("payroll", "USD")]
+
+def lam(n):
+    return "لل" + n[2:] if n.startswith("ال") else "ل" + n
+
+def _inverse(t):
+    """True when a HIGHER number is bad for the currency (unemployment, jobless claims)."""
+    t = (t or "").lower()
+    return any(k in t for k in ("unemployment", "jobless", "claims", "layoff"))
+
+def result_cur(title):
+    t = " " + (title or "").lower() + " "
+    for k, c in _CUR_WORDS:
+        if k in t: return c
+    return None
+
+def impact_lines(title, verdict, cur=None):
+    """What a released number means for the currency, the dollar and gold (rule-based, not a prediction)."""
+    cur = cur or result_cur(title)
+    if verdict == "مطابق للمتوقع":
+        return ["▫️ مطابق للتوقعات، فالتأثير المباشر محدود"]
+    higher = verdict == "أعلى من المتوقع"
+    cur_up = higher != _inverse(title)
+    if cur == "USD":
+        return ["📈 إيجابي للدولار الأمريكي 🇺🇸" if cur_up else "📉 سلبي للدولار الأمريكي 🇺🇸",
+                "📉 سلبي للذهب 🟡" if cur_up else "📈 إيجابي للذهب 🟡"]
+    if cur in CUR_AR:
+        return [f"{'📈 إيجابي' if cur_up else '📉 سلبي'} {lam(CUR_AR[cur])}",
+                f"🇺🇸 الدولار: {'ضغط خفيف' if cur_up else 'دعم خفيف'} | 🟡 الذهب: {'دعم خفيف' if cur_up else 'ضغط خفيف'} (تأثير غير مباشر)"]
     return []
 
 EVENT_POSTERS = [(r"fomc meeting minutes", "FOMC", "MEETING MINUTES"), (r"cpi", "CPI", "CONSUMER PRICE INDEX"),
@@ -393,7 +436,7 @@ def msg_prealert(e, when, stage=60):
     lines = [head, f"{flag} {esc(t)}", impact_tag(e)]
     line = _fc_pv(e)
     if line: lines.append(line)
-    if stage == 60 and e.get("impact") == "High":
+    if stage in (60, 5) and e.get("impact") == "High":
         ex = explain_lines(e)
         if ex: lines += ["", *ex, f"ℹ️ {DISCLAIMER}"]
     lines.append(LINK)
@@ -406,6 +449,8 @@ def msg_now(e, when):
     lines = [head, f"{flag} {esc(t)}", impact_tag(e)]
     line = _fc_pv(e)
     if line: lines.append(line)
+    if e.get("impact") == "High":
+        lines.append("⏳ الرقم الفعلي وتأثيره على الذهب والدولار هيتنشر أول ما يتأكد")
     lines.append(LINK)
     return "\n".join(lines)
 
@@ -735,6 +780,10 @@ def run_news(state, now, out):
         head = "📊 <b>نتيجة</b>" if is_result else pick(NEWS_POOL if urgent else NEWS_POOL_NORMAL, title)
         text = f"{head}\n{esc(ar)}\n📰 {esc(src)}"
         extra = None
+        if res:
+            fl = impact_lines(title, res["verdict"])
+            if fl:
+                text = f"{head}\n{esc(ar)}\n🎯 الفعلي <b>{esc(res['actual'])}</b> مقابل المتوقع <b>{esc(res['forecast'])}</b> ({res['verdict']})\n" + "\n".join(fl) + f"\nℹ️ {DISCLAIMER}\n📰 {esc(src)}"
         if res:
             label = translate_ar(res["name"]) or res["name"]
             extra = ("img", lambda r=res, l=label: C().card_result("", l, r["actual"], r["forecast"], r["prev"], r["verdict"]))

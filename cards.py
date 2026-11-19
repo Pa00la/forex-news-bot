@@ -540,29 +540,66 @@ PEOPLE = [("trump", r"\btrump\b"), ("xi", r"\bxi\b|xi jinping"), ("putin", r"\bp
           ("biden", r"\bbiden\b"), ("warsh", r"\bwarsh\b"), ("waller", r"\bwaller\b"), ("zelensky", r"\bzelensky\b"),
           ("netanyahu", r"\bnetanyahu\b"), ("musk", r"\bmusk\b")]
 
+_FOCUS = None
+def _focus_of(fname):
+    """Face position [cx, cy, face_height] (fractions) from people/focus.json, if the face was found."""
+    global _FOCUS
+    if _FOCUS is None:
+        try:
+            import json
+            _FOCUS = {}
+            for p in (os.path.join(PEOPLE_DIR, "focus.json"), os.path.join(HERE, "focus.json")):
+                if os.path.exists(p):
+                    _FOCUS = json.load(open(p)); break
+        except Exception:
+            _FOCUS = {}
+    f = _FOCUS.get(fname)
+    return f if f and f[2] >= 0.12 else None
+
 def _people_imgs(title):
     """One photo per person from the 'people' folder. Several files per person are allowed for variety:
-    trump.jpg, trump2.jpg, trump_3.png ... one of them is picked per news item."""
+    trump.jpg, trump2.jpg, trump_3.png ... one of them is picked per news item.
+    Any new person works with no code change: name the file after the person, e.g. jensen_huang.jpg or jensen_huang2.jpg."""
     import re, zlib
     t = (title or "").lower()
     out = []
     try: files = os.listdir(PEOPLE_DIR)
     except Exception: return out
-    for key, rx in PEOPLE:
+    keys = [(k, rx) for k, rx in PEOPLE]
+    known = {k for k, _ in PEOPLE}
+    for f in files:   # people found in the folder automatically
+        m = re.fullmatch(r"([a-z][a-z_\-]*?)[_\-]?\d*\.(?:jpg|jpeg|png|webp)", f.lower())
+        if m and m.group(1) not in known and not m.group(1).startswith("whitehouse"):
+            k = m.group(1); known.add(k)
+            keys.append((k, r"\b" + r"[\s_\-]+".join(re.escape(p) for p in re.split(r"[_\-]", k) if p) + r"\b"))
+    for key, rx in keys:
         if not re.search(rx, t): continue
-        cand = sorted(f for f in files if re.fullmatch(rf"{key}[_\-]?\d*\.(jpg|jpeg|png|webp)", f.lower()))
+        cand = sorted(f for f in files if re.fullmatch(rf"{re.escape(key)}[_\-]?\d*\.(jpg|jpeg|png|webp)", f.lower()))
         if not cand: continue
+        cand = [f for f in cand if _focus_of(f)] or cand   # prefer photos where a clear face was found
         pick = cand[zlib.crc32((t + key).encode()) % len(cand)]
-        try: out.append(Image.open(os.path.join(PEOPLE_DIR, pick)).convert("RGB"))
+        try:
+            im = Image.open(os.path.join(PEOPLE_DIR, pick)).convert("RGB")
+            im.focus = _focus_of(pick)
+            out.append(im)
         except Exception as ex: print("people image failed:", pick, ex)
     return out[:3]
 
 def _crop_to(im, w, h, top_bias=0.25):
+    fc = getattr(im, "focus", None)
     s = max(w / im.width, h / im.height)
-    im = im.resize((max(w, int(im.width * s)), max(h, int(im.height * s))))
-    x = (im.width - w) // 2
-    y = int((im.height - h) * top_bias)
-    return im.crop((x, y, x + w, y + h))
+    if fc:   # keep the face large and centered: zoom in a little when the face is small
+        cx, cy, fh = fc
+        s = min(max(s, 0.36 * h / (fh * im.height)), s * 1.8)
+    im2 = im.resize((max(w, int(im.width * s)), max(h, int(im.height * s))))
+    if fc:
+        x = int(cx * im2.width - w / 2)
+        y = int(cy * im2.height - 0.42 * h)
+        x = min(max(x, 0), im2.width - w); y = min(max(y, 0), im2.height - h)
+    else:
+        x = (im2.width - w) // 2
+        y = int((im2.height - h) * top_bias)
+    return im2.crop((x, y, x + w, y + h))
 
 def _label(urgent):
     return ("عاجل", (200, 40, 40)) if urgent else ("خبر", (45, 70, 110))
