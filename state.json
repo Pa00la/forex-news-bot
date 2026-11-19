@@ -81,7 +81,8 @@
   "now:2026-11-18T19:30:00-05:00|AUD|Unemployment Rate",
   "morning:2026-11-19",
   "open5:لندن:2026-11-19",
-  "tip:2026-11-19"
+  "tip:2026-11-19",
+  "snap:2026-11-19:12"
  ],
  "titles": [
   "for futures global lower oil outlook start surplus week",
@@ -192,14 +193,15 @@
   "center great meet prais putin relationship stage take trump ukraine war",
   "china discus historic meet nuclear positioned reduc russia trump u.s uniquely weapon",
   "congres markwayne mullin nationwide outag sery tech testify",
-  "ben conservative future media party republican shapiro"
+  "ben conservative future media party republican shapiro",
+  "anthropic await debut futur improv optimism rise stock trad"
  ],
  "daily": {},
  "news_count": {
   "2026-11-16": 4,
   "2026-11-17": 23,
   "2026-11-18": 60,
-  "2026-11-19": 20
+  "2026-11-19": 21
  },
  "day_news": {
   "2026-11-17": [
@@ -565,6 +567,10 @@
    },
    {
     "ar": "بن شابيرو يتحدث عن مستقبل الحزب الجمهوري ووسائل الإعلام المحافظة",
+    "score": 0
+   },
+   {
+    "ar": "ترتفع العقود الآجلة للأسهم مع تحسن التفاؤل قبل ظهور التداول الإنساني لأول مرة",
     "score": 0
    }
   ]
