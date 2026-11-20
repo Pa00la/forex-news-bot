@@ -285,7 +285,8 @@
   "401 auto grand instead nvidia peek play spooked theft turmoil your",
   "away can one stock taco tech trade trump wreck",
   "expect fall gold interest low month nearly rate",
-  "iran military renewed strain strik trump warn weigh"
+  "iran military renewed strain strik trump warn weigh",
+  "announc challenge college fed federal reserve winner"
  ],
  "daily": {},
  "news_count": {
@@ -293,7 +294,7 @@
   "2026-11-17": 23,
   "2026-11-18": 60,
   "2026-11-19": 43,
-  "2026-11-20": 40
+  "2026-11-20": 41
  },
  "day_news": {
   "2026-11-17": [
@@ -914,6 +915,10 @@
    {
     "ar": "يدرس بروم تجديد الضربات على إيران بينما يحذر الجيش من التوتر. قدم",
     "score": 2
+   },
+   {
+    "ar": "يعلن الاحتياطي الفيدرالي عن الفائزين في تحدي College Fed",
+    "score": 1
    }
   ]
  }
