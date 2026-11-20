@@ -248,7 +248,8 @@
   "baaja backed bill energy pass permitt reform sector senate",
   "$1.756 billion fed friday gets isn market morn post pump viral what wrong",
   "boost campaign good launch milk ready retail sale tinned uht",
-  "acting christine lagarde time"
+  "acting christine lagarde time",
+  "dollar fall modestly selloff stock weigh"
  ],
  "daily": {},
  "news_count": {
@@ -256,7 +257,7 @@
   "2026-11-17": 23,
   "2026-11-18": 60,
   "2026-11-19": 43,
-  "2026-11-20": 15
+  "2026-11-20": 16
  },
  "day_news": {
   "2026-11-17": [
@@ -776,6 +777,10 @@
    },
    {
     "ar": "كريستين لاغارد: التصرف في الوقت المناسب",
+    "score": 0
+   },
+   {
+    "ar": "الدولار ينخفض بشكل متواضع مع تأثير عمليات بيع أسهم الذكاء الاصطناعي",
     "score": 0
    }
   ]
