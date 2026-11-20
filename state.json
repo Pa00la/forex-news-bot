@@ -277,7 +277,8 @@
   "coming deal other secured soon trade trump two very",
   "abroad build center company data stop tax threaten tremendou trump u.s vows",
   "arch block court judge saying second succeed trump unlikely",
-  "confidence lutnick still trump"
+  "confidence lutnick still trump",
+  "busy fed fight inflation market rescue stock too"
  ],
  "daily": {},
  "news_count": {
@@ -285,7 +286,7 @@
   "2026-11-17": 23,
   "2026-11-18": 60,
   "2026-11-19": 43,
-  "2026-11-20": 35
+  "2026-11-20": 36
  },
  "day_news": {
   "2026-11-17": [
@@ -886,6 +887,10 @@
    {
     "ar": "يقول روم إنه لا يزال يثق في لوتنيك",
     "score": 1
+   },
+   {
+    "ar": "بنك الاحتياطي الفيدرالي مشغول للغاية بمكافحة التضخم لإنقاذ سوق الأسهم",
+    "score": 2
    }
   ]
  }
