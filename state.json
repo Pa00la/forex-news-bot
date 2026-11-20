@@ -242,7 +242,8 @@
   "2.5% 2027 analyst boj despite inflation mid now rate see slower some underly",
   "$78 back birol brent goldman hormuz iea oil sees still way",
   "bear boj circl dec endpoint enough fuzzy keep may raise why yen",
-  "baaja backed bill energy pass permitt reform sector senate"
+  "baaja backed bill energy pass permitt reform sector senate",
+  "$1.756 billion fed friday gets isn market morn post pump viral what wrong"
  ],
  "daily": {},
  "news_count": {
@@ -250,7 +251,7 @@
   "2026-11-17": 23,
   "2026-11-18": 60,
   "2026-11-19": 43,
-  "2026-11-20": 12
+  "2026-11-20": 13
  },
  "day_news": {
   "2026-11-17": [
@@ -759,6 +760,10 @@
    {
     "ar": "مجلس الشيوخ يوافق على مشروع قانون BAAJA الذي يسمح بالإصلاح المدعوم بالذكاء الاصطناعي في قطاعات الطاقة",
     "score": 2
+   },
+   {
+    "ar": "لا، لن يضخ بنك الاحتياطي الفيدرالي 1.756 مليار دولار في الأسواق صباح يوم الجمعة: ما الخطأ الذي يرتكبه هذا المنشور الفيروسي",
+    "score": 1
    }
   ]
  }
