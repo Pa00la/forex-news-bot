@@ -282,7 +282,8 @@
   "confidence lutnick still trump",
   "busy fed fight inflation market rescue stock too",
   "401 auto grand instead nvidia peek play spooked theft turmoil your",
-  "away can one stock taco tech trade trump wreck"
+  "away can one stock taco tech trade trump wreck",
+  "expect fall gold interest low month nearly rate"
  ],
  "daily": {},
  "news_count": {
@@ -290,7 +291,7 @@
   "2026-11-17": 23,
   "2026-11-18": 60,
   "2026-11-19": 43,
-  "2026-11-20": 38
+  "2026-11-20": 39
  },
  "day_news": {
   "2026-11-17": [
@@ -902,6 +903,10 @@
    },
    {
     "ar": "انهيار التكنولوجيا هو صفقة أسهم لا يستطيع ترامب \"تجاوزها\"",
+    "score": 1
+   },
+   {
+    "ar": "الذهب يهبط إلى أدنى مستوى له منذ ما يقرب من 15 شهرًا بسبب توقعات أسعار الفائدة",
     "score": 1
    }
   ]
