@@ -241,7 +241,8 @@
   "above all await boj call core cpi japan measur miss raise stay three",
   "2.5% 2027 analyst boj despite inflation mid now rate see slower some underly",
   "$78 back birol brent goldman hormuz iea oil sees still way",
-  "bear boj circl dec endpoint enough fuzzy keep may raise why yen"
+  "bear boj circl dec endpoint enough fuzzy keep may raise why yen",
+  "baaja backed bill energy pass permitt reform sector senate"
  ],
  "daily": {},
  "news_count": {
@@ -249,7 +250,7 @@
   "2026-11-17": 23,
   "2026-11-18": 60,
   "2026-11-19": 43,
-  "2026-11-20": 11
+  "2026-11-20": 12
  },
  "day_news": {
   "2026-11-17": [
@@ -754,6 +755,10 @@
    {
     "ar": "قد لا يكون رفع أسعار الفائدة من قبل بنك اليابان في شهر ديسمبر كافيًا: لماذا تؤدي نقطة النهاية الغامضة إلى إبقاء المضاربين على الين في حالة دوران",
     "score": 1
+   },
+   {
+    "ar": "مجلس الشيوخ يوافق على مشروع قانون BAAJA الذي يسمح بالإصلاح المدعوم بالذكاء الاصطناعي في قطاعات الطاقة",
+    "score": 2
    }
   ]
  }
