@@ -286,7 +286,9 @@
   "away can one stock taco tech trade trump wreck",
   "expect fall gold interest low month nearly rate",
   "iran military renewed strain strik trump warn weigh",
-  "announc challenge college fed federal reserve winner"
+  "announc challenge college fed federal reserve winner",
+  "presser trump",
+  "conference latest pres trump"
  ],
  "daily": {},
  "news_count": {
@@ -294,7 +296,7 @@
   "2026-11-17": 23,
   "2026-11-18": 60,
   "2026-11-19": 43,
-  "2026-11-20": 41
+  "2026-11-20": 43
  },
  "day_news": {
   "2026-11-17": [
@@ -918,6 +920,14 @@
    },
    {
     "ar": "يعلن الاحتياطي الفيدرالي عن الفائزين في تحدي College Fed",
+    "score": 1
+   },
+   {
+    "ar": "روم كوى",
+    "score": 1
+   },
+   {
+    "ar": "آخر ما جاء في المؤتمر الصحفي لترامب",
     "score": 1
    }
   ]
