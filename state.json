@@ -258,7 +258,9 @@
   "concern demand disruption focu next oil pressure pric remain shift supply what",
   "cairncros cyber director house outag replac sean tech white widespread",
   "brainer grabb inflation now protection",
-  "aim army azide block delay dems detonation fund iowa iran lead war"
+  "aim army azide block delay dems detonation fund iowa iran lead war",
+  "anthropic break fall gold ipo kickstart lower morn",
+  "0.7% 0.8% 1.0% canada come core estimate retail sale strong"
  ],
  "daily": {},
  "news_count": {
@@ -266,7 +268,7 @@
   "2026-11-17": 23,
   "2026-11-18": 60,
   "2026-11-19": 43,
-  "2026-11-20": 24
+  "2026-11-20": 26
  },
  "day_news": {
   "2026-11-17": [
@@ -823,6 +825,14 @@
    {
     "ar": "ويهدف الديمقراطيون إلى منع تمويل حرب إيران. والجيش يؤخر تفجير مادة أزيد في ولاية أيوا",
     "score": 1
+   },
+   {
+    "ar": "بداية الصباح. أسهم أنثروبيك تنخفض بعد الاكتتاب العام وأسعار الذهب تنخفض",
+    "score": 1
+   },
+   {
+    "ar": "جاءت مبيعات التجزئة في كندا أقوى عند 0.8% مقابل تقدير 0.7%. ارتفعت المبيعات الأساسية بنسبة 1.0% مقابل تقدير بنسبة 0.7%.",
+    "score": 0
    }
   ]
  }
