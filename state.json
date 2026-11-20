@@ -266,7 +266,8 @@
   "aim army azide block delay dems detonation fund iowa iran lead war",
   "anthropic break fall gold ipo kickstart lower morn",
   "0.7% 0.8% 1.0% canada come core estimate retail sale strong",
-  "fed instead less official talk they want warsh"
+  "fed instead less official talk they want warsh",
+  "bessent discussion policy robust saw trade trump"
  ],
  "daily": {},
  "news_count": {
@@ -274,7 +275,7 @@
   "2026-11-17": 23,
   "2026-11-18": 60,
   "2026-11-19": 43,
-  "2026-11-20": 27
+  "2026-11-20": 28
  },
  "day_news": {
   "2026-11-17": [
@@ -843,6 +844,10 @@
    {
     "ar": "يريد وورش من مسؤولي بنك الاحتياطي الفيدرالي التحدث أقل. بدلاً من ذلك، يتحدثون أكثر",
     "score": 2
+   },
+   {
+    "ar": "بيسنت يقول إن ترامب وشي جين بينغ أجريا مناقشة قوية حول السياسة التجارية والذكاء الاصطناعي",
+    "score": 1
    }
   ]
  }
