@@ -250,7 +250,9 @@
   "boost campaign good launch milk ready retail sale tinned uht",
   "acting christine lagarde time",
   "dollar fall modestly selloff stock weigh",
-  "bottom capitulation catalyst gold needed panic sell signal"
+  "bottom capitulation catalyst gold needed panic sell signal",
+  "first grind massive meet putin rebuild scor stand trilateral ukraine war win",
+  "can circumvent congres democratic incom run threat trump veto"
  ],
  "daily": {},
  "news_count": {
@@ -258,7 +260,7 @@
   "2026-11-17": 23,
   "2026-11-18": 60,
   "2026-11-19": 43,
-  "2026-11-20": 17
+  "2026-11-20": 19
  },
  "day_news": {
   "2026-11-17": [
@@ -787,6 +789,14 @@
    {
     "ar": "يشير البيع المذعور للذهب إلى الاستسلام، ولكن هناك حاجة إلى محفز للوصول إلى القاع",
     "score": 1
+   },
+   {
+    "ar": "تحقق النتائج \"انتصارًا هائلاً\" في الاجتماع الثلاثي الأول، مما يعيد بناء المكانة مع استمرار الحرب في أوكرانيا",
+    "score": 1
+   },
+   {
+    "ar": "هل يستطيع الكونجرس القادم الذي يديره الديمقراطيون التحايل على تهديدات ترامب باستخدام حق النقض؟",
+    "score": 3
    }
   ]
  }
