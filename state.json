@@ -274,7 +274,8 @@
   "50% area below break breakout buyer can gold hold midpoint old",
   "accepted doubt fair gop initially midterm result they trump voter",
   "coming deal other secured soon trade trump two very",
-  "abroad build center company data stop tax threaten tremendou trump u.s vows"
+  "abroad build center company data stop tax threaten tremendou trump u.s vows",
+  "arch block court judge saying second succeed trump unlikely"
  ],
  "daily": {},
  "news_count": {
@@ -282,7 +283,7 @@
   "2026-11-17": 23,
   "2026-11-18": 60,
   "2026-11-19": 43,
-  "2026-11-20": 33
+  "2026-11-20": 34
  },
  "day_news": {
   "2026-11-17": [
@@ -874,6 +875,10 @@
    },
    {
     "ar": "ترامب يتعهد بمنع الشركات الأمريكية من بناء مراكز بيانات في الخارج ويهدد بفرض \"ضريبة هائلة\"",
+    "score": 1
+   },
+   {
+    "ar": "قاضٍ ثانٍ يسد قوس ترامب، قائلاً إنه من غير المرجح أن ينجح في المحكمة",
     "score": 1
    }
   ]
