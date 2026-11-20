@@ -106,7 +106,9 @@
   "asset:CL=F:2026-11-20",
   "close:eu:2026-11-20",
   "poll:2026-11-20",
-  "snap:2026-11-20:21"
+  "snap:2026-11-20:21",
+  "recap:2026-11-20",
+  "top3:2026-11-20"
  ],
  "titles": [
   "for futures global lower oil outlook start surplus week",
@@ -279,7 +281,8 @@
   "arch block court judge saying second succeed trump unlikely",
   "confidence lutnick still trump",
   "busy fed fight inflation market rescue stock too",
-  "401 auto grand instead nvidia peek play spooked theft turmoil your"
+  "401 auto grand instead nvidia peek play spooked theft turmoil your",
+  "away can one stock taco tech trade trump wreck"
  ],
  "daily": {},
  "news_count": {
@@ -287,7 +290,7 @@
   "2026-11-17": 23,
   "2026-11-18": 60,
   "2026-11-19": 43,
-  "2026-11-20": 37
+  "2026-11-20": 38
  },
  "day_news": {
   "2026-11-17": [
@@ -895,6 +898,10 @@
    },
    {
     "ar": "هل أنت مذعور من اضطرابات نفيديا؟ العب لعبة Grand Theft Auto VI بدلاً من إلقاء نظرة على حساب التقاعد 401(k) الخاص بك.",
+    "score": 1
+   },
+   {
+    "ar": "انهيار التكنولوجيا هو صفقة أسهم لا يستطيع ترامب \"تجاوزها\"",
     "score": 1
    }
   ]
