@@ -290,7 +290,8 @@
   "presser trump",
   "conference latest pres trump",
   "anthropic caps ipo street trillion turmoil wall wipeout",
-  "china control maker opinion want why yacht"
+  "china control maker opinion want why yacht",
+  "ancient flight ground safe stop system trump"
  ],
  "daily": {},
  "news_count": {
@@ -299,7 +300,7 @@
   "2026-11-18": 60,
   "2026-11-19": 43,
   "2026-11-20": 43,
-  "2026-11-21": 2
+  "2026-11-21": 3
  },
  "day_news": {
   "2026-11-17": [
@@ -942,6 +943,10 @@
    {
     "ar": "رأي | لماذا تريد الصين السيطرة على صانع اليخوت؟",
     "score": 0
+   },
+   {
+    "ar": "يقول ترومب إن أنظمة الطيران الأمريكية أصبحت \"قديمة\" ولكنها \"آمنة\" بعد توقفها على الأرض",
+    "score": 1
    }
   ]
  }
