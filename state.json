@@ -293,7 +293,8 @@
   "anthropic caps ipo street trillion turmoil wall wipeout",
   "china control maker opinion want why yacht",
   "ancient flight ground safe stop system trump",
-  "china expand global how influence summit using"
+  "china expand global how influence summit using",
+  "agency attack east hit hormuz iran maritime mine near oman report tanker two vessel"
  ],
  "daily": {},
  "news_count": {
@@ -302,7 +303,7 @@
   "2026-11-18": 60,
   "2026-11-19": 43,
   "2026-11-20": 43,
-  "2026-11-21": 4
+  "2026-11-21": 5
  },
  "day_news": {
   "2026-11-17": [
@@ -952,6 +953,10 @@
    },
    {
     "ar": "كيف تستخدم الصين مؤتمرات القمة لتوسيع نفوذها العالمي",
+    "score": 0
+   },
+   {
+    "ar": "الهيئة البحرية البريطانية تُبلغ عن تعرض ناقلتين للهجوم بالقرب من عُمان؛ وإيران تقول إن سفينة اصطدمت بلغم شرق هرمز",
     "score": 0
    }
   ]
