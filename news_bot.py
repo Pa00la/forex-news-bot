@@ -853,9 +853,18 @@ def is_dup_ar(ar, day_items):
     a = ar_tokens(ar)
     return any(_same_story(a, ar_tokens(it.get("ar"))) for it in day_items)
 
+_NOT_NEWS_START = re.compile(r"^\s*(opinion|analysis|commentary|editorial|review|column|essay|explainer|op-ed|podcast|watch|live blog|live updates|"
+                             r"why |how |what |what's |who |when |where |should |could |would |is |are |does |do |did |can |will |here's |here are |"
+                             r"the case for|the case against|\d+ (things|ways|reasons|tips|stocks))", re.I)
+
+def is_not_news(title):
+    """Opinion pieces, explainers and questions: the channel wants facts that were actually said or happened."""
+    t = (title or "").strip()
+    return "?" in t or bool(_NOT_NEWS_START.match(t)) or bool(re.search(r"\|\s*(opinion|analysis)\b|\b(opinion|analysis)\s*[|:]", t, re.I))
+
 def relevant(title):
     tl = title.lower() + " "
-    if any(s in tl for s in SKIP): return False
+    if any(s in tl for s in SKIP) or is_not_news(title): return False
     return any(k in tl for k in KEYWORDS) or bool(parse_result(title))  # any data release with actual vs expected
 
 NORMAL_PER_DAY = 12   # non-urgent news per day at most: the channel favours strong news over volume
