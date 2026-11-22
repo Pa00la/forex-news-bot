@@ -299,7 +299,8 @@
   "asia best hail history one politic return trip trump week",
   "database fbi hack latest positive spin there trump",
   "chat congres control democrat lawmaker only politic step week",
-  "arabia attack bahrain deal iran open remain report saudi u.s"
+  "arabia attack bahrain deal iran open remain report saudi u.s",
+  "backed benefit cash company crunch deepen employe eric health lose robot startup trump"
  ],
  "daily": {},
  "news_count": {
@@ -309,7 +310,7 @@
   "2026-11-19": 43,
   "2026-11-20": 43,
   "2026-11-21": 7,
-  "2026-11-22": 2
+  "2026-11-22": 3
  },
  "day_news": {
   "2026-11-18": [
@@ -940,6 +941,10 @@
    {
     "ar": "السعودية والبحرين تبلغان عن هجمات جديدة بينما تقول إيران إنها لا تزال منفتحة على التوصل إلى اتفاق مع الولايات المتحدة",
     "score": 0
+   },
+   {
+    "ar": "يفقد الموظفون في شركة الروبوتات الناشئة المدعومة من \"إيريك ترامب\" المزايا الصحية مع تفاقم الأزمة النقدية للشركة",
+    "score": 1
    }
   ]
  },
