@@ -294,6 +294,44 @@ def translate_ar(text, verbose=False):
                 if verbose: print(f"translate {fn.__name__} failed: {ex}")
     return best
 
+# ---------------- "who is this?" lines from Wikipedia (automatic, always current) ----------------
+_ROLES = {}   # english name -> arabic one-liner ("" = not a notable person); persisted in state.json
+_ROLE_OK = re.compile(r"politician|businessman|businesswoman|executive|official|governor|minister|president|chair|ceo|senator|banker|economist|secretary|diplomat|judge|leader|speaker|entrepreneur|investor|prime minister|representative|congress", re.I)
+_NAME_RX = re.compile(r"\b([A-Z][a-z]+(?:\s[A-Z][a-z\-]+){1,2})\b")
+_NOT_NAMES = {"White House", "Wall Street", "Federal Reserve", "Supreme Court", "New York", "United States", "Middle East", "Hong Kong",
+              "South Korea", "North Korea", "New Zealand", "Saudi Arabia", "Bank Of", "Fed Chair", "Treasury Secretary", "Senate Banking"}
+
+def wiki_role(name):
+    """Short Arabic description of a person from Wikipedia, or '' when unknown / not a notable political or business figure."""
+    if name in _ROLES: return _ROLES[name]
+    out = ""
+    try:
+        url = "https://en.wikipedia.org/api/rest_v1/page/summary/" + urllib.parse.quote(name.replace(" ", "_")) + "?redirect=true"
+        j = json.loads(http_get(url, 10))
+        desc = re.sub(r"\s*\((?:born|b\.)[^)]*\)", "", j.get("description") or "").strip()
+        title_ok = all(w.lower() in (j.get("title") or "").lower() for w in name.split())
+        if j.get("type") == "standard" and title_ok and desc and _ROLE_OK.search(desc):
+            ar_ = translate_ar(desc)
+            if ar_: out = ar_
+    except Exception as ex:
+        print("wiki_role failed:", name, ex)
+        return ""   # do not cache network failures
+    _ROLES[name] = out
+    return out
+
+def who_lines(title, limit=2):
+    """'👤 name: role' lines for people named in an English headline (people the built-in glossary already explains are skipped)."""
+    lines, seen = [], set()
+    for m in _NAME_RX.finditer(title or ""):
+        nm = m.group(1)
+        if nm in seen or nm in _NOT_NAMES or any(re.search(rx, nm, re.I) and ar_ in {a for a, b in PEOPLE_GLOSS if b} for rx, ar_ in NAMES_AR): continue
+        seen.add(nm)
+        role = wiki_role(nm)
+        if role:
+            lines.append(f"👤 {esc(translate_ar(nm) or nm)}: {esc(role)}")
+        if len(lines) >= limit: break
+    return lines
+
 # ---------------- calendar ----------------
 def fetch_calendar():
     return json.loads(http_get(CAL_URL, 30))
@@ -826,6 +864,8 @@ def hot_window(now):
     return False
 
 def run_news(state, now, out, fast=False):
+    _ROLES.update(state.get("roles", {}))
+    state["roles"] = _ROLES
     day = now.date().isoformat()
     count = state["news_count"].get(day, 0)
     found, used = [], 0
@@ -855,6 +895,9 @@ def run_news(state, now, out, fast=False):
         urgent = news_score(title) >= URGENT_MIN_SCORE
         head = "📊 <b>نتيجة</b>" if is_result else pick(NEWS_POOL if urgent else NEWS_POOL_NORMAL, title)
         text = f"{head}\n{esc(ar)}\n📰 {esc(src)}"
+        if not is_result:
+            wl = who_lines(title)
+            if wl: text += "\n" + "\n".join(wl)
         extra = None
         ev = match_event(res["name"], now) if res else None
         if res and ev:
