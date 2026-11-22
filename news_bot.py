@@ -665,6 +665,30 @@ def parse_result(title):
     return {"name": name, "actual": m.group("a").strip(), "forecast": m.group("f").strip(),
             "prev": pm.group("p").strip() if pm else "", "verdict": verdict}
 
+_MATCH_STOP = {"us", "u", "s", "the", "of", "in", "rate", "data", "index", "change", "total", "m", "q", "y", "mom", "yoy", "qoq", "initial", "final", "flash", "prelim", "preliminary", "and", "a"}
+
+def _tok(t):
+    return {w for w in re.findall(r"[a-z]+", (t or "").lower()) if w not in _MATCH_STOP and len(w) > 1}
+
+def match_event(name, now):
+    """Find the calendar release (last 6 hours) that a result headline belongs to, to get its previous value and proper name."""
+    nt = _tok(name)
+    if not nt: return None
+    best, bs = None, 0
+    try:
+        for e in calendar_cached():
+            if e.get("impact") not in ("High", "Medium"): continue
+            try: dt = datetime.fromisoformat(e["date"]).astimezone(DUBAI)
+            except Exception: continue
+            if not (0 <= (now - dt).total_seconds() / 60 <= 360): continue
+            sc = len(nt & _tok(e.get("title")))
+            cur = result_cur(name)
+            if cur and cur == e.get("country"): sc += 1
+            if sc > bs: best, bs = e, sc
+    except Exception as ex:
+        print("match_event failed:", ex)
+    return best if bs >= 2 else None
+
 def unesc(t):
     for _ in range(3):
         n = html.unescape(t)
@@ -793,12 +817,16 @@ def run_news(state, now, out, fast=False):
         head = "📊 <b>نتيجة</b>" if is_result else pick(NEWS_POOL if urgent else NEWS_POOL_NORMAL, title)
         text = f"{head}\n{esc(ar)}\n📰 {esc(src)}"
         extra = None
+        ev = match_event(res["name"], now) if res else None
+        if res and ev:
+            if not res["prev"] and (ev.get("previous") or "").strip(): res["prev"] = ev["previous"].strip()
+            res["_flag"] = FLAGS.get(ev["country"], ""); res["_ar"] = ev_names(ev)[1]
         if res:
-            fl = impact_lines(title, res["verdict"])
+            fl = impact_lines(title, res["verdict"], ev.get("country") if ev else None)
             if fl:
-                text = f"{head}\n{esc(ar)}\n🎯 الفعلي <b>{esc(res['actual'])}</b> مقابل المتوقع <b>{esc(res['forecast'])}</b> ({res['verdict']})\n" + "\n".join(fl) + f"\nℹ️ {DISCLAIMER}\n📰 {esc(src)}"
+                text = f"{head}\n{esc(ar)}\n🎯 الفعلي <b>{esc(res['actual'])}</b> مقابل المتوقع <b>{esc(res['forecast'])}</b>" + (f" والسابق <b>{esc(res['prev'])}</b>" if res["prev"] else "") + f" ({res['verdict']})\n" + "\n".join(fl) + f"\nℹ️ {DISCLAIMER}\n📰 {esc(src)}"
         if res:
-            label = translate_ar(res["name"]) or res["name"]
+            label = res.get("_ar") or translate_ar(res["name"]) or res["name"]
             extra = ("img", lambda r=res, l=label: C().card_result("", l, r["actual"], r["forecast"], r["prev"], r["verdict"]))
         if extra is None:
             extra = ("img", lambda a=ar, t=title, sr=src, u=urgent: C().card_news(a, t, sr, urgent=u))

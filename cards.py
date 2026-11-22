@@ -123,7 +123,7 @@ def card_table(title, subtitle, rows):
     return to_png(img)
 
 def card_result(country, name, actual, forecast, previous, verdict):
-    img, d = base(900, "نتيجة الخبر", f"{country} - {name}")
+    img, d = base(900, "نتيجة الخبر", " - ".join(x for x in (country, name) if x and x.strip(" .…")) or "بيانات اقتصادية")
     boxes = [("الفعلي", actual, GOLD), ("المتوقع", forecast, WHITE), ("السابق", previous, GREY)]
     x = W - 40
     bw = (W - 80 - 40) // 3
