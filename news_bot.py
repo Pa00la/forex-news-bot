@@ -274,25 +274,41 @@ def _missing_names(src, out):
     """Arabic names that must appear in the translation (because the English source has them) but do not."""
     return [ar_ for rx, ar_ in NAMES_AR if re.search(rx, src) and ar_ not in out and len(ar_) <= 14 and "لجنة" not in ar_ and "رئيس" not in ar_ and "وزير" not in ar_ and "زعيم" not in ar_]
 
-def translate_ar(text, verbose=False):
+def tr_score(title, out):
+    """How trustworthy a translation looks (0 = fine, negative = problems). Used to pick the best of several candidates."""
+    sc = 0
+    en_words = re.findall(r"[A-Za-z0-9%$.\-']+", title)
+    ar_words = re.findall(r"[\u0600-\u06FF]+", out or "")
+    if len(en_words) < 6: sc -= 3            # too thin to be a useful headline
+    if len(ar_words) < 4 or len(out or "") < 20: sc -= 3
+    elif len(ar_words) < 0.4 * len(en_words): sc -= 2
+    sc -= 2 * len(_missing_names(title, out or ""))
+    a = re.sub(r"\D", "", _digits(out or ""))
+    for n in re.findall(r"\d[\d.,]*", title):
+        d_ = re.sub(r"\D", "", n)
+        if len(d_) >= 2 and d_ not in a: sc -= 1   # a number got lost
+    return sc
+
+def translate_best(text, verbose=False):
+    """Try every translator on both versions of the headline (names fixed first / plain English) and keep the best-scoring one."""
     fixed = fix_names(text)
-    best = None
-    # attempt A: names already in Arabic; attempt B: plain English (names fixed afterwards) when a name got mangled/lost
+    best, best_sc = None, -99
     for attempt in (fixed, text):
         for fn in (_tr_google, _tr_google_mobile, _tr_mymemory):
             try:
                 out = fn(attempt)
                 if not out or out == attempt: continue
-                if attempt is text:
-                    out = polish_names(out, text)
+                if attempt is text: out = polish_names(out, text)
                 out = polish_ar(out)
-                if best is None: best = out
-                if not _missing_names(text, out):
-                    return out
-                break   # this attempt lost a name: try the other one
+                sc = tr_score(text, out)
+                if sc > best_sc: best, best_sc = out, sc
+                if sc >= 0: return best, best_sc
             except Exception as ex:
                 if verbose: print(f"translate {fn.__name__} failed: {ex}")
-    return best
+    return best, best_sc
+
+def translate_ar(text, verbose=False):
+    return translate_best(text, verbose)[0]
 
 # ---------------- "who is this?" lines from Wikipedia (automatic, always current) ----------------
 _ROLES = {}   # english name -> arabic one-liner ("" = not a notable person); persisted in state.json
@@ -901,7 +917,7 @@ def run_news(state, now, out, fast=False):
         if is_dup(title, state["titles"]): continue
         tl = title.lower()
         is_result = any(w in tl for w in RESULT_WORDS) and re.search(r"\d", title)
-        ar = translate_ar(title)
+        ar, tsc = translate_best(title)
         if not ar:
             continue  # Arabic only
         ar = re.sub(r"^(?:investing\s?live|InvestingLive)\s*[:\-–]?\s*", "", ar, flags=re.I).strip()
@@ -911,7 +927,7 @@ def run_news(state, now, out, fast=False):
         res = parse_result(title) if is_result else None
         src = name
         sc_ = news_score(title)
-        if not res and (sc_ < 1 or not quality_ok(title, ar)):
+        if not res and (sc_ < 1 or tsc < -1):   # one lost number is tolerated; anything worse is skipped
             print("skipped (weak/broken):", title[:70], "->", ar[:40])
             state["titles"].append(" ".join(sorted(norm(title))))
             continue
