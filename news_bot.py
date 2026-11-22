@@ -28,8 +28,8 @@ CURRENCIES = {"USD", "GBP", "EUR", "JPY", "CAD", "AUD", "CHF", "NZD", "CNY"}
 LEAD_STAGES = [60, 5, 1]      # pre-alerts: 1 hour, 5 minutes and 1 minute before each release
 MORNING_HOUR = 8              # Dubai hour for the daily calendar post
 SNAPSHOT_HOURS = [12, 17, 21] # Dubai hours for gold + currency strength posts (weekdays)
-MAX_NEWS_PER_RUN = 3
-MAX_NEWS_PER_DAY = 60
+MAX_NEWS_PER_RUN = 2
+MAX_NEWS_PER_DAY = 40
 NEWS_MAX_AGE_MIN = 45
 
 FEEDS = {  # name -> url (a failing feed is simply skipped)
@@ -842,10 +842,28 @@ def relevant(title):
     if any(s in tl for s in SKIP): return False
     return any(k in tl for k in KEYWORDS) or bool(parse_result(title))  # any data release with actual vs expected
 
-IMPORTANT_WORDS = ["fed ", "powell", "trump", "cpi", "nfp", "payroll", "rate cut", "rate hike", "interest rate", "inflation",
+NORMAL_PER_DAY = 12   # non-urgent news per day at most: the channel favours strong news over volume
+
+IMPORTANT_WORDS = ["dollar", "yield", "treasury", "iran", "israel", "sanction", "china", "putin", "zelensky", "pmi", "retail sales",
+                   "unemployment", "bessent", "warsh", "lagarde", "bailey", "ueda", "shutdown", "debt ceiling", "senate", "election",
+                   "fed ", "powell", "trump", "cpi", "nfp", "payroll", "rate cut", "rate hike", "interest rate", "inflation",
                    "gold", "tariff", "opec", "oil", "ecb", "boj", "bank of england", "war", "ceasefire", "recession", "gdp", "jobs"]
 
 ELECTION_WORDS = ["election", "midterm", "senate", "congress"]  # focus topic: counts double, so it earns the red "عاجل" label
+
+def _digits(t):
+    return (t or "").translate(str.maketrans("٠١٢٣٤٥٦٧٨٩", "0123456789"))
+
+def quality_ok(title, ar):
+    """Drop headlines too thin to be useful, and translations that came out broken (too short, lost the numbers)."""
+    en_words = re.findall(r"[A-Za-z0-9%$.\-']+", title)
+    if len(en_words) < 6: return False
+    ar_words = [w for w in re.findall(r"[\u0600-\u06FF]+", ar or "")]
+    if len(ar_words) < 4 or len(ar or "") < 20: return False
+    if len(ar_words) < 0.4 * len(en_words): return False
+    nums = [n for n in re.findall(r"\d[\d.,]*", title) if len(re.sub(r"\D", "", n)) >= 2]
+    a = _digits(ar)
+    return all(re.sub(r"\D", "", n) in re.sub(r"\D", "", a) for n in nums)
 
 def news_score(title):
     tl = title.lower() + " "
@@ -892,7 +910,14 @@ def run_news(state, now, out, fast=False):
             continue
         res = parse_result(title) if is_result else None
         src = name
-        urgent = news_score(title) >= URGENT_MIN_SCORE
+        sc_ = news_score(title)
+        if not res and (sc_ < 1 or not quality_ok(title, ar)):
+            print("skipped (weak/broken):", title[:70], "->", ar[:40])
+            state["titles"].append(" ".join(sorted(norm(title))))
+            continue
+        if not res and sc_ < URGENT_MIN_SCORE and sum(1 for x in state.get("day_news", {}).get(day, []) if x.get("score", 0) < URGENT_MIN_SCORE) >= NORMAL_PER_DAY:
+            continue   # enough ordinary news today
+        urgent = sc_ >= URGENT_MIN_SCORE
         head = "📊 <b>نتيجة</b>" if is_result else pick(NEWS_POOL if urgent else NEWS_POOL_NORMAL, title)
         text = f"{head}\n{esc(ar)}\n📰 {esc(src)}"
         if not is_result:
