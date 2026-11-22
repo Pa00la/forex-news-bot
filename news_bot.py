@@ -215,10 +215,13 @@ NAMES_AR += [(r"\bJensen Huang\b", "جنسن هوانغ"), (r"\bTim Scott\b", "�
              (r"\bHouse Financial Services Committee\b", "لجنة الخدمات المالية في مجلس النواب"),
              (r"\bSenate Majority Leader\b", "زعيم الأغلبية في مجلس الشيوخ"), (r"\bHouse Speaker\b|\bSpeaker of the House\b", "رئيس مجلس النواب")]
 
+NAMES_AR += [(r"\bLutnick\b", "لوتنيك"), (r"\bHakeem Jeffries\b|\bJeffries\b", "حكيم جيفريز"), (r"\bSchumer\b", "شومر"),
+             (r"\bThune\b", "ثون"), (r"\bHassett\b", "هاسيت"), (r"\bGreer\b", "غير")]
+
 def fix_names(text):
     low = text.lower()
     for rx, ar_ in NAMES_AR:
-        text = re.sub(rx, ar_, text)
+        text = re.sub(rx, ar_, text, flags=re.I)
     if "committee" in low or "لجنة" in text:
         text = re.sub(r"\bChair(?:man|woman|person)?\b", "رئيس اللجنة", text)      # committee chair, not a president
         text = re.sub(r"\b(?:agreed to |will |to )?appear before\b", "الإدلاء بشهادته أمام", text)
@@ -238,23 +241,58 @@ GLOSS = [("المثول أمام", "الإدلاء بشهادته أمام"),
          ("تجنب المخاطر", "تجنب المخاطر (ميل المستثمرين للأصول الآمنة)"),
          ("شهية المخاطرة", "شهية المخاطرة (ميل المستثمرين للأصول الأعلى مخاطرة)")]
 
+_VARIANTS = {"ترامب": ("ترمب", "ترامپ", "ترومب", "ترمبو", "ترامبل"), "بوتين": ("بوتن", "بوتان"), "شي جين بينغ": ("شي جينبينغ", "شي جينبينج", "شي جين بينج"),
+             "جنسن هوانغ": ("جينسن هوانغ", "جنسن هوانج", "جنسن هوانغ")}
+
+def polish_names(out, src):
+    """Plain-translation outputs: normalise the usual spellings of names that the source contains."""
+    for good, bad in _VARIANTS.items():
+        for b in bad:
+            if b != good: out = out.replace(b, good)
+    return out
+
+PEOPLE_GLOSS = [("لوتنيك", "لوتنيك (وزير التجارة الأمريكي)"), ("بيسنت", "بيسنت (وزير الخزانة الأمريكي)"),
+                ("جيفريز", "جيفريز (زعيم الديمقراطيين في مجلس النواب)"), ("شومر", "شومر (زعيم الديمقراطيين في مجلس الشيوخ)"),
+                ("ثون", "ثون (زعيم الأغلبية الجمهورية في مجلس الشيوخ)"), ("مايك جونسون", "مايك جونسون (رئيس مجلس النواب)"),
+                ("جنسن هوانغ", "جنسن هوانغ (رئيس شركة إنفيديا)"), ("جيمي ديمون", "جيمي ديمون (رئيس بنك جيه بي مورغان)"),
+                ("سام ألتمان", "سام ألتمان (رئيس شركة OpenAI)"), ("تيم كوك", "تيم كوك (رئيس شركة أبل)"),
+                ("إيلون ماسك", "إيلون ماسك (مالك تسلا وإكس)")]
+GLOSS += [("مضيق هرمز", "مضيق هرمز (ممر شحن النفط الرئيسي في الخليج)"), ("أوبك", "أوبك (منظمة الدول المصدرة للنفط)"),
+          ("التعريفات الجمركية", "التعريفات الجمركية (ضرائب على الواردات)")]
+
 def polish_ar(t):
+    for a, b in PEOPLE_GLOSS:
+        if b and re.search(rf"(?<![\u0600-\u06FF]){re.escape(a)}(?![\u0600-\u06FF])", t) and (a + " (") not in t and b not in t:
+            t = re.sub(rf"(?<![\u0600-\u06FF]){re.escape(a)}(?![\u0600-\u06FF])", b, t, count=1)
     t = re.sub(r"(?<![\u0600-\u06FF])(?:برم|برمب|ترمب)(?![\u0600-\u06FF])", "ترامب", t)   # common mangling of "Trump"
     for a, b in GLOSS:
         if a in t and (b not in t) and (a + " (") not in t:
             t = t.replace(a, b, 1)
     return t
 
+def _missing_names(src, out):
+    """Arabic names that must appear in the translation (because the English source has them) but do not."""
+    return [ar_ for rx, ar_ in NAMES_AR if re.search(rx, src) and ar_ not in out and len(ar_) <= 14 and "لجنة" not in ar_ and "رئيس" not in ar_ and "وزير" not in ar_ and "زعيم" not in ar_]
+
 def translate_ar(text, verbose=False):
-    text = fix_names(text)
-    for fn in (_tr_google, _tr_google_mobile, _tr_mymemory):
-        try:
-            out = fn(text)
-            if out and out != text:
-                return polish_ar(out)
-        except Exception as ex:
-            if verbose: print(f"translate {fn.__name__} failed: {ex}")
-    return None
+    fixed = fix_names(text)
+    best = None
+    # attempt A: names already in Arabic; attempt B: plain English (names fixed afterwards) when a name got mangled/lost
+    for attempt in (fixed, text):
+        for fn in (_tr_google, _tr_google_mobile, _tr_mymemory):
+            try:
+                out = fn(attempt)
+                if not out or out == attempt: continue
+                if attempt is text:
+                    out = polish_names(out, text)
+                out = polish_ar(out)
+                if best is None: best = out
+                if not _missing_names(text, out):
+                    return out
+                break   # this attempt lost a name: try the other one
+            except Exception as ex:
+                if verbose: print(f"translate {fn.__name__} failed: {ex}")
+    return best
 
 # ---------------- calendar ----------------
 def fetch_calendar():
