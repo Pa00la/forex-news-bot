@@ -298,7 +298,8 @@
   "agency attack east hit hormuz iran maritime mine near oman report tanker two vessel",
   "asia best hail history one politic return trip trump week",
   "database fbi hack latest positive spin there trump",
-  "chat congres control democrat lawmaker only politic step week"
+  "chat congres control democrat lawmaker only politic step week",
+  "arabia attack bahrain deal iran open remain report saudi u.s"
  ],
  "daily": {},
  "news_count": {
@@ -308,7 +309,7 @@
   "2026-11-19": 43,
   "2026-11-20": 43,
   "2026-11-21": 7,
-  "2026-11-22": 1
+  "2026-11-22": 2
  },
  "day_news": {
   "2026-11-18": [
@@ -935,6 +936,10 @@
    {
     "ar": "دردشة سياسية: المشرعون يتقدمون مع بقاء أسابيع فقط على سيطرة الديمقراطيين على الكونغرس",
     "score": 2
+   },
+   {
+    "ar": "السعودية والبحرين تبلغان عن هجمات جديدة بينما تقول إيران إنها لا تزال منفتحة على التوصل إلى اتفاق مع الولايات المتحدة",
+    "score": 0
    }
   ]
  }
