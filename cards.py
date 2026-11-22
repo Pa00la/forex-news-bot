@@ -405,6 +405,7 @@ def _footer(d, source, dark=True):
         text(d, (W - 45, W - 125), "المصدر: " + source, 28, (200, 205, 215), "ra")
 
 def _pill(d, xy, label, size, fill, fg=WHITE):
+    if not label: return
     w = int(d.textlength(ar(label), font=font(size))) + 60
     x, y = xy
     d.rounded_rectangle([x - w // 2, y - size, x + w // 2, y + size], 20, fill=fill)
@@ -439,7 +440,7 @@ N_LAYOUTS = 11
 def card_news(headline_ar, english_title="", source="", layout=None, urgent=True):
     import zlib
     name, glyph, col = pick_cat(english_title)
-    LBL, PILL, PILLT = ("عاجل", (200, 40, 40), (230, 60, 60)) if urgent else ("خبر", (45, 70, 110), (120, 160, 215))
+    LBL, PILL, PILLT = ("عاجل", (200, 40, 40), (230, 60, 60)) if urgent else ("", (45, 70, 110), (120, 160, 215))
     seed = zlib.crc32((english_title + headline_ar).encode())
     v = seed % N_LAYOUTS if layout is None else layout
     bgs = [(11, 18, 32), (14, 14, 28), (10, 24, 30), (22, 14, 20)]
@@ -467,8 +468,9 @@ def card_news(headline_ar, english_title="", source="", layout=None, urgent=True
         if big: _ctext(d, W // 2, W // 2, glyph, 560 if len(glyph) <= 2 else 420, _shade(base_bg, 1.8))
         d.polygon([(0, 0), (W, 0), (W, 120), (0, 260)], fill=PANEL)
         d.rectangle([0, 0, 18, W], fill=col)
-        d.rounded_rectangle([W - 330, 40, W - 40, 130], 20, fill=PILL)
-        text(d, (W - 185, 85), LBL, 56, WHITE, "mm")
+        if LBL:
+            d.rounded_rectangle([W - 330, 40, W - 40, 130], 20, fill=PILL)
+            text(d, (W - 185, 85), LBL, 56, WHITE, "mm")
         d.rounded_rectangle([40, 50, 40 + 40 + int(d.textlength(ar(name), font=font(40))), 125], 20, fill=col)
         text(d, (60, 87), name, 40, WHITE, "lm")
         size, lines = _fit(d, headline_ar, W - 130, 7, (66, 58, 52))
@@ -519,8 +521,9 @@ def card_news(headline_ar, english_title="", source="", layout=None, urgent=True
     elif v == 6:    # frame
         d.rectangle([34, 34, W - 34, W - 34], outline=GOLD, width=4)
         d.rectangle([52, 52, W - 52, W - 52], outline=_shade(GOLD, 0.5), width=2)
-        d.rectangle([W // 2 - 150, 14, W // 2 + 150, 74], fill=PILL)
-        text(d, (W // 2, 44), LBL, 44, WHITE, "mm")
+        if LBL:
+            d.rectangle([W // 2 - 150, 14, W // 2 + 150, 74], fill=PILL)
+            text(d, (W // 2, 44), LBL, 44, WHITE, "mm")
         text(d, (W // 2, 170), name, 48, GOLD, "mm")
         size, lines = _fit(d, headline_ar, W - 220, 6, (64, 56, 50))
         y = 230 + (560 - len(lines) * int(size * 1.45)) // 2
@@ -574,7 +577,7 @@ def _focus_of(fname):
         except Exception:
             _FOCUS = {}
     f = _FOCUS.get(fname)
-    return f if f and f[2] >= 0.12 else None
+    return f if f and f[2] >= 0.15 and 0.1 <= f[1] <= 0.6 else None
 
 def _people_imgs(title):
     """One photo per person from the 'people' folder. Several files per person are allowed for variety:
@@ -592,8 +595,9 @@ def _people_imgs(title):
         if m and m.group(1) not in known and not m.group(1).startswith("whitehouse"):
             k = m.group(1); known.add(k)
             keys.append((k, r"\b" + r"[\s_\-]+".join(re.escape(p) for p in re.split(r"[_\-]", k) if p) + r"\b"))
-    for key, rx in keys:
-        if not re.search(rx, t): continue
+    hits = [(k, rx) for k, rx in keys if re.search(rx, t)][:3]
+    n = max(1, len(hits)); pw, ph = W // n, 640
+    for key, rx in hits:
         cand = sorted(f for f in files if re.fullmatch(rf"{re.escape(key)}[_\-]?\d*\.(jpg|jpeg|png|webp)", f.lower()))
         if not cand: continue
         cand = [f for f in cand if _focus_of(f)] or cand   # prefer photos where a clear face was found
@@ -606,23 +610,29 @@ def _people_imgs(title):
     return out[:3]
 
 def _crop_to(im, w, h, top_bias=0.25):
+    from PIL import ImageFilter
     fc = getattr(im, "focus", None)
-    s = max(w / im.width, h / im.height)
-    if fc:   # keep the face large and centered: zoom in a little when the face is small
-        cx, cy, fh = fc
-        s = min(max(s, 0.24 * h / (fh * im.height)), s * 1.25)   # face stays fairly small and fully visible
-    im2 = im.resize((max(w, int(im.width * s)), max(h, int(im.height * s))))
-    if fc:
-        x = int(cx * im2.width - w / 2)
-        y = int(cy * im2.height - 0.40 * h)
-        x = min(max(x, 0), im2.width - w); y = min(max(y, 0), im2.height - h)
-    else:
-        x = (im2.width - w) // 2
-        y = int((im2.height - h) * top_bias)
-    return im2.crop((x, y, x + w, y + h))
+    s = max(w / im.width, h / im.height)          # "cover" scale
+    if not fc:
+        im2 = im.resize((max(w, int(im.width * s)), max(h, int(im.height * s))))
+        x = (im2.width - w) // 2; y = int((im2.height - h) * top_bias)
+        return im2.crop((x, y, x + w, y + h))
+    cx, cy, fh = fc
+    # keep the face fairly small and clear: zoom in a bit if tiny, zoom OUT if huge (blurred sides fill the gap)
+    st = max(h / im.height, min(s * 1.25, 0.34 * h / (fh * im.height)))
+    im2 = im.resize((max(1, int(im.width * st)), max(h, int(im.height * st))))
+    y = min(max(int(cy * im2.height - 0.40 * h), 0), im2.height - h)
+    if im2.width >= w:
+        x = min(max(int(cx * im2.width - w / 2), 0), im2.width - w)
+        return im2.crop((x, y, x + w, y + h))
+    bg = im.resize((max(w, int(im.width * s)), max(h, int(im.height * s)))).filter(ImageFilter.GaussianBlur(28))
+    bx = (bg.width - w) // 2; by = (bg.height - h) // 2
+    bg = Image.blend(bg.crop((bx, by, bx + w, by + h)), Image.new("RGB", (w, h), (8, 12, 22)), 0.35)
+    bg.paste(im2.crop((0, y, im2.width, y + h)), ((w - im2.width) // 2, 0))
+    return bg
 
 def _label(urgent):
-    return ("عاجل", (200, 40, 40)) if urgent else ("خبر", (45, 70, 110))
+    return ("عاجل", (200, 40, 40)) if urgent else ("", (45, 70, 110))
 
 def _card_people(imgs, headline_ar, name, source, urgent):
     img = Image.new("RGB", (W, W), (8, 12, 22))
@@ -634,14 +644,17 @@ def _card_people(imgs, headline_ar, name, source, urgent):
         d.rectangle([i * pw - 3, 0, i * pw + 3, ph], fill=(8, 12, 22))
     lab, lc = _label(urgent)
     d.rectangle([0, ph, W, W], fill=(245, 246, 249))
-    d.rectangle([W - 215, ph, W, W - 110], fill=lc)
-    text(d, (W - 108, ph + (W - 110 - ph) // 2), lab, 76, WHITE, "mm")
-    size, lines = _fit(d, headline_ar, W - 215 - 90, 4, (56, 50, 44, 40))
+    if lab:
+        d.rectangle([W - 215, ph, W, W - 110], fill=lc)
+        text(d, (W - 108, ph + (W - 110 - ph) // 2), lab, 76, WHITE, "mm")
+    right = W - 250 if lab else W - 60
+    size, lines = _fit(d, headline_ar, right - 40, 4, (56, 50, 44, 40))
     h = len(lines) * int(size * 1.4)
-    _lines(d, lines, size, W - 250, ph + (W - 110 - ph - h) // 2 + 6, "ra", (18, 22, 36))
-    d.rectangle([0, W - 110, W, W], fill=PANEL)
-    d.text((45, W - 55), BRAND, font=font(40), fill=GOLD, anchor="lm")
-    d.text((W - 45, W - 55), HANDLE, font=font(32), fill=WHITE, anchor="rm")
+    _lines(d, lines, size, right, ph + (W - 110 - ph - h) // 2 + 6, "ra", (18, 22, 36))
+    d.rectangle([0, W - 110, W, W], fill=(245, 246, 249))
+    d.line([(45, W - 108), (W - 45, W - 108)], fill=(205, 210, 222), width=2)
+    d.text((45, W - 52), BRAND, font=font(40), fill=(176, 120, 10), anchor="lm")
+    d.text((W - 45, W - 52), HANDLE, font=font(32), fill=(40, 48, 70), anchor="rm")
     if source:
         text(d, (W - 250, W - 135), "المصدر: " + source, 26, (90, 98, 120), "ra")
     return to_png(img)
@@ -654,14 +667,17 @@ def _card_photo_top(photo, headline_ar, name, source, urgent, col):
     ph = 640
     d.rounded_rectangle([30, 30, 30 + 44 + int(d.textlength(ar(name), font=font(38))), 104], 18, fill=col)
     text(d, (52, 67), name, 38, WHITE, "lm")
-    d.rectangle([W - 215, ph + 30, W - 40 + 40, W - 110], fill=lc)
-    text(d, (W - 108, ph + 30 + (W - 110 - ph - 30) // 2), lab, 76, WHITE, "mm")
-    size, lines = _fit(d, headline_ar, W - 215 - 90, 4, (56, 50, 44, 40))
+    if lab:
+        d.rectangle([W - 215, ph + 30, W - 40 + 40, W - 110], fill=lc)
+        text(d, (W - 108, ph + 30 + (W - 110 - ph - 30) // 2), lab, 76, WHITE, "mm")
+    right = W - 250 if lab else W - 60
+    size, lines = _fit(d, headline_ar, right - 40, 4, (56, 50, 44, 40))
     h = len(lines) * int(size * 1.4)
-    _lines(d, lines, size, W - 250, ph + 30 + (W - 110 - ph - 30 - h) // 2 + 6, "ra", (18, 22, 36))
-    d.rectangle([0, W - 110, W, W], fill=PANEL)
-    d.text((45, W - 55), BRAND, font=font(40), fill=GOLD, anchor="lm")
-    d.text((W - 45, W - 55), HANDLE, font=font(32), fill=WHITE, anchor="rm")
+    _lines(d, lines, size, right, ph + 30 + (W - 110 - ph - 30 - h) // 2 + 6, "ra", (18, 22, 36))
+    d.rectangle([0, W - 110, W, W], fill=(245, 246, 249))
+    d.line([(45, W - 108), (W - 45, W - 108)], fill=(205, 210, 222), width=2)
+    d.text((45, W - 52), BRAND, font=font(40), fill=(176, 120, 10), anchor="lm")
+    d.text((W - 45, W - 52), HANDLE, font=font(32), fill=(40, 48, 70), anchor="rm")
     if source:
         text(d, (W - 250, W - 135), "المصدر: " + source, 26, (90, 98, 120), "ra")
     return to_png(img)
@@ -715,9 +731,7 @@ def card_poster(session_name, sub, english_hint, chips=("الذهب", "الدو�
         x = int(W // 2 + ((len(chips) - 1) / 2 - i) * 280)
         d.rounded_rectangle([x - 125, 790, x + 125, 870], 40, fill=(245, 185, 66))
         text(d, (x, 830), ch, 40, (20, 24, 36), "mm")
-    d.rectangle([0, W - 110, W, W], fill=PANEL)
-    d.text((45, W - 55), BRAND, font=font(40), fill=GOLD, anchor="lm")
-    d.text((W - 45, W - 55), HANDLE, font=font(32), fill=WHITE, anchor="rm")
+    _footer(d, "")
     return to_png(img)
 
 
@@ -755,9 +769,7 @@ def card_event(abbr, english, arabic, hint, chips):
     text(d, (W // 2, 640), arabic, size2, WHITE, "mm")
     text(d, (W // 2, 725), "الأهم في هذا الأسبوع" if False else "حدث مهم للأسواق", 38, GOLD, "mm")
     _chip_row(d, chips, 800)
-    d.rectangle([0, W - 110, W, W], fill=PANEL)
-    d.text((45, W - 55), BRAND, font=font(40), fill=GOLD, anchor="lm")
-    d.text((W - 45, W - 55), HANDLE, font=font(32), fill=WHITE, anchor="rm")
+    _footer(d, "")
     return to_png(img)
 
 def card_greeting(title, sub, hint):
@@ -770,7 +782,5 @@ def card_greeting(title, sub, hint):
     d.rectangle([W // 2 - 120, 430, W // 2 + 120, 438], fill=GOLD)
     for k, ln in enumerate(wrap(d, sub, 46, W - 200)[:2]):
         text(d, (W // 2, 500 + k * 70), ln, 46, WHITE, "mm")
-    d.rectangle([0, W - 110, W, W], fill=PANEL)
-    d.text((45, W - 55), BRAND, font=font(40), fill=GOLD, anchor="lm")
-    d.text((W - 45, W - 55), HANDLE, font=font(32), fill=WHITE, anchor="rm")
+    _footer(d, "")
     return to_png(img)

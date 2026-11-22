@@ -200,7 +200,7 @@ def _tr_mymemory(text):
     out = data["responseData"]["translatedText"]
     return "" if "MYMEMORY WARNING" in out.upper() else unesc(out).strip()
 
-NAMES_AR = [(r"\bXi Jinping\b|\bXi\b", "شي جين بينغ"), (r"\bPutin\b", "بوتين"), (r"\bTrump\b", "ترامب"),
+NAMES_AR = [(r"\bXi Jinping\b|\bXi\b", "شي جين بينغ"), (r"\bPutin\b", "بوتين"), (r"(?i:\bTrump(?:\'s)?\b)", "ترامب"),
             (r"\bBiden\b", "بايدن"), (r"\bPowell\b", "باول"), (r"\bLagarde\b", "لاغارد"), (r"\bBailey\b", "بايلي"),
             (r"\bUeda\b", "أويدا"), (r"\bWarsh\b", "وورش"), (r"\bZelensky\b", "زيلينسكي"), (r"\bNetanyahu\b", "نتنياهو"),
             (r"\bBessent\b", "بيسنت"), (r"\bWaller\b", "والر"), (r"\bMusk\b", "ماسك"), (r"\bModi\b", "مودي")]
@@ -239,6 +239,7 @@ GLOSS = [("المثول أمام", "الإدلاء بشهادته أمام"),
          ("شهية المخاطرة", "شهية المخاطرة (ميل المستثمرين للأصول الأعلى مخاطرة)")]
 
 def polish_ar(t):
+    t = re.sub(r"(?<![\u0600-\u06FF])(?:برم|برمب|ترمب)(?![\u0600-\u06FF])", "ترامب", t)   # common mangling of "Trump"
     for a, b in GLOSS:
         if a in t and (b not in t) and (a + " (") not in t:
             t = t.replace(a, b, 1)
@@ -1097,6 +1098,8 @@ def deliver(state, out):
     sent = 0
     for item in out:
         key, text = item[0], item[1]
+        if "t.me/forex_news_M1" not in text and not (len(item) > 2 and item[2] and item[2][0] == "poll"):
+            text = text + "\n\n" + LINK   # every message carries the channel link
         extra = item[2] if len(item) > 2 else None
         try:
             if extra and extra[0] == "poll":
