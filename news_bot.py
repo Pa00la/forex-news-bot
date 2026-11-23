@@ -402,8 +402,24 @@ def medium_events(events, high_dates):
 def ev_key(e):
     return f'{e.get("date")}|{e.get("country")}|{e.get("title")}'
 
+_ABBR = [("non-farm", "NFP"), ("nonfarm", "NFP"), ("core pce", "PCE"), ("pce", "PCE"), ("core cpi", "CPI"), ("cpi", "CPI"), ("core ppi", "PPI"), ("ppi", "PPI"),
+         ("unemployment rate", "UR"), ("adp", "ADP"), ("jolts", "JOLTS"), ("fomc", "FOMC"), ("gdp", "GDP"),
+         ("ism", "ISM"), ("pmi", "PMI"), ("retail sales", "Retail Sales"), ("crude oil inventories", "EIA"), ("average hourly earnings", "AHE"),
+         ("employment change", "NFP"), ("trade balance", "TB"), ("rate decision", "Rates"), ("cash rate", "RBA"), ("official bank rate", "BoE")]
+
+def ev_abbr(e):
+    t = (e.get("title") or "").lower()
+    for k, ab in _ABBR:
+        if k in t:
+            return ab
+    return ""
+
 def ev_names(e):
-    return COUNTRY_AR.get(e["country"], e["country"]), TITLE_AR.get(e["title"], e["title"])
+    t = TITLE_AR.get(e["title"], e["title"])
+    ab = ev_abbr(e)
+    if ab and ab.lower() not in t.lower():
+        t = f"{t} ({ab})"
+    return COUNTRY_AR.get(e["country"], e["country"]), t
 
 def fc_line(e):
     fc, pv = (e.get("forecast") or "").strip(), (e.get("previous") or "").strip()
