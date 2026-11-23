@@ -120,7 +120,6 @@
   "morning:2026-11-23"
  ],
  "titles": [
-  "and being fair happily husband keep retired should thinks working.",
   "2027 4.9% bofa end expected fall says survey treasury u.s. year yield",
   "amid and european fed hawkish investinglive iran news remains risk sentiment stalemate tentative wrap",
   "east middle oil persist prices rebound risks shipping",
@@ -319,7 +318,8 @@
   "drone exemplary libyan operation port prais russian sank warship zelenskyy",
   "administration bounc huang jensen nvidia push rehir stock trump",
   "ackman bill enter fed fund hedge manager may rais rate recession u.s",
-  "attack fall further oil persist shipp"
+  "attack fall further oil persist shipp",
+  "decline gold march rebound sharpest since weekly"
  ],
  "daily": {},
  "news_count": {
@@ -330,7 +330,7 @@
   "2026-11-20": 43,
   "2026-11-21": 7,
   "2026-11-22": 3,
-  "2026-11-23": 19
+  "2026-11-23": 20
  },
  "day_news": {
   "2026-11-19": [
@@ -800,6 +800,10 @@
    },
    {
     "ar": "النفط يتراجع أكثر لكن هجمات الشحن مستمرة",
+    "score": 1
+   },
+   {
+    "ar": "الذهب يرتد بعد أكبر انخفاض أسبوعي منذ مارس",
     "score": 1
    }
   ]
