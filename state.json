@@ -120,8 +120,6 @@
   "morning:2026-11-23"
  ],
  "titles": [
-  "could dollar end strengthen versus year yen",
-  "ball become breakout could dollar driven market stock u.s. wrecking",
   "0.12% 98.46 dollar index rises wsj",
   "and being fair happily husband keep retired should thinks working.",
   "2027 4.9% bofa end expected fall says survey treasury u.s. year yield",
@@ -319,7 +317,9 @@
   "elevated may near oil pric stay term",
   "debate loss midterm next party republican what",
   "acceptance asset based collateral dlt ecb eligible eurosystem expand",
-  "drone exemplary libyan operation port prais russian sank warship zelenskyy"
+  "drone exemplary libyan operation port prais russian sank warship zelenskyy",
+  "administration bounc huang jensen nvidia push rehir stock trump",
+  "ackman bill enter fed fund hedge manager may rais rate recession u.s"
  ],
  "daily": {},
  "news_count": {
@@ -330,7 +330,7 @@
   "2026-11-20": 43,
   "2026-11-21": 7,
   "2026-11-22": 3,
-  "2026-11-23": 16
+  "2026-11-23": 18
  },
  "day_news": {
   "2026-11-19": [
@@ -789,10 +789,19 @@
    {
     "ar": "زيلينسكي يثني على عملية الطائرات بدون طيار \"النموذجية\" التي أغرقت سفينة حربية روسية في ميناء ليبي",
     "score": 3
+   },
+   {
+    "ar": "أسهم إنفيديا ترتفع مع سعي إدارة ترامب لإعادة تعيين جنسن هوانغ (رئيس شركة إنفيديا)",
+    "score": 1
+   },
+   {
+    "ar": "يقول مدير صندوق التحوط بيل أكمان إن الولايات المتحدة قد تدخل في حالة ركود إذا رفع بنك الاحتياطي الفيدرالي أسعار الفائدة",
+    "score": 2
    }
   ]
  },
  "roles": {
-  "Last Week": ""
+  "Last Week": "",
+  "Bill Ackman": ""
  }
 }
