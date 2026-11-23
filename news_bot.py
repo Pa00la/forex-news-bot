@@ -529,6 +529,7 @@ def event_poster(e, when):
     for rx, abbr, eng in EVENT_POSTERS:
         if re.search(rx, t):
             c, name_ar = ev_names(e)
+            name_ar = re.sub(r"\s*\([A-Za-z]+\)$", "", name_ar)  # the acronym is already huge on the poster
             cur = e.get("country")
             who = "الدولار والأسواق" if cur == "USD" else "العملة والأسواق"
             chips = ["ترقب عالي من الأسواق", f"الموعد {_t12(when.astimezone(DUBAI))} مصر", f"تأثير مباشر على {who}"]
