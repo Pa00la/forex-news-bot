@@ -131,7 +131,6 @@
   "open5:سيدني:2026-11-24"
  ],
  "titles": [
-  "are based bets halt kalshi remarks that trump",
   "bond edge eurozone lower treasury u.s. yields",
   "and communication ecb experience lane monetary philip policy practice science the",
   "dollar futures gold higher inch slip u.s. yields",
@@ -330,7 +329,8 @@
   "california congres democrat evidence misconduct resign sexual",
   "2027 bring factor fed inflation lower pins sees unusual william",
   "ceo cnbc deal exclusive how huang made nvidia reinstate see transcript trump",
-  "advisor back ceo house huang national nvidia security weigh white"
+  "advisor back ceo house huang national nvidia security weigh white",
+  "2027 2028 anz cut cuts early first forward june pull rate rba sees three"
  ],
  "daily": {},
  "news_count": {
@@ -342,7 +342,7 @@
   "2026-11-21": 7,
   "2026-11-22": 3,
   "2026-11-23": 26,
-  "2026-11-24": 2
+  "2026-11-24": 3
  },
  "day_news": {
   "2026-11-20": [
@@ -677,6 +677,10 @@
    {
     "ar": "نسخة حصرية من CNBC: شاهد كيف \"عقد ترامب الصفقة\" لإعادة هوانغ إلى منصب الرئيس التنفيذي لشركة Nvidia",
     "score": 1
+   },
+   {
+    "ar": "ANZ يسحب أول خفض لسعر الفائدة من بنك الاحتياطي الأسترالي إلى يونيو 2027، ويتوقع ثلاثة تخفيضات بحلول أوائل عام 2028",
+    "score": 2
    }
   ]
  },
