@@ -89,6 +89,30 @@ def base(height, title, subtitle=""):
 def to_png(img):
     b = io.BytesIO(); img.save(b, "PNG", optimize=True); return b.getvalue()
 
+def add_quote(png, name, price, pct, decimals=2):
+    """Stamp a live-price pill (asset name, price, % change today) above the footer of a finished news card."""
+    img = Image.open(io.BytesIO(png)).convert("RGB")
+    d = ImageDraw.Draw(img, "RGBA")
+    up = pct >= 0
+    col = GREEN if up else RED
+    ptxt = f"{'+' if up else '-'}{abs(pct):.2f}%"
+    ntxt = ar(name)
+    vtxt = f"{price:,.{decimals}f}"
+    f_n, f_v, f_p = font(36), font(44), font(38)
+    wn, wv, wp = d.textlength(ntxt, font=f_n), d.textlength(vtxt, font=f_v), d.textlength(ptxt, font=f_p)
+    pad, gap = 28, 26
+    total = wn + wv + wp + 2 * gap + 2 * pad
+    x1, y0, y1 = W - 40, 862, 938
+    x0 = x1 - total
+    d.rounded_rectangle([x0, y0, x1, y1], 18, fill=(8, 12, 22, 225), outline=(col[0], col[1], col[2], 255), width=3)
+    cy = (y0 + y1) // 2
+    x = x1 - pad
+    d.text((x, cy), ntxt, font=f_n, fill=WHITE, anchor="rm"); x -= wn + gap
+    d.text((x, cy), vtxt, font=f_v, fill=GOLD, anchor="rm"); x -= wv + gap
+    d.text((x, cy), ptxt, font=f_p, fill=col, anchor="rm")
+    return to_png(img)
+
+
 def card_strength(rows, subtitle):
     """rows: [(code, arabic name, pct)] sorted strongest first."""
     h = 230 + 105 * len(rows) + 90

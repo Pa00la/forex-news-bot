@@ -720,6 +720,38 @@ def record_context(symbol, price):
         print("record_context failed:", ex)
     return ""
 
+
+# ---------------- live price next to the news ----------------
+QUOTE_RULES = [  # (regex on english title, yahoo symbol, arabic name, decimals, unit, emoji)
+    (r"\b(gold|xau|bullion)\b", "GC=F", "الذهب", 2, "$", "🥇"),
+    (r"\bsilver\b", "SI=F", "الفضة", 2, "$", "🥈"),
+    (r"\b(oil|crude|brent|wti|opec)\b", "CL=F", "النفط الأمريكي", 2, "$", "🛢️"),
+    (r"\b(bitcoin|btc|crypto|cryptocurrency)\b", "BTC-USD", "بيتكوين", 0, "$", "🪙"),
+    (r"\b(nasdaq)\b", "^IXIC", "ناسداك", 0, "", "📈"),
+    (r"\b(s&p|wall street|stocks?|stock market)\b", "^GSPC", "S&P 500", 0, "", "📈"),
+    (r"\b(dow)\b", "^DJI", "داو جونز", 0, "", "📈"),
+    (r"(?<!australian )(?<!canadian )(?<!new zealand )(?<!hong kong )\b(dollar|dxy|greenback)\b", "DX-Y.NYB", "مؤشر الدولار", 2, "", "💵"),
+    (r"\beuro\b", "EURUSD=X", "اليورو/دولار", 4, "", "💶"),
+    (r"\b(pound|sterling)\b", "GBPUSD=X", "الإسترليني/دولار", 4, "", "💷"),
+    (r"\byen\b", "USDJPY=X", "دولار/ين", 2, "", "💴"),
+]
+
+def quote_for(title):
+    """Current price + % change today for the asset the headline is about, or None."""
+    t = (title or "").lower()
+    for rx, sym, name, dec, unit, emo in QUOTE_RULES:
+        if re.search(rx, t):
+            try:
+                price, _chg, pct, _c = asset_data(sym)
+                return {"name": name, "price": price, "pct": pct, "dec": dec, "unit": unit, "emo": emo}
+            except Exception as ex:
+                print("quote failed:", sym, ex)
+            return None
+    return None
+
+def quote_line(q):
+    return f"{q['emo']} {q['name']} الآن: <b>{q['price']:,.{q['dec']}f}{q['unit']}</b> ({'+' if q['pct'] >= 0 else '-'}{abs(q['pct']):.2f}% اليوم)"
+
 def run_assets(state, now, out):
     """Gold and US oil (WTI) price cards once a day at 17:00."""
     if now.weekday() >= 5 or not (17 <= now.hour < 20): return
@@ -977,9 +1009,12 @@ def run_news(state, now, out, fast=False):
         urgent = sc_ >= URGENT_MIN_SCORE
         head = "📊 <b>نتيجة</b>" if is_result else pick(NEWS_POOL if urgent else NEWS_POOL_NORMAL, title)
         text = f"{head}\n{esc(ar)}\n📰 {esc(src)}"
+        q = None
         if not is_result:
             wl = who_lines(title)
             if wl: text += "\n" + "\n".join(wl)
+            q = quote_for(title)
+            if q: text += "\n" + quote_line(q)
         extra = None
         ev = match_event(res["name"], now) if res else None
         if res and ev:
@@ -993,7 +1028,7 @@ def run_news(state, now, out, fast=False):
             label = res.get("_ar") or translate_ar(res["name"]) or res["name"]
             extra = ("img", lambda r=res, l=label: C().card_result("", l, r["actual"], r["forecast"], r["prev"], r["verdict"]))
         if extra is None:
-            extra = ("img", lambda a=ar, t=title, sr=src, u=urgent: C().card_news(a, t, sr, urgent=u))
+            extra = ("img", lambda a=ar, t=title, sr=src, u=urgent, qq=q: (lambda b: C().add_quote(b, qq["name"], qq["price"], qq["pct"], qq["dec"]) if qq else b)(C().card_news(a, t, sr, urgent=u)))
         out.append((None, text, extra))
         state.setdefault("day_news", {}).setdefault(day, []).append({"ar": ar, "score": news_score(title)})
         state["titles"].append(" ".join(sorted(norm(title))))
