@@ -120,7 +120,6 @@
   "morning:2026-11-23"
  ],
  "titles": [
-  "0.12% 98.46 dollar index rises wsj",
   "and being fair happily husband keep retired should thinks working.",
   "2027 4.9% bofa end expected fall says survey treasury u.s. year yield",
   "amid and european fed hawkish investinglive iran news remains risk sentiment stalemate tentative wrap",
@@ -319,7 +318,8 @@
   "acceptance asset based collateral dlt ecb eligible eurosystem expand",
   "drone exemplary libyan operation port prais russian sank warship zelenskyy",
   "administration bounc huang jensen nvidia push rehir stock trump",
-  "ackman bill enter fed fund hedge manager may rais rate recession u.s"
+  "ackman bill enter fed fund hedge manager may rais rate recession u.s",
+  "attack fall further oil persist shipp"
  ],
  "daily": {},
  "news_count": {
@@ -330,7 +330,7 @@
   "2026-11-20": 43,
   "2026-11-21": 7,
   "2026-11-22": 3,
-  "2026-11-23": 18
+  "2026-11-23": 19
  },
  "day_news": {
   "2026-11-19": [
@@ -797,6 +797,10 @@
    {
     "ar": "يقول مدير صندوق التحوط بيل أكمان إن الولايات المتحدة قد تدخل في حالة ركود إذا رفع بنك الاحتياطي الفيدرالي أسعار الفائدة",
     "score": 2
+   },
+   {
+    "ar": "النفط يتراجع أكثر لكن هجمات الشحن مستمرة",
+    "score": 1
    }
   ]
  },
