@@ -402,22 +402,24 @@ def medium_events(events, high_dates):
 def ev_key(e):
     return f'{e.get("date")}|{e.get("country")}|{e.get("title")}'
 
-_ICONS = [("crude", "🛢️"), ("oil", "🛢️"), ("nonfarm", "👷"), ("employment", "👷"), ("unemployment", "👷"), ("jobless", "👷"), ("claims", "👷"), ("payroll", "👷"), ("jolts", "👷"), ("adp", "👷"),
-          ("cpi", "🛒"), ("inflation", "🛒"), ("ppi", "🏭"), ("pce", "🛒"), ("price", "🛒"),
-          ("interest rate", "🏦"), ("rate decision", "🏦"), ("fomc", "🏦"), ("minutes", "📝"), ("speaks", "🎤"), ("press conference", "🎤"), ("statement", "🏦"),
-          ("gdp", "📈"), ("pmi", "🏭"), ("ism", "🏭"), ("manufacturing", "🏭"), ("industrial", "🏭"), ("retail sales", "🛍️"), ("consumer", "🛍️"), ("sentiment", "🛍️"), ("confidence", "🛍️"),
-          ("home", "🏠"), ("housing", "🏠"), ("building permits", "🏠"), ("trade balance", "🚢"), ("durable", "📦"), ("inventories", "📦"),
-          ("crude", "🛢️"), ("oil", "🛢️"), ("auction", "🏛️"), ("bond", "🏛️"), ("treasury", "🏛️")]
+_ABBR = [("non-farm", "NFP"), ("nonfarm", "NFP"), ("core pce", "PCE"), ("pce", "PCE"), ("core cpi", "CPI"), ("cpi", "CPI"), ("core ppi", "PPI"), ("ppi", "PPI"),
+         ("unemployment rate", "UR"), ("adp", "ADP"), ("jolts", "JOLTS"), ("fomc", "FOMC"), ("gdp", "GDP"),
+         ("ism", "ISM"), ("pmi", "PMI"), ("retail sales", "Retail Sales"), ("crude oil inventories", "EIA"), ("average hourly earnings", "AHE"),
+         ("employment change", "NFP"), ("trade balance", "TB"), ("rate decision", "Rates"), ("cash rate", "RBA"), ("official bank rate", "BoE")]
 
-def ev_icon(e):
+def ev_abbr(e):
     t = (e.get("title") or "").lower()
-    for k, ic in _ICONS:
+    for k, ab in _ABBR:
         if k in t:
-            return ic
-    return "📊"
+            return ab
+    return ""
 
 def ev_names(e):
-    return COUNTRY_AR.get(e["country"], e["country"]), TITLE_AR.get(e["title"], e["title"])
+    t = TITLE_AR.get(e["title"], e["title"])
+    ab = ev_abbr(e)
+    if ab and ab.lower() not in t.lower():
+        t = f"{t} ({ab})"
+    return COUNTRY_AR.get(e["country"], e["country"]), t
 
 def fc_line(e):
     fc, pv = (e.get("forecast") or "").strip(), (e.get("previous") or "").strip()
@@ -527,6 +529,7 @@ def event_poster(e, when):
     for rx, abbr, eng in EVENT_POSTERS:
         if re.search(rx, t):
             c, name_ar = ev_names(e)
+            name_ar = re.sub(r"\s*\([A-Za-z]+\)$", "", name_ar)  # the acronym is already huge on the poster
             cur = e.get("country")
             who = "الدولار والأسواق" if cur == "USD" else "العملة والأسواق"
             chips = ["ترقب عالي من الأسواق", f"الموعد {_t12(when.astimezone(DUBAI))} مصر", f"تأثير مباشر على {who}"]
@@ -535,7 +538,7 @@ def event_poster(e, when):
 
 def msg_prealert(e, when, stage=60):
     c, t = ev_names(e)
-    flag = FLAGS.get(e["country"], "") + " " + ev_icon(e)
+    flag = FLAGS.get(e["country"], "")
     if e.get("impact") == "High":
         head = pick(PRE_POOL[stage], ev_key(e) + str(stage))
     else:
@@ -551,7 +554,7 @@ def msg_prealert(e, when, stage=60):
 
 def msg_now(e, when):
     c, t = ev_names(e)
-    flag = FLAGS.get(e["country"], "") + " " + ev_icon(e)
+    flag = FLAGS.get(e["country"], "")
     head = pick(NOW_POOL, ev_key(e)) if e.get("impact") == "High" else "📌 <b>صدر الآن خبر متوسط التأثير</b>"
     lines = [head, f"{flag} {esc(t)}", impact_tag(e)]
     line = _fc_pv(e)
@@ -562,22 +565,22 @@ def msg_now(e, when):
     return "\n".join(lines)
 
 def msg_morning(items, today, rest=None):
-    lines = [f"📅 <b>أهم أخبار اليوم</b>", f"🗓️ {DAYS_AR[today.weekday()]} {today.day}/{today.month} ", LINE]
+    lines = [f"📅 <b>أهم أخبار اليوم</b>", f"🗓️ {DAYS_AR[today.weekday()]} {today.day}/{today.month}", "", LINE, ""]
     if items:
         for e, when in items:
             c, t = ev_names(e)
-            lines.append(f"🕒 <b>{fmt_time(when)}</b>  {FLAGS.get(e['country'], '')} {ev_icon(e)} {esc(c)}: {esc(t)}")
+            lines += [f"🕒 <b>{fmt_time(when)}</b>", f"{FLAGS.get(e['country'], '')} {esc(t)}", ""]
     else:
-        lines.append("✅ مفيش أخبار قوية النهارده، والسوق غالباً هادي")
+        lines += ["✅ مفيش أخبار قوية النهارده", ""]
     if rest:
-        lines += ["", "🗓️ <b>أهم أخبار باقي الأسبوع</b>", LINE]
+        lines += [LINE, "", "🗓️ <b>باقي الأسبوع</b>", ""]
         day = None
         for e, w in rest:
             if w.date() != day:
-                day = w.date(); lines.append(f"📌 <b>{DAYS_AR[w.weekday()]} {w.day}/{w.month}</b>")
+                day = w.date(); lines += [f"📌 <b>{DAYS_AR[w.weekday()]} {w.day}/{w.month}</b>", ""]
             c, t = ev_names(e)
-            lines.append(f"🕒 {_t12(w)} {FLAGS.get(e['country'], '')} {ev_icon(e)} {esc(c)}: {esc(t)}")
-    lines += [LINE, "🔔 هنبعت تنبيه قبل كل خبر وبعده", f"ℹ️ {DISCLAIMER}", FOOTER]
+            lines += [f"🕒 {_t12(w)}  {FLAGS.get(e['country'], '')} {esc(t)}", ""]
+    lines += [LINE, "", f"ℹ️ {DISCLAIMER}", "", FOOTER]
     return "\n".join(lines)
 
 def run_calendar(state, now, events, out):
@@ -638,7 +641,7 @@ def strength_word(range_pct):
 def msg_reaction(e, gold, dxy):
     c, t = ev_names(e)
     arrow = "🟢 ▲" if gold["move"] >= 0 else "🔴 ▼"
-    lines = [f"📊 <b>تفاعل السوق مع الخبر</b>", f"{FLAGS.get(e['country'], '')} {ev_icon(e)} {esc(t)}",
+    lines = [f"📊 <b>تفاعل السوق مع الخبر</b>", f"{FLAGS.get(e['country'], '')} {esc(t)}",
              f"🥇 الذهب: {arrow} <b>{abs(gold['move']):.1f}$</b> ({gold['pct']:+.2f}%) خلال 5 دقايق",
              f"⚡ مدى التذبذب: <b>{gold['range']:.1f}$</b> - حركة {strength_word(gold['range_pct'])}"]
     if dxy:
@@ -1189,14 +1192,14 @@ def run_weekly(state, now, out):
         except Exception as ex:
             print("nextweek failed:", ex); items = []
         if items:
-            lines = ["🗓️ <b>جدول أهم أخبار الأسبوع الجاي</b>", LINE]
+            lines = ["🗓️ <b>جدول أهم أخبار الأسبوع الجاي</b>", "", LINE, ""]
             day = None
             for e, w in items:
                 if w.date() != day:
-                    day = w.date(); lines += ["", f"📌 <b>{DAYS_AR[w.weekday()]} {w.day}/{w.month}</b>"]
+                    day = w.date(); lines += [f"📌 <b>{DAYS_AR[w.weekday()]} {w.day}/{w.month}</b>", ""]
                 c, t = ev_names(e)
-                lines.append(f"🕒 {_t12(w)} {FLAGS.get(e['country'], '')} {ev_icon(e)} {esc(c)}: {esc(t)}")
-            lines += ["", LINE, "🔔 هنبعت تنبيه قبل كل خبر بساعة وبـ 5 دقايق وبدقيقة", f"ℹ️ {DISCLAIMER}", FOOTER]
+                lines += [f"🕒 {_t12(w)}  {FLAGS.get(e['country'], '')} {esc(t)}", ""]
+            lines += [LINE, "", f"ℹ️ {DISCLAIMER}", "", FOOTER]
             txt = "\n".join(lines)
             if len(txt) < 4000: out.append((key, txt))
     # Friday night: weekly recap
