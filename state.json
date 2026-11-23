@@ -310,7 +310,8 @@
   "bounce fall futur gold jump kospi nearly relief rise stock",
   "ackman dec fall fed goal inflation raise recession risk urge warn",
   "becom currency dollar growth ocbc rout shock strong take",
-  "attack claim houthi next oil refinery saudi strik trump warn year yemen"
+  "attack claim houthi next oil refinery saudi strik trump warn year yemen",
+  "asian calm driven effort market regulator step turmoil"
  ],
  "daily": {},
  "news_count": {
@@ -321,7 +322,7 @@
   "2026-11-20": 43,
   "2026-11-21": 7,
   "2026-11-22": 3,
-  "2026-11-23": 8
+  "2026-11-23": 9
  },
  "day_news": {
   "2026-11-19": [
@@ -748,6 +749,10 @@
    {
     "ar": "الحوثيون في اليمن يعلنون مسؤوليتهم عن الهجمات على مصفاة النفط السعودية بينما يحذر ترامب من ضربات جديدة العام المقبل",
     "score": 3
+   },
+   {
+    "ar": "الهيئات التنظيمية الآسيوية تكثّف جهودها لتهدئة الاضطرابات في السوق الناجمة عن الذكاء الاصطناعي",
+    "score": 1
    }
   ]
  },
