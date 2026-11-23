@@ -125,10 +125,10 @@
   "asset:CL=F:2026-11-23",
   "close:eu:2026-11-23",
   "poll:2026-11-23",
-  "snap:2026-11-23:21"
+  "snap:2026-11-23:21",
+  "top3:2026-11-23"
  ],
  "titles": [
-  "budget could dispute dollar faces fall u.s.",
   "and earnings kickstart loom morning nvidia rebound retail sales stocks struggle",
   "0.2% advance expected october retail sales",
   "asia china chip east hit how new restrictions south will",
@@ -327,7 +327,8 @@
   "dollar futur kickstart mixed morn stock surge trad u.s",
   "ceo climb huang jensen nvidia reinstat treasury u.s yield",
   "back bring character congres decision failure huang nvidia outrageou shred",
-  "bank capp card credit holiday interest open rate shopper shouldn trump yet"
+  "bank capp card credit holiday interest open rate shopper shouldn trump yet",
+  "back china given haven hawk huang jensen may probably"
  ],
  "daily": {},
  "news_count": {
