@@ -569,18 +569,18 @@ def msg_morning(items, today, rest=None):
     if items:
         for e, when in items:
             c, t = ev_names(e)
-            lines += [f"🕒 <b>{fmt_time(when)}</b>", f"{FLAGS.get(e['country'], '')} {esc(t)}", ""]
+            lines += [f"🕒 <b>{fmt_time(when)}</b>", f"{FLAGS.get(e['country'], '')} {esc(t)}"]
     else:
-        lines += ["✅ مفيش أخبار قوية النهارده", ""]
+        lines.append("✅ مفيش أخبار قوية النهارده")
     if rest:
-        lines += [LINE, "", "🗓️ <b>باقي الأسبوع</b>", ""]
+        lines += ["", LINE, "", "🗓️ <b>باقي الأسبوع</b>"]
         day = None
         for e, w in rest:
             if w.date() != day:
-                day = w.date(); lines += [f"📌 <b>{DAYS_AR[w.weekday()]} {w.day}/{w.month}</b>", ""]
+                day = w.date(); lines += ["", f"📌 <b>{DAYS_AR[w.weekday()]} {w.day}/{w.month}</b>"]
             c, t = ev_names(e)
-            lines += [f"🕒 {_t12(w)}  {FLAGS.get(e['country'], '')} {esc(t)}", ""]
-    lines += [LINE, "", f"ℹ️ {DISCLAIMER}", "", FOOTER]
+            lines.append(f"🕒 {_t12(w)}  {FLAGS.get(e['country'], '')} {esc(t)}")
+    lines += ["", LINE, "", f"ℹ️ {DISCLAIMER}", FOOTER]
     return "\n".join(lines)
 
 def run_calendar(state, now, events, out):
@@ -1192,14 +1192,14 @@ def run_weekly(state, now, out):
         except Exception as ex:
             print("nextweek failed:", ex); items = []
         if items:
-            lines = ["🗓️ <b>جدول أهم أخبار الأسبوع الجاي</b>", "", LINE, ""]
+            lines = ["🗓️ <b>جدول أهم أخبار الأسبوع الجاي</b>", "", LINE]
             day = None
             for e, w in items:
                 if w.date() != day:
-                    day = w.date(); lines += [f"📌 <b>{DAYS_AR[w.weekday()]} {w.day}/{w.month}</b>", ""]
+                    day = w.date(); lines += ["", f"📌 <b>{DAYS_AR[w.weekday()]} {w.day}/{w.month}</b>"]
                 c, t = ev_names(e)
-                lines += [f"🕒 {_t12(w)}  {FLAGS.get(e['country'], '')} {esc(t)}", ""]
-            lines += [LINE, "", f"ℹ️ {DISCLAIMER}", "", FOOTER]
+                lines.append(f"🕒 {_t12(w)}  {FLAGS.get(e['country'], '')} {esc(t)}")
+            lines += ["", LINE, "", f"ℹ️ {DISCLAIMER}", FOOTER]
             txt = "\n".join(lines)
             if len(txt) < 4000: out.append((key, txt))
     # Friday night: weekly recap
