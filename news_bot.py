@@ -1257,12 +1257,28 @@ def calendar_cached():
             print("calendar fetch failed (using cache):", ex); _CAL["t"] = time.time() - 240
     return _CAL["data"]
 
+def slim(text):
+    """Long messages: drop the disclaimer line and the hashtag line (the channel link always stays)."""
+    body = text.split("📚 لمتابعة")[0]
+    visible = re.sub(r"<[^>]+>", "", body)
+    if len(visible) < 330 and body.count("\n") < 9:
+        return text
+    out, prev_blank = [], False
+    for ln in text.split("\n"):
+        if ln.startswith("ℹ️") and "للمعلومات فقط" in ln: continue
+        if ln.strip() == TAGS: continue
+        blank = not ln.strip()
+        if blank and prev_blank: continue
+        out.append(ln); prev_blank = blank
+    return "\n".join(out)
+
 def deliver(state, out):
     sent = 0
     for item in out:
         key, text = item[0], item[1]
         if "t.me/forex_news_M1" not in text and not (len(item) > 2 and item[2] and item[2][0] == "poll"):
             text = text + "\n\n" + LINK   # every message carries the channel link
+        text = slim(text)
         extra = item[2] if len(item) > 2 else None
         try:
             if extra and extra[0] == "poll":
