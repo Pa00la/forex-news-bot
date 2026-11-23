@@ -127,7 +127,6 @@
   "poll:2026-11-23"
  ],
  "titles": [
-  "coming fed four hikes louis may months more musalem needed rate says st.",
   "ahead hint holiday just retail sales season. shopping slow the trouble u.s.",
   "budget could dispute dollar faces fall u.s.",
   "and earnings kickstart loom morning nvidia rebound retail sales stocks struggle",
@@ -326,7 +325,8 @@
   "decline gold march rebound sharpest since weekly",
   "dollar poised recover rise stock",
   "dollar futur kickstart mixed morn stock surge trad u.s",
-  "ceo climb huang jensen nvidia reinstat treasury u.s yield"
+  "ceo climb huang jensen nvidia reinstat treasury u.s yield",
+  "back bring character congres decision failure huang nvidia outrageou shred"
  ],
  "daily": {},
  "news_count": {
@@ -337,7 +337,7 @@
   "2026-11-20": 43,
   "2026-11-21": 7,
   "2026-11-22": 3,
-  "2026-11-23": 22
+  "2026-11-23": 23
  },
  "day_news": {
   "2026-11-19": [
@@ -819,6 +819,10 @@
    },
    {
     "ar": "عوائد سندات الخزانة الأمريكية ترتفع مع إعادة نفيديا لجنسن هوانغ كرئيس تنفيذي",
+    "score": 2
+   },
+   {
+    "ar": "الكونجرس يمزق قرار نفيديا \"الفاحش\" بإعادة هوانغ: \"فشل الشخصية\"",
     "score": 2
    }
   ]
