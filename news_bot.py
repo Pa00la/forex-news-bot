@@ -26,7 +26,7 @@ UA = {"User-Agent": "Mozilla/5.0 (compatible; news-bot/1.0)"}
 CAL_URL = "https://nfs.faireconomy.media/ff_calendar_thisweek.json"
 CURRENCIES = {"USD", "GBP", "EUR", "JPY", "CAD", "AUD", "CHF", "NZD", "CNY"}
 LEAD_STAGES = [60, 5, 1]      # pre-alerts: 1 hour, 5 minutes and 1 minute before each release
-MORNING_HOUR = 8              # Dubai hour for the daily calendar post
+MORNING_HOUR = 10             # Egypt hour (fixed daily time) for the daily calendar post
 SNAPSHOT_HOURS = [12, 17, 21] # Dubai hours for gold + currency strength posts (weekdays)
 MAX_NEWS_PER_RUN = 2
 MAX_NEWS_PER_DAY = 40
@@ -547,11 +547,22 @@ def msg_now(e, when):
     lines.append(LINK)
     return "\n".join(lines)
 
-def msg_morning(items, today):
+def msg_morning(items, today, rest=None):
     lines = [f"📅 <b>أهم أخبار اليوم</b>", f"🗓️ {DAYS_AR[today.weekday()]} {today.day}/{today.month} ", LINE]
-    for e, when in items:
-        c, t = ev_names(e)
-        lines.append(f"🕒 <b>{fmt_time(when)}</b>  {FLAGS.get(e['country'], '')} {esc(c)}: {esc(t)}")
+    if items:
+        for e, when in items:
+            c, t = ev_names(e)
+            lines.append(f"🕒 <b>{fmt_time(when)}</b>  {FLAGS.get(e['country'], '')} {esc(c)}: {esc(t)}")
+    else:
+        lines.append("✅ مفيش أخبار قوية النهارده، والسوق غالباً هادي")
+    if rest:
+        lines += ["", "🗓️ <b>أهم أخبار باقي الأسبوع</b>", LINE]
+        day = None
+        for e, w in rest:
+            if w.date() != day:
+                day = w.date(); lines.append(f"📌 <b>{DAYS_AR[w.weekday()]} {w.day}/{w.month}</b>")
+            c, t = ev_names(e)
+            lines.append(f"🕒 {_t12(w)} {FLAGS.get(e['country'], '')} {esc(c)}: {esc(t)}")
     lines += [LINE, "🔔 هنبعت تنبيه قبل كل خبر وبعده", f"ℹ️ {DISCLAIMER}", FOOTER]
     return "\n".join(lines)
 
@@ -560,8 +571,12 @@ def run_calendar(state, now, events, out):
     today = now.date().isoformat()
     todays = [(e, w) for e, w in items if w.date() == now.date()]
     mkey = f"morning:{today}"
-    if todays and now.hour >= MORNING_HOUR and now.hour < MORNING_HOUR + 6 and mkey not in state["sent"]:
-        out.append((mkey, msg_morning(todays, now)))
+    if now.weekday() < 5 and MORNING_HOUR <= now.hour < MORNING_HOUR + 6 and mkey not in state["sent"]:
+        rest = [(e, w) for e, w in items if w.date() > now.date()]
+        txt = msg_morning(todays, now, rest)
+        while len(txt) >= 3900 and rest:
+            rest = rest[:-1]; txt = msg_morning(todays, now, rest)
+        out.append((mkey, txt))
     mediums = list(medium_events(events, {e.get("date") for e, _ in items})) if MEDIUM_ALERTS else []
     for stages, group in ((LEAD_STAGES, items), ([5], mediums)):
         for e, when in group:
