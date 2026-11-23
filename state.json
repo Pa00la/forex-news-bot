@@ -304,7 +304,9 @@
   "arabia attack bahrain deal iran open remain report saudi u.s",
   "backed benefit cash company crunch deepen employe eric health lose robot startup trump",
   "against bessent caution dec decision equity fed overtighten rout",
-  "call expect fed gold haven margin override raise role sink week"
+  "call expect fed gold haven margin override raise role sink week",
+  "gold likely rebound rise technical",
+  "150 2027 cold european gas goldman halv push sees winter"
  ],
  "daily": {},
  "news_count": {
@@ -315,7 +317,7 @@
   "2026-11-20": 43,
   "2026-11-21": 7,
   "2026-11-22": 3,
-  "2026-11-23": 2
+  "2026-11-23": 4
  },
  "day_news": {
   "2026-11-19": [
@@ -718,6 +720,14 @@
    {
     "ar": "انخفض الذهب بنسبة 9٪ خلال أسبوع، حيث تجاوزت نداءات الهامش ورهانات رفع الاحتياطي الفيدرالي دوره كملاذ آمن",
     "score": 2
+   },
+   {
+    "ar": "الذهب يرتفع في انتعاش فني محتمل",
+    "score": 1
+   },
+   {
+    "ar": "يتوقع بنك جولدمان ساكس انخفاض الغاز الأوروبي إلى النصف إلى 45 يورو في عام 2027، لكن الشتاء البارد قد يدفعه إلى 150 يورو",
+    "score": 1
    }
   ]
  },
