@@ -115,10 +115,10 @@
   "open5:سيدني:2026-11-23",
   "open5:طوكيو:2026-11-23",
   "open5:لندن:2026-11-23",
-  "tip:2026-11-23"
+  "tip:2026-11-23",
+  "snap:2026-11-23:12"
  ],
  "titles": [
-  "for futures global lower oil outlook start surplus week",
   "ahead fedspeak slip treasury yields",
   "ceo huang mind nvidia reinstated says seeing trump wouldn",
   "could dollar end strengthen versus year yen",
@@ -316,7 +316,9 @@
   "asian calm driven effort market regulator step turmoil",
   "data euro fall french pare pmi rise weak yield",
   "data focu gold inflation last plunge rebound u.s week",
-  "54.0 55.0 expect flash germany manufactur nov pmi"
+  "54.0 55.0 expect flash germany manufactur nov pmi",
+  "elevated may near oil pric stay term",
+  "debate loss midterm next party republican what"
  ],
  "daily": {},
  "news_count": {
@@ -327,7 +329,7 @@
   "2026-11-20": 43,
   "2026-11-21": 7,
   "2026-11-22": 3,
-  "2026-11-23": 12
+  "2026-11-23": 14
  },
  "day_news": {
   "2026-11-19": [
@@ -770,6 +772,14 @@
    {
     "ar": "مؤشر مديري المشتريات التصنيعي الألماني الأولي لشهر نوفمبر 55.0 مقابل 54.0 المتوقع",
     "score": 1
+   },
+   {
+    "ar": "قد تظل أسعار النفط مرتفعة على المدى القريب",
+    "score": 1
+   },
+   {
+    "ar": "بعد خسائر انتخابات منتصف الولاية، يناقش الجمهوريون ما هو التالي للحزب",
+    "score": 2
    }
   ]
  },
