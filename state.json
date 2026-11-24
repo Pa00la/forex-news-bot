@@ -138,10 +138,10 @@
   "usidx:2026-11-24",
   "snap:2026-11-24:17",
   "asset:GC=F:2026-11-24",
-  "asset:CL=F:2026-11-24"
+  "asset:CL=F:2026-11-24",
+  "close:eu:2026-11-24"
  ],
  "titles": [
-  "bets ease fed hike likely next strengthen year yen",
   "elevated french german likely persist spreads yield",
   "3.6% cpi expected october",
   "3.6% fuel higher inflation prices push",
@@ -340,7 +340,8 @@
   "2.6 2.7% caseshiller city expect house index price september",
   "103.3 92.5 confidence consumer expect nov",
   "corporate fall fresh market meddl pivot stock tariff trump",
-  "confidence consumer democrat inflation midterm persist shoot though victory worry"
+  "confidence consumer democrat inflation midterm persist shoot though victory worry",
+  "american anyway don doubl like soon tariff trump week"
  ],
  "daily": {},
  "news_count": {
@@ -352,7 +353,7 @@
   "2026-11-21": 7,
   "2026-11-22": 3,
   "2026-11-23": 26,
-  "2026-11-24": 20
+  "2026-11-24": 21
  },
  "day_news": {
   "2026-11-20": [
@@ -759,6 +760,10 @@
    {
     "ar": "ارتفاع ثقة المستهلك بعد انتصارات الديمقراطيين في انتخابات منتصف الولاية — على الرغم من استمرار المخاوف من التضخم",
     "score": 3
+   },
+   {
+    "ar": "لا يحبّ الأمريكيون تعريفات ترامب الجمركية. إنه يضاعفها على أي حال — بدءًا من هذا الأسبوع.",
+    "score": 2
    }
   ]
  },
