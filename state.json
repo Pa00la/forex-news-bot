@@ -132,7 +132,6 @@
   "open5:طوكيو:2026-11-24"
  ],
  "titles": [
-  "dollar futures gold higher inch slip u.s. yields",
   "come has nvidia sell spooked stocks the time turmoil",
   "direction economy fed getting inflation moving not right stronger the williams",
   "and bear buy digital gold good hackproof increasingly market this time world.",
@@ -331,7 +330,8 @@
   "advisor back ceo house huang national nvidia security weigh white",
   "2027 2028 anz cut cuts early first forward june pull rate rba sees three",
   "edge futur higher likely oil recovery technical",
-  "economic goldman next prov technology test"
+  "economic goldman next prov technology test",
+  "acros gold market rise risk sentiment"
  ],
  "daily": {},
  "news_count": {
@@ -343,7 +343,7 @@
   "2026-11-21": 7,
   "2026-11-22": 3,
   "2026-11-23": 26,
-  "2026-11-24": 5
+  "2026-11-24": 6
  },
  "day_news": {
   "2026-11-20": [
@@ -689,6 +689,10 @@
    },
    {
     "ar": "يقول جولدمان إن الاختبار التالي للذكاء الاصطناعي هو إثبات الجوانب الاقتصادية، وليس التكنولوجيا",
+    "score": 1
+   },
+   {
+    "ar": "ارتفاع الذهب وسط أجواء تقبل المخاطر في الأسواق",
     "score": 1
    }
   ]
