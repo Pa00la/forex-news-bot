@@ -136,7 +136,6 @@
   "snap:2026-11-24:12"
  ],
  "titles": [
-  "currencies dollar further growth may most other resilient rise tailwinds u.s. vs.",
   "amid dollar off risk sentiment singapore slightly weakens",
   "east enemy from gold headlines middle not now right the treasury worst yield",
   "ahead behind competition falling industry losing meeting putin says trump with",
@@ -335,7 +334,8 @@
   "dollar look start stretched strong",
   "boost ease find forced gold liquidation market news nvidia relief some stock",
   "acces aligned benefit business democrat government probe trump whether",
-  "can comfortable ecb german get hint ifo nov recovery still survey too"
+  "can comfortable ecb german get hint ifo nov recovery still survey too",
+  "condition consolidat hormuz iran key management met oil support tighten until urge"
  ],
  "daily": {},
  "news_count": {
@@ -347,7 +347,7 @@
   "2026-11-21": 7,
   "2026-11-22": 3,
   "2026-11-23": 26,
-  "2026-11-24": 17
+  "2026-11-24": 18
  },
  "day_news": {
   "2026-11-20": [
@@ -742,6 +742,10 @@
    {
     "ar": "ويشير استطلاع إيفو الألماني إلى حدوث انتعاش في نوفمبر/تشرين الثاني، لكن البنك المركزي الأوروبي لا يزال غير مرتاح للغاية",
     "score": 1
+   },
+   {
+    "ar": "يتماسك النفط الخام عند مستوى دعم رئيسي حيث تحث إيران على تشديد إدارة هرمز حتى استيفاء الشروط",
+    "score": 2
    }
   ]
  },
