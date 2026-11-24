@@ -141,7 +141,6 @@
   "asset:CL=F:2026-11-24"
  ],
  "titles": [
-  "ahead behind competition falling industry losing meeting putin says trump with",
   "800 asia below breaks gold investinglive market news pacific",
   "bets ease fed hike likely next strengthen year yen",
   "elevated french german likely persist spreads yield",
@@ -340,7 +339,8 @@
   "can comfortable ecb german get hint ifo nov recovery still survey too",
   "condition consolidat hormuz iran key management met oil support tighten until urge",
   "2.6 2.7% caseshiller city expect house index price september",
-  "103.3 92.5 confidence consumer expect nov"
+  "103.3 92.5 confidence consumer expect nov",
+  "corporate fall fresh market meddl pivot stock tariff trump"
  ],
  "daily": {},
  "news_count": {
@@ -352,7 +352,7 @@
   "2026-11-21": 7,
   "2026-11-22": 3,
   "2026-11-23": 26,
-  "2026-11-24": 18
+  "2026-11-24": 19
  },
  "day_news": {
   "2026-11-20": [
@@ -750,6 +750,10 @@
    },
    {
     "ar": "يتماسك النفط الخام عند مستوى دعم رئيسي حيث تحث إيران على تشديد إدارة هرمز حتى استيفاء الشروط",
+    "score": 2
+   },
+   {
+    "ar": "أسواق الأسهم تهبط مع تحول ترامب من التدخل في شؤون الشركات إلى فرض رسوم جمركية جديدة",
     "score": 2
    }
   ]
