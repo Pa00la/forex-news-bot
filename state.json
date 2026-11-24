@@ -132,7 +132,6 @@
   "open5:طوكيو:2026-11-24"
  ],
  "titles": [
-  "drag market retail sales slower",
   "again earn for shift. shorter term this treasurys want watch",
   "0.04% 98.42 dollar falls index wsj",
   "dollar fed gold keep treads water weighing",
@@ -331,7 +330,8 @@
   "blackrock energy fade fed market overprice raise sees shock three two",
   "000 back bank bet big fed four gold pace recovery road sets",
   "detonate explosiv iowa military now order toxic trump",
-  "billion buying china etf halt icymi off record rescue sell state struggl yuan"
+  "billion buying china etf halt icymi off record rescue sell state struggl yuan",
+  "hit iran low mine month near oil sits supply tanker three wins yet"
  ],
  "daily": {},
  "news_count": {
@@ -343,7 +343,7 @@
   "2026-11-21": 7,
   "2026-11-22": 3,
   "2026-11-23": 26,
-  "2026-11-24": 10
+  "2026-11-24": 11
  },
  "day_news": {
   "2026-11-20": [
@@ -710,6 +710,10 @@
    {
     "ar": "ICYMI: إنقاذ الصين بقيمة 90 مليار يوان: شراء صناديق الاستثمار المتداولة الحكومية يكافح لوقف عمليات بيع الذكاء الاصطناعي",
     "score": 1
+   },
+   {
+    "ar": "وتقول إيران إن ثلاث ناقلات اصطدمت بألغام، لكن النفط يقترب من أدنى مستوى له منذ ثلاثة أشهر مع زيادة الإمدادات",
+    "score": 2
    }
   ]
  },
