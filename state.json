@@ -132,8 +132,6 @@
   "open5:طوكيو:2026-11-24"
  ],
  "titles": [
-  "come has nvidia sell spooked stocks the time turmoil",
-  "direction economy fed getting inflation moving not right stronger the williams",
   "and bear buy digital gold good hackproof increasingly market this time world.",
   "futures gains modest oil post",
   "drag market retail sales slower",
@@ -331,7 +329,9 @@
   "2027 2028 anz cut cuts early first forward june pull rate rba sees three",
   "edge futur higher likely oil recovery technical",
   "economic goldman next prov technology test",
-  "acros gold market rise risk sentiment"
+  "acros gold market rise risk sentiment",
+  "blackrock energy fade fed market overprice raise sees shock three two",
+  "000 back bank bet big fed four gold pace recovery road sets"
  ],
  "daily": {},
  "news_count": {
@@ -343,7 +343,7 @@
   "2026-11-21": 7,
   "2026-11-22": 3,
   "2026-11-23": 26,
-  "2026-11-24": 6
+  "2026-11-24": 8
  },
  "day_news": {
   "2026-11-20": [
@@ -694,6 +694,14 @@
    {
     "ar": "ارتفاع الذهب وسط أجواء تقبل المخاطر في الأسواق",
     "score": 1
+   },
+   {
+    "ar": "تقول بلاك روك إن الأسواق تبالغ في تقدير رفع أسعار الفائدة من قبل بنك الاحتياطي الفيدرالي، وترى رفعين وليس ثلاثة مع تلاشي صدمة الطاقة",
+    "score": 1
+   },
+   {
+    "ar": "طريق الذهب للعودة إلى 5000 دولار: أربعة بنوك كبرى تراهن على التعافي، لكن بنك الاحتياطي الفيدرالي يحدد الوتيرة",
+    "score": 2
    }
   ]
  },
