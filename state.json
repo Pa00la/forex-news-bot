@@ -135,7 +135,6 @@
   "tip:2026-11-24"
  ],
  "titles": [
-  "dollar fed gold keep treads water weighing",
   "edges lower mideast offset oil prospects supply surplus tensions",
   "and china meet putin things three trump watch",
   "anchored around boj december hike inflation keeps play ueda wants",
@@ -334,7 +333,8 @@
   "billion buying china etf halt icymi off record rescue sell state struggl yuan",
   "hit iran low mine month near oil sits supply tanker three wins yet",
   "changed china india panel rise still tactic thwart u.s",
-  "2027 bund end german higher seen ten treasury u.s year yield"
+  "2027 bund end german higher seen ten treasury u.s year yield",
+  "dollar look start stretched strong"
  ],
  "daily": {},
  "news_count": {
@@ -346,7 +346,7 @@
   "2026-11-21": 7,
   "2026-11-22": 3,
   "2026-11-23": 26,
-  "2026-11-24": 13
+  "2026-11-24": 14
  },
  "day_news": {
   "2026-11-20": [
@@ -725,6 +725,10 @@
    {
     "ar": "من المتوقع ارتفاع عائدات سندات الخزانة الأمريكية وسندات الحكومة الألمانية لأجل عشر سنوات بحلول نهاية عام 2027",
     "score": 2
+   },
+   {
+    "ar": "بدأت قوة الدولار تبدو مبالغًا فيها",
+    "score": 1
    }
   ]
  },
