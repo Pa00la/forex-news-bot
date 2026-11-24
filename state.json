@@ -147,7 +147,6 @@
   "open5:سيدني:2026-11-25"
  ],
  "titles": [
-  "3.6% diesel drive high inflation prices record year",
   "after data falls inflation sterling u.k.",
   "bond early eurozone fall trade yields",
   "after boe fall forecast gilt inflation services u.k. undershoots yields",
@@ -346,7 +345,8 @@
   "auction demand note show slightly soft treasury u.s year",
   "await data gdp inflation mixed treasury u.s yield",
   "$237 billion debt eye load popp reveal venezuela",
-  "become choice florida may midterm moving republican some"
+  "become choice florida may midterm moving republican some",
+  "3.8% dec fed inflation last near pce preview raise read seen"
  ],
  "daily": {},
  "news_count": {
@@ -359,7 +359,7 @@
   "2026-11-22": 3,
   "2026-11-23": 26,
   "2026-11-24": 21,
-  "2026-11-25": 2
+  "2026-11-25": 3
  },
  "day_news": {
   "2026-11-21": [
@@ -606,6 +606,10 @@
    {
     "ar": "قد يصبح الانتقال إلى فلوريدا خيارًا لبعض الجمهوريين بعد الانتخابات النصفية",
     "score": 2
+   },
+   {
+    "ar": "معاينة نفقات الاستهلاك الشخصي في الولايات المتحدة: من المتوقع أن يقترب التضخم من 3.8% في القراءة الأخيرة لبنك الاحتياطي الفيدرالي قبل رفع أسعار الفائدة في ديسمبر",
+    "score": 1
    }
   ]
  },
