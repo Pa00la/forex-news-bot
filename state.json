@@ -132,11 +132,10 @@
   "open5:طوكيو:2026-11-24",
   "open5:لندن:2026-11-24",
   "morning:2026-11-24",
-  "tip:2026-11-24"
+  "tip:2026-11-24",
+  "snap:2026-11-24:12"
  ],
  "titles": [
-  "and china meet putin things three trump watch",
-  "anchored around boj december hike inflation keeps play ueda wants",
   "currencies dollar further growth may most other resilient rise tailwinds u.s. vs.",
   "amid dollar off risk sentiment singapore slightly weakens",
   "east enemy from gold headlines middle not now right the treasury worst yield",
@@ -334,7 +333,9 @@
   "changed china india panel rise still tactic thwart u.s",
   "2027 bund end german higher seen ten treasury u.s year yield",
   "dollar look start stretched strong",
-  "boost ease find forced gold liquidation market news nvidia relief some stock"
+  "boost ease find forced gold liquidation market news nvidia relief some stock",
+  "acces aligned benefit business democrat government probe trump whether",
+  "can comfortable ecb german get hint ifo nov recovery still survey too"
  ],
  "daily": {},
  "news_count": {
@@ -346,7 +347,7 @@
   "2026-11-21": 7,
   "2026-11-22": 3,
   "2026-11-23": 26,
-  "2026-11-24": 15
+  "2026-11-24": 17
  },
  "day_news": {
   "2026-11-20": [
@@ -733,6 +734,14 @@
    {
     "ar": "يشهد الذهب بعض الانتعاش مع تراجع عمليات التصفية القسرية بعد أن عززت أخبار إنفيديا أسواق الأسهم",
     "score": 1
+   },
+   {
+    "ar": "يحقق الديمقراطيون فيما إذا كانت الشركات المتحالفة مع ترامب جونيور تستفيد من وصول الحكومة",
+    "score": 1
+   },
+   {
+    "ar": "ويشير استطلاع إيفو الألماني إلى حدوث انتعاش في نوفمبر/تشرين الثاني، لكن البنك المركزي الأوروبي لا يزال غير مرتاح للغاية",
+    "score": 1
    }
   ]
  },
@@ -740,6 +749,7 @@
   "Last Week": "",
   "Bill Ackman": "",
   "John Williams": "",
-  "California Democrat": ""
+  "California Democrat": "",
+  "Trump Jr": "رجل أعمال وناشط أمريكي"
  }
 }
