@@ -141,7 +141,6 @@
   "asset:CL=F:2026-11-24"
  ],
  "titles": [
-  "800 asia below breaks gold investinglive market news pacific",
   "bets ease fed hike likely next strengthen year yen",
   "elevated french german likely persist spreads yield",
   "3.6% cpi expected october",
@@ -340,7 +339,8 @@
   "condition consolidat hormuz iran key management met oil support tighten until urge",
   "2.6 2.7% caseshiller city expect house index price september",
   "103.3 92.5 confidence consumer expect nov",
-  "corporate fall fresh market meddl pivot stock tariff trump"
+  "corporate fall fresh market meddl pivot stock tariff trump",
+  "confidence consumer democrat inflation midterm persist shoot though victory worry"
  ],
  "daily": {},
  "news_count": {
@@ -352,7 +352,7 @@
   "2026-11-21": 7,
   "2026-11-22": 3,
   "2026-11-23": 26,
-  "2026-11-24": 19
+  "2026-11-24": 20
  },
  "day_news": {
   "2026-11-20": [
@@ -755,6 +755,10 @@
    {
     "ar": "أسواق الأسهم تهبط مع تحول ترامب من التدخل في شؤون الشركات إلى فرض رسوم جمركية جديدة",
     "score": 2
+   },
+   {
+    "ar": "ارتفاع ثقة المستهلك بعد انتصارات الديمقراطيين في انتخابات منتصف الولاية — على الرغم من استمرار المخاوف من التضخم",
+    "score": 3
    }
   ]
  },
