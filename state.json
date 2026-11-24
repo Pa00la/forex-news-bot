@@ -139,7 +139,8 @@
   "snap:2026-11-24:17",
   "asset:GC=F:2026-11-24",
   "asset:CL=F:2026-11-24",
-  "close:eu:2026-11-24"
+  "close:eu:2026-11-24",
+  "poll:2026-11-24"
  ],
  "titles": [
   "elevated french german likely persist spreads yield",
