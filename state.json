@@ -132,7 +132,6 @@
   "open5:طوكيو:2026-11-24"
  ],
  "titles": [
-  "0.04% 98.42 dollar falls index wsj",
   "dollar fed gold keep treads water weighing",
   "edges lower mideast offset oil prospects supply surplus tensions",
   "and china meet putin things three trump watch",
@@ -331,7 +330,8 @@
   "detonate explosiv iowa military now order toxic trump",
   "billion buying china etf halt icymi off record rescue sell state struggl yuan",
   "hit iran low mine month near oil sits supply tanker three wins yet",
-  "changed china india panel rise still tactic thwart u.s"
+  "changed china india panel rise still tactic thwart u.s",
+  "2027 bund end german higher seen ten treasury u.s year yield"
  ],
  "daily": {},
  "news_count": {
@@ -343,7 +343,7 @@
   "2026-11-21": 7,
   "2026-11-22": 3,
   "2026-11-23": 26,
-  "2026-11-24": 12
+  "2026-11-24": 13
  },
  "day_news": {
   "2026-11-20": [
@@ -717,6 +717,10 @@
    },
    {
     "ar": "تقول لجنة أمريكية إن الصين غيرت تكتيكاتها لكنها لا تزال تعرقل صعود الهند",
+    "score": 2
+   },
+   {
+    "ar": "من المتوقع ارتفاع عائدات سندات الخزانة الأمريكية وسندات الحكومة الألمانية لأجل عشر سنوات بحلول نهاية عام 2027",
     "score": 2
    }
   ]
