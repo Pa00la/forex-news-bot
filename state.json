@@ -155,7 +155,6 @@
   "now:2026-11-24T19:30:00-05:00|AUD|CPI m/m"
  ],
  "titles": [
-  "443 again bills energy forecast from inflation january rises year",
   "changes concerns could crude culprit demand despite east extends losses middle oil the",
   "contained could growth inflationary pressures sterling support u.k.",
   "and argues bonds buy economy fed perfect setup slowing that the this tightening trader",
@@ -354,7 +353,8 @@
   "boom fortun his intervention nvidia political ties trump",
   "comeback gold may wait",
   "against bet dollar early still too u.s",
-  "2027 both different dollar end euro gain path seen yen"
+  "2027 both different dollar end euro gain path seen yen",
+  "asian doubt jitter lower mostly stock tariff"
  ],
  "daily": {},
  "news_count": {
@@ -367,7 +367,7 @@
   "2026-11-22": 3,
   "2026-11-23": 26,
   "2026-11-24": 21,
-  "2026-11-25": 13
+  "2026-11-25": 14
  },
  "day_news": {
   "2026-11-21": [
@@ -657,6 +657,10 @@
    },
    {
     "ar": "من المتوقع أن يرتفع كل من الين واليورو مقابل الدولار بحلول نهاية عام 2027، ولكن على مسارات مختلفة",
+    "score": 1
+   },
+   {
+    "ar": "انخفاض الأسهم الآسيوية في الغالب بسبب الشكوك بشأن الذكاء الاصطناعي والتوترات المتعلقة بالتعريفات الجمركية (ضرائب على الواردات)",
     "score": 1
    }
   ]
