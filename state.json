@@ -149,8 +149,6 @@
   "open5:طوكيو:2026-11-25"
  ],
  "titles": [
-  "bond early eurozone fall trade yields",
-  "after boe fall forecast gilt inflation services u.k. undershoots yields",
   "council heating oil payments speed urges",
   "amid east expectations fall middle oil prices supply surplus tensions",
   "bearish data expectations inventory oil pressured prices report surplus u.s.",
@@ -348,7 +346,9 @@
   "$237 billion debt eye load popp reveal venezuela",
   "become choice florida may midterm moving republican some",
   "3.8% dec fed inflation last near pce preview raise read seen",
-  "0.27% 98.75 dollar fall index wsj"
+  "0.27% 98.75 dollar fall index wsj",
+  "call chipmaker float government leadership nvidia stake trump vital",
+  "arabia barrel buys japan oil refill reserv saudi storage tokyo tripl"
  ],
  "daily": {},
  "news_count": {
@@ -361,7 +361,7 @@
   "2026-11-22": 3,
   "2026-11-23": 26,
   "2026-11-24": 21,
-  "2026-11-25": 4
+  "2026-11-25": 6
  },
  "day_news": {
   "2026-11-21": [
@@ -615,6 +615,14 @@
    },
    {
     "ar": "انخفض مؤشر وول ستريت جورنال للدولار بنسبة 0.27% إلى 98.75",
+    "score": 1
+   },
+   {
+    "ar": "ترامب يطرح فكرة استحواذ الحكومة الأمريكية على حصة في شركة إنفيديا، واصفًا شركة صناعة الرقاقات بأنها حيوية لقيادة الذكاء الاصطناعي",
+    "score": 1
+   },
+   {
+    "ar": "المملكة العربية السعودية تُضاعف مخزونها النفطي في اليابان ثلاث مرات حيث تشتري طوكيو 8 ملايين برميل لإعادة ملء الاحتياطيات",
     "score": 1
    }
   ]
