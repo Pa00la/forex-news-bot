@@ -155,7 +155,6 @@
   "now:2026-11-24T19:30:00-05:00|AUD|CPI m/m"
  ],
  "titles": [
-  "but carries dollar downside fed firms minutes policy prospects risks",
   "analysis bottom gold interesting may potential shows zone",
   "443 again bills energy forecast from inflation january rises year",
   "changes concerns could crude culprit demand despite east extends losses middle oil the",
@@ -354,7 +353,8 @@
   "4.2% boj case firm japan jump oct pric producer raise servic",
   "3.6% 3.8% aud australia cpi expect mean oct prior rise trimmed",
   "boom fortun his intervention nvidia political ties trump",
-  "comeback gold may wait"
+  "comeback gold may wait",
+  "against bet dollar early still too u.s"
  ],
  "daily": {},
  "news_count": {
@@ -367,7 +367,7 @@
   "2026-11-22": 3,
   "2026-11-23": 26,
   "2026-11-24": 21,
-  "2026-11-25": 11
+  "2026-11-25": 12
  },
  "day_news": {
   "2026-11-21": [
@@ -649,6 +649,10 @@
    },
    {
     "ar": "قد تضطر عودة الذهب إلى الانتظار",
+    "score": 1
+   },
+   {
+    "ar": "لا يزال من السابق لأوانه المراهنة ضد الدولار الأمريكي",
     "score": 1
    }
   ]
