@@ -165,7 +165,9 @@
   "pre1:2026-11-25T08:30:00-05:00|USD|Core PCE Price Index m/m",
   "now:2026-11-25T08:30:00-05:00|USD|Core PCE Price Index m/m",
   "react:2026-11-25T08:30:00-05:00|USD|Core PCE Price Index m/m",
-  "goldmove:997563:down"
+  "goldmove:997563:down",
+  "open5:الأمريكي:2026-11-25",
+  "usidx:2026-11-25"
  ],
  "titles": [
   "1.245m 1.309m expect hous oct start",
