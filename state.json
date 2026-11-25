@@ -175,7 +175,6 @@
   "poll:2026-11-25"
  ],
  "titles": [
-  "admin aren closely connected insist outag recent tech timed trump",
   "ally democrat house investigation record save their trump upcom warn",
   "democrat hakeem house jeffry nominate speaker",
   "3380k 58k expect inventory oil weekly",
@@ -374,7 +373,8 @@
   "bailey boe energy inflation lower peak pric sees stay they where",
   "425 despite edge gold lower sitt support yield",
   "4.708% billion high note sell treasury yield",
-  "add democrat freshman group leadership push senate"
+  "add democrat freshman group leadership push senate",
+  "blam election here selloff trump watch what"
  ],
  "daily": {},
  "news_count": {
@@ -387,7 +387,7 @@
   "2026-11-22": 3,
   "2026-11-23": 26,
   "2026-11-24": 21,
-  "2026-11-25": 25
+  "2026-11-25": 26
  },
  "day_news": {
   "2026-11-21": [
@@ -726,6 +726,10 @@
    {
     "ar": "تسعى مجموعة من الديمقراطيين في مجلس الشيوخ إلى إضافة طالب جديد إلى القيادة",
     "score": 3
+   },
+   {
+    "ar": "ترامب يلقي باللوم على الانتخابات في عمليات البيع المكثفة. إليك ما أتابعه.",
+    "score": 4
    }
   ]
  },
