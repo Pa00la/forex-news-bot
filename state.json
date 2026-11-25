@@ -155,7 +155,6 @@
   "now:2026-11-24T19:30:00-05:00|AUD|CPI m/m"
  ],
  "titles": [
-  "council heating oil payments speed urges",
   "amid east expectations fall middle oil prices supply surplus tensions",
   "bearish data expectations inventory oil pressured prices report surplus u.s.",
   "2.5% bets dollar down firmer gold hike rate",
@@ -354,7 +353,8 @@
   "3.8% dec fed inflation last near pce preview raise read seen",
   "0.27% 98.75 dollar fall index wsj",
   "call chipmaker float government leadership nvidia stake trump vital",
-  "arabia barrel buys japan oil refill reserv saudi storage tokyo tripl"
+  "arabia barrel buys japan oil refill reserv saudi storage tokyo tripl",
+  "global partner prepar tariff trad unveil"
  ],
  "daily": {},
  "news_count": {
@@ -367,7 +367,7 @@
   "2026-11-22": 3,
   "2026-11-23": 26,
   "2026-11-24": 21,
-  "2026-11-25": 6
+  "2026-11-25": 7
  },
  "day_news": {
   "2026-11-21": [
@@ -629,6 +629,10 @@
    },
    {
     "ar": "المملكة العربية السعودية تُضاعف مخزونها النفطي في اليابان ثلاث مرات حيث تشتري طوكيو 8 ملايين برميل لإعادة ملء الاحتياطيات",
+    "score": 1
+   },
+   {
+    "ar": "الولايات المتحدة تستعد للإعلان عن تعريفات جمركية جديدة على شركائها التجاريين العالميين",
     "score": 1
    }
   ]
