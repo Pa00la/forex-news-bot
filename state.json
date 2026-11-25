@@ -153,7 +153,9 @@
   "pre5:2026-11-24T19:30:00-05:00|AUD|CPI m/m",
   "pre1:2026-11-24T19:30:00-05:00|AUD|CPI m/m",
   "now:2026-11-24T19:30:00-05:00|AUD|CPI m/m",
-  "open5:لندن:2026-11-25"
+  "open5:لندن:2026-11-25",
+  "morning:2026-11-25",
+  "tip:2026-11-25"
  ],
  "titles": [
   "contained could growth inflationary pressures sterling support u.k.",
