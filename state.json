@@ -158,7 +158,6 @@
   "tip:2026-11-25"
  ],
  "titles": [
-  "contained could growth inflationary pressures sterling support u.k.",
   "and argues bonds buy economy fed perfect setup slowing that the this tightening trader",
   "amid and but extends fed hawkish headwinds iran persist recovery significant tensions zcash",
   "alaska and flips huang jensen mary nvidia peltola reinstate seat. senate won",
@@ -357,7 +356,8 @@
   "against bet dollar early still too u.s",
   "2027 both different dollar end euro gain path seen yen",
   "asian doubt jitter lower mostly stock tariff",
-  "among children coast crash dead mississippi off plane six two"
+  "among children coast crash dead mississippi off plane six two",
+  "500 await close data fall gold inflation market ounce troy"
  ],
  "daily": {},
  "news_count": {
@@ -370,7 +370,7 @@
   "2026-11-22": 3,
   "2026-11-23": 26,
   "2026-11-24": 21,
-  "2026-11-25": 14
+  "2026-11-25": 15
  },
  "day_news": {
   "2026-11-21": [
@@ -665,6 +665,10 @@
    {
     "ar": "انخفاض الأسهم الآسيوية في الغالب بسبب الشكوك بشأن الذكاء الاصطناعي والتوترات المتعلقة بالتعريفات الجمركية (ضرائب على الواردات)",
     "score": 1
+   },
+   {
+    "ar": "الذهب ينخفض ​​إلى ما يقرب من 3500 دولار للأونصة مع انتظار السوق لبيانات التضخم",
+    "score": 2
    }
   ]
  },
@@ -673,6 +677,7 @@
   "Bill Ackman": "",
   "John Williams": "",
   "California Democrat": "",
-  "Trump Jr": "رجل أعمال وناشط أمريكي"
+  "Trump Jr": "رجل أعمال وناشط أمريكي",
+  "Troy Ounce": ""
  }
 }
