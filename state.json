@@ -157,11 +157,15 @@
   "morning:2026-11-25",
   "tip:2026-11-25",
   "snap:2026-11-25:12",
-  "pre60:2026-11-25T08:30:00-05:00|USD|Core PCE Price Index m/m"
+  "pre60:2026-11-25T08:30:00-05:00|USD|Core PCE Price Index m/m",
+  "pre60:2026-11-25T08:30:00-05:00|USD|Core PCE Price Index m/m",
+  "pre5:2026-11-25T08:30:00-05:00|USD|Core PCE Price Index m/m",
+  "pre60:2026-11-25T08:30:00-05:00|USD|Core PCE Price Index m/m",
+  "pre5:2026-11-25T08:30:00-05:00|USD|Core PCE Price Index m/m",
+  "pre1:2026-11-25T08:30:00-05:00|USD|Core PCE Price Index m/m",
+  "now:2026-11-25T08:30:00-05:00|USD|Core PCE Price Index m/m"
  ],
  "titles": [
-  "bank central fed half hike may need people point rate says shock waller with",
-  "action aggressive break calls fed for inflation more norm psychology that the waller",
   "2027 could cuts dollar fall fed rates",
   "and bills cat chocolate energy figures food for inflation mean the what you",
   "agreed appear banking before chairman committee has huang jensen says scott senate",
@@ -359,7 +363,9 @@
   "attack complain oil promis putin refinery retaliation russia stop tell ukraine",
   "boe governor lawmaker present sterl struggle",
   "australian break can catch dollar even hot inflation macro pulse runn",
-  "dollar drive expect fed higher tighten"
+  "dollar drive expect fed higher tighten",
+  "announc china country host includ tariff",
+  "china doubl favorite fresh his other propos tariff trade trump u.s weapon"
  ],
  "daily": {},
  "news_count": {
