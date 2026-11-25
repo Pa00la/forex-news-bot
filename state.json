@@ -163,10 +163,10 @@
   "pre60:2026-11-25T08:30:00-05:00|USD|Core PCE Price Index m/m",
   "pre5:2026-11-25T08:30:00-05:00|USD|Core PCE Price Index m/m",
   "pre1:2026-11-25T08:30:00-05:00|USD|Core PCE Price Index m/m",
-  "now:2026-11-25T08:30:00-05:00|USD|Core PCE Price Index m/m"
+  "now:2026-11-25T08:30:00-05:00|USD|Core PCE Price Index m/m",
+  "react:2026-11-25T08:30:00-05:00|USD|Core PCE Price Index m/m"
  ],
  "titles": [
-  "2027 could cuts dollar fall fed rates",
   "and bills cat chocolate energy figures food for inflation mean the what you",
   "agreed appear banking before chairman committee has huang jensen says scott senate",
   "bps case futur kickstart lift make morn nasdaq nvidia waller",
@@ -365,7 +365,8 @@
   "australian break can catch dollar even hot inflation macro pulse runn",
   "dollar drive expect fed higher tighten",
   "announc china country host includ tariff",
-  "china doubl favorite fresh his other propos tariff trade trump u.s weapon"
+  "china doubl favorite fresh his other propos tariff trade trump u.s weapon",
+  "3.8% accelerated fed gauge inflation likely oct preferred raise rate seal"
  ],
  "daily": {},
  "news_count": {
@@ -378,7 +379,7 @@
   "2026-11-22": 3,
   "2026-11-23": 26,
   "2026-11-24": 21,
-  "2026-11-25": 19
+  "2026-11-25": 20
  },
  "day_news": {
   "2026-11-21": [
@@ -692,6 +693,10 @@
    },
    {
     "ar": "توقعات تشديد السياسة النقدية من قبل بنك الاحتياطي الفيدرالي تدفع الدولار إلى الارتفاع",
+    "score": 2
+   },
+   {
+    "ar": "تسارع مقياس التضخم المفضل لدى بنك الاحتياطي الفيدرالي إلى 3.8٪ في أكتوبر، ومن المرجح أن يؤدي إلى ارتفاع أسعار الفائدة",
     "score": 2
    }
   ]
