@@ -155,8 +155,6 @@
   "now:2026-11-24T19:30:00-05:00|AUD|CPI m/m"
  ],
  "titles": [
-  "amid east expectations fall middle oil prices supply surplus tensions",
-  "bearish data expectations inventory oil pressured prices report surplus u.s.",
   "2.5% bets dollar down firmer gold hike rate",
   "bets dollar high hike month rate rises",
   "but carries dollar downside fed firms minutes policy prospects risks",
@@ -354,7 +352,9 @@
   "0.27% 98.75 dollar fall index wsj",
   "call chipmaker float government leadership nvidia stake trump vital",
   "arabia barrel buys japan oil refill reserv saudi storage tokyo tripl",
-  "global partner prepar tariff trad unveil"
+  "global partner prepar tariff trad unveil",
+  "4.2% boj case firm japan jump oct pric producer raise servic",
+  "3.6% 3.8% aud australia cpi expect mean oct prior rise trimmed"
  ],
  "daily": {},
  "news_count": {
@@ -367,7 +367,7 @@
   "2026-11-22": 3,
   "2026-11-23": 26,
   "2026-11-24": 21,
-  "2026-11-25": 7
+  "2026-11-25": 9
  },
  "day_news": {
   "2026-11-21": [
@@ -633,6 +633,14 @@
    },
    {
     "ar": "الولايات المتحدة تستعد للإعلان عن تعريفات جمركية جديدة على شركائها التجاريين العالميين",
+    "score": 1
+   },
+   {
+    "ar": "أسعار منتجي الخدمات في اليابان ترتفع بنسبة 4.2% في أكتوبر، مما يعزز حجة رفع بنك اليابان للفائدة",
+    "score": 1
+   },
+   {
+    "ar": "ارتفاع الدولار الأسترالي: بلغ مؤشر أسعار المستهلكين المتوسط المعدل في أستراليا لشهر أكتوبر 3.8% على أساس سنوي (التوقعات 3.6%، السابق 3.6%).",
     "score": 1
    }
   ]
