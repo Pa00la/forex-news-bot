@@ -168,9 +168,6 @@
   "goldmove:997563:down"
  ],
  "titles": [
-  "and bills cat chocolate energy figures food for inflation mean the what you",
-  "agreed appear banking before chairman committee has huang jensen says scott senate",
-  "bps case futur kickstart lift make morn nasdaq nvidia waller",
   "1.245m 1.309m expect hous oct start",
   "fedspeak hawkish rise treasury yield",
   "100 basi cool fed high how inflation interest must point possibly rate waller",
@@ -367,7 +364,10 @@
   "dollar drive expect fed higher tighten",
   "announc china country host includ tariff",
   "china doubl favorite fresh his other propos tariff trade trump u.s weapon",
-  "3.8% accelerated fed gauge inflation likely oct preferred raise rate seal"
+  "3.8% accelerated fed gauge inflation likely oct preferred raise rate seal",
+  "0.2% 0.6% durable expect good oct order",
+  "2nd 3.5 3rd 4.3% estimate gdp quarter",
+  "already better even gdp great look looked now quarter third"
  ],
  "daily": {},
  "news_count": {
@@ -380,7 +380,7 @@
   "2026-11-22": 3,
   "2026-11-23": 26,
   "2026-11-24": 21,
-  "2026-11-25": 20
+  "2026-11-25": 21
  },
  "day_news": {
   "2026-11-21": [
@@ -699,6 +699,10 @@
    {
     "ar": "تسارع مقياس التضخم المفضل لدى بنك الاحتياطي الفيدرالي إلى 3.8٪ في أكتوبر، ومن المرجح أن يؤدي إلى ارتفاع أسعار الفائدة",
     "score": 2
+   },
+   {
+    "ar": "تقدير الناتج المحلي الإجمالي الأمريكي الثاني للربع الثالث 4.3% مقابل 3.5 تقدير",
+    "score": 1
    }
   ]
  },
