@@ -175,10 +175,10 @@
   "poll:2026-11-25",
   "snap:2026-11-25:21",
   "top3:2026-11-25",
-  "close:us:2026-11-25"
+  "close:us:2026-11-25",
+  "open5:سيدني:2026-11-26"
  ],
  "titles": [
-  "china gather here putin takeaway top trump watched",
   "april chinese concern copper demand lowest market since turmoil",
   "copper extend fall gold loss silver",
   "bipartisan block china chip fuel huang jensen push sale scandal",
@@ -377,7 +377,8 @@
   "any await better dec fed gotten hasn inflation key raise rate vote",
   "data dollar fall muted reaction u.s",
   "$17.8 account billion donate elon musk roughly spacex trump",
-  "bet greenspan liesman need productivity raise warsh why"
+  "bet greenspan liesman need productivity raise warsh why",
+  "africa bank becom binge bond central debt market problem south warn"
  ],
  "daily": {},
  "news_count": {
@@ -390,7 +391,7 @@
   "2026-11-23": 26,
   "2026-11-24": 21,
   "2026-11-25": 26,
-  "2026-11-26": 2
+  "2026-11-26": 3
  },
  "day_news": {
   "2026-11-22": [
@@ -713,6 +714,10 @@
    {
     "ar": "إيلون ماسك (مالك تسلا وإكس) وSpaceX سيتبرعان بحوالي 17.8 مليار دولار إلى \"حسابات ترامب\"",
     "score": 1
+   },
+   {
+    "ar": "يحذر البنك المركزي في جنوب أفريقيا من أن الإفراط في ديون الذكاء الاصطناعي أصبح مشكلة في سوق السندات",
+    "score": 1
    }
   ]
  },
@@ -725,6 +730,7 @@
   "Troy Ounce": "",
   "The Australian": "",
   "Senate Democrats": "",
-  "Elon Musk": ""
+  "Elon Musk": "",
+  "South Africa": ""
  }
 }
