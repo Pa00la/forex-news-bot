@@ -155,7 +155,6 @@
   "now:2026-11-24T19:30:00-05:00|AUD|CPI m/m"
  ],
  "titles": [
-  "2.5% bets dollar down firmer gold hike rate",
   "bets dollar high hike month rate rises",
   "but carries dollar downside fed firms minutes policy prospects risks",
   "analysis bottom gold interesting may potential shows zone",
@@ -354,7 +353,8 @@
   "arabia barrel buys japan oil refill reserv saudi storage tokyo tripl",
   "global partner prepar tariff trad unveil",
   "4.2% boj case firm japan jump oct pric producer raise servic",
-  "3.6% 3.8% aud australia cpi expect mean oct prior rise trimmed"
+  "3.6% 3.8% aud australia cpi expect mean oct prior rise trimmed",
+  "boom fortun his intervention nvidia political ties trump"
  ],
  "daily": {},
  "news_count": {
@@ -367,7 +367,7 @@
   "2026-11-22": 3,
   "2026-11-23": 26,
   "2026-11-24": 21,
-  "2026-11-25": 9
+  "2026-11-25": 10
  },
  "day_news": {
   "2026-11-21": [
@@ -641,6 +641,10 @@
    },
    {
     "ar": "ارتفاع الدولار الأسترالي: بلغ مؤشر أسعار المستهلكين المتوسط المعدل في أستراليا لشهر أكتوبر 3.8% على أساس سنوي (التوقعات 3.6%، السابق 3.6%).",
+    "score": 1
+   },
+   {
+    "ar": "يربط تدخل ترامب في قضية إنفيديا مصيره السياسي بازدهار الذكاء الاصطناعي",
     "score": 1
    }
   ]
