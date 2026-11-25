@@ -158,8 +158,6 @@
   "tip:2026-11-25"
  ],
  "titles": [
-  "amid and but extends fed hawkish headwinds iran persist recovery significant tensions zcash",
-  "alaska and flips huang jensen mary nvidia peltola reinstate seat. senate won",
   "arrives china for historic meeting putin trump with",
   "2027 bank central could cut franc japanese major peers rates rise swiss yen",
   "alaska democrat election mary peltola senate wins",
@@ -357,7 +355,9 @@
   "asian doubt jitter lower mostly stock tariff",
   "among children coast crash dead mississippi off plane six two",
   "500 await close data fall gold inflation market ounce troy",
-  "2025 eras fade gold level move nvidia optimism restore rise tariff"
+  "2025 eras fade gold level move nvidia optimism restore rise tariff",
+  "1990 democrat early house largest majority secure since tennessee win",
+  "attack complain oil promis putin refinery retaliation russia stop tell ukraine"
  ],
  "daily": {},
  "news_count": {
@@ -370,7 +370,7 @@
   "2026-11-22": 3,
   "2026-11-23": 26,
   "2026-11-24": 21,
-  "2026-11-25": 16
+  "2026-11-25": 17
  },
  "day_news": {
   "2026-11-21": [
@@ -672,6 +672,10 @@
    },
    {
     "ar": "الذهب يفقد مكاسبه مع تلاشي التفاؤل بشأن إنفيديا وتحرك الولايات المتحدة لاستعادة التعريفات الجمركية (ضرائب على الواردات) إلى مستويات عام 2025",
+    "score": 2
+   },
+   {
+    "ar": "أوكرانيا تخبر بوتين \"بالتوقف عن الشكوى\" بشأن هجمات مصفاة النفط بينما تعد روسيا بالانتقام",
     "score": 2
    }
   ]
