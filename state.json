@@ -155,7 +155,6 @@
   "now:2026-11-24T19:30:00-05:00|AUD|CPI m/m"
  ],
  "titles": [
-  "bets dollar high hike month rate rises",
   "but carries dollar downside fed firms minutes policy prospects risks",
   "analysis bottom gold interesting may potential shows zone",
   "443 again bills energy forecast from inflation january rises year",
@@ -354,7 +353,8 @@
   "global partner prepar tariff trad unveil",
   "4.2% boj case firm japan jump oct pric producer raise servic",
   "3.6% 3.8% aud australia cpi expect mean oct prior rise trimmed",
-  "boom fortun his intervention nvidia political ties trump"
+  "boom fortun his intervention nvidia political ties trump",
+  "comeback gold may wait"
  ],
  "daily": {},
  "news_count": {
@@ -367,7 +367,7 @@
   "2026-11-22": 3,
   "2026-11-23": 26,
   "2026-11-24": 21,
-  "2026-11-25": 10
+  "2026-11-25": 11
  },
  "day_news": {
   "2026-11-21": [
@@ -645,6 +645,10 @@
    },
    {
     "ar": "يربط تدخل ترامب في قضية إنفيديا مصيره السياسي بازدهار الذكاء الاصطناعي",
+    "score": 1
+   },
+   {
+    "ar": "قد تضطر عودة الذهب إلى الانتظار",
     "score": 1
    }
   ]
