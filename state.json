@@ -191,7 +191,6 @@
   "poll:2026-11-26"
  ],
  "titles": [
-  "1.50% boj dec first raise three tipped year",
   "asian consolidate currency drag expect face fed rate",
   "breath catch gold lows one stay year",
   "4.7% 4.9% against australian expect oct rate rise unemployment",
@@ -390,7 +389,8 @@
   "agricole credit dollar end favour month rebalanc signal",
   "attack caution chief energy infrastructure intensify nato russia trump ukraine",
   "kaine oppos proposed sen shar tariff tim trump why",
-  "bank central cos european hern lead ndez pablo set spain"
+  "bank central cos european hern lead ndez pablo set spain",
+  "data demand error gdp gets higher massive probe quarter record revision sett third trump"
  ],
  "daily": {},
  "news_count": {
@@ -403,7 +403,7 @@
   "2026-11-23": 26,
   "2026-11-24": 21,
   "2026-11-25": 26,
-  "2026-11-26": 15
+  "2026-11-26": 16
  },
  "day_news": {
   "2026-11-22": [
@@ -777,6 +777,10 @@
    },
    {
     "ar": "السناتور تيم كاين، ديمقراطي من فرجينيا، يشارك أسباب معارضته للرسوم الجمركية التي اقترحها ترامب",
+    "score": 2
+   },
+   {
+    "ar": "يطالب ترامب بالتحقيق في \"خطأ في تحديد الرقم القياسي\" بعد أن حصلت بيانات الناتج المحلي الإجمالي للربع الثالث على مراجعة هائلة للأعلى",
     "score": 2
    }
   ]
