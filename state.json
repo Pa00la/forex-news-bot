@@ -184,7 +184,6 @@
   "snap:2026-11-26:12"
  ],
  "titles": [
-  "decline expect extend futur oil supply surplu",
   "democratic future hold house montana race secret strategist think wins",
   "fed four hawkish kashkari market official raise see turn voic",
   "america bigger dec fed investinglive minut news nov play put raise waller wrap",
@@ -383,7 +382,8 @@
   "beware correlation credit fund high higher manager nab u.s yield",
   "bond eurozone quiet rise thanksgiv trade yield",
   "deal partner pile pressure raise sign tariff threat trade u.s",
-  "concern gilt inflation linger rise yield"
+  "concern gilt inflation linger rise yield",
+  "agricole credit dollar end favour month rebalanc signal"
  ],
  "daily": {},
  "news_count": {
@@ -396,7 +396,7 @@
   "2026-11-23": 26,
   "2026-11-24": 21,
   "2026-11-25": 26,
-  "2026-11-26": 12
+  "2026-11-26": 13
  },
  "day_news": {
   "2026-11-22": [
@@ -759,6 +759,10 @@
    {
     "ar": "ارتفاع عائدات السندات الحكومية مع استمرار المخاوف من التضخم",
     "score": 2
+   },
+   {
+    "ar": "إشارات إعادة موازنة العملات الأجنبية في نهاية الشهر تدعم الدولار - كريدي أجريكول",
+    "score": 1
    }
   ]
  },
@@ -773,6 +777,7 @@
   "Senate Democrats": "",
   "Elon Musk": "",
   "South Africa": "",
-  "Ray Dalio": "مستثمر أمريكي ومدير صندوق تحوط"
+  "Ray Dalio": "مستثمر أمريكي ومدير صندوق تحوط",
+  "Credit Agricole": ""
  }
 }
