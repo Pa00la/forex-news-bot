@@ -183,7 +183,6 @@
   "tip:2026-11-26"
  ],
  "titles": [
-  "canada car carney china come industry look pressure why",
   "decline expect extend futur oil supply surplu",
   "democratic future hold house montana race secret strategist think wins",
   "fed four hawkish kashkari market official raise see turn voic",
@@ -382,7 +381,8 @@
   "abc fcc free judge please right rule speech trump u.s violated",
   "beware correlation credit fund high higher manager nab u.s yield",
   "bond eurozone quiet rise thanksgiv trade yield",
-  "deal partner pile pressure raise sign tariff threat trade u.s"
+  "deal partner pile pressure raise sign tariff threat trade u.s",
+  "concern gilt inflation linger rise yield"
  ],
  "daily": {},
  "news_count": {
@@ -395,7 +395,7 @@
   "2026-11-23": 26,
   "2026-11-24": 21,
   "2026-11-25": 26,
-  "2026-11-26": 11
+  "2026-11-26": 12
  },
  "day_news": {
   "2026-11-22": [
@@ -754,6 +754,10 @@
    {
     "ar": "وتزيد التهديدات الأمريكية برفع التعريفات الجمركية (ضرائب على الواردات) الضغط على الشركاء لتوقيع اتفاقيات تجارية",
     "score": 1
+   },
+   {
+    "ar": "ارتفاع عائدات السندات الحكومية مع استمرار المخاوف من التضخم",
+    "score": 2
    }
   ]
  },
