@@ -180,7 +180,6 @@
   "open5:طوكيو:2026-11-26"
  ],
  "titles": [
-  "claim credit death deserv fall house make mislead overdose white who",
   "boom coming dollar month seen support",
   "fed grow inflation minut outlook show unease",
   "canada car carney china come industry look pressure why",
@@ -379,7 +378,8 @@
   "china company executive linked nvidia other romance",
   "etf fund goldman hedge jump pile point post short weekly",
   "15% bullion call dalio feet find gold ray resurfac trie",
-  "abc fcc free judge please right rule speech trump u.s violated"
+  "abc fcc free judge please right rule speech trump u.s violated",
+  "beware correlation credit fund high higher manager nab u.s yield"
  ],
  "daily": {},
  "news_count": {
@@ -392,7 +392,7 @@
   "2026-11-23": 26,
   "2026-11-24": 21,
   "2026-11-25": 26,
-  "2026-11-26": 8
+  "2026-11-26": 9
  },
  "day_news": {
   "2026-11-22": [
@@ -739,6 +739,10 @@
    {
     "ar": "قاضٍ أمريكي يحكم بأن لجنة الاتصالات الفيدرالية انتهكت حقوق حرية التعبير الخاصة بشبكة ABC لإرضاء ترامب",
     "score": 1
+   },
+   {
+    "ar": "يحذر مديرو الصناديق من الارتباط الأعلى ولكنهم يحصلون على عوائد ائتمانية أمريكية مرتفعة",
+    "score": 2
    }
   ]
  },
