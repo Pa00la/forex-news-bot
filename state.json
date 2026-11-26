@@ -184,7 +184,6 @@
   "snap:2026-11-26:12"
  ],
  "titles": [
-  "fed four hawkish kashkari market official raise see turn voic",
   "america bigger dec fed investinglive minut news nov play put raise waller wrap",
   "1.50% boj dec first raise three tipped year",
   "asian consolidate currency drag expect face fed rate",
@@ -383,7 +382,8 @@
   "deal partner pile pressure raise sign tariff threat trade u.s",
   "concern gilt inflation linger rise yield",
   "agricole credit dollar end favour month rebalanc signal",
-  "attack caution chief energy infrastructure intensify nato russia trump ukraine"
+  "attack caution chief energy infrastructure intensify nato russia trump ukraine",
+  "kaine oppos proposed sen shar tariff tim trump why"
  ],
  "daily": {},
  "news_count": {
@@ -396,7 +396,7 @@
   "2026-11-23": 26,
   "2026-11-24": 21,
   "2026-11-25": 26,
-  "2026-11-26": 14
+  "2026-11-26": 15
  },
  "day_news": {
   "2026-11-22": [
@@ -767,6 +767,10 @@
    {
     "ar": "ترامب، رئيس حلف شمال الأطلسي يحذر روسيا مع تصاعد الهجمات على البنية التحتية للطاقة في أوكرانيا",
     "score": 1
+   },
+   {
+    "ar": "السناتور تيم كاين، ديمقراطي من فرجينيا، يشارك أسباب معارضته للرسوم الجمركية التي اقترحها ترامب",
+    "score": 2
    }
   ]
  },
@@ -782,6 +786,7 @@
   "Elon Musk": "",
   "South Africa": "",
   "Ray Dalio": "مستثمر أمريكي ومدير صندوق تحوط",
-  "Credit Agricole": ""
+  "Credit Agricole": "",
+  "Tim Kaine": "محامي وسياسي أمريكي"
  }
 }
