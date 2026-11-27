@@ -201,7 +201,6 @@
   "snap:2026-11-27:12"
  ],
  "titles": [
-  "big democrat despite divided frustrated midterm party remain winn",
   "2026 bank call deutsche dollar got now shift tack why wrong",
   "2027 dollar stay strong",
   "197k 203k claim estimate initial jobles",
@@ -400,7 +399,8 @@
   "attack drone ends iran italian killed kuwait trump two want war whenever",
   "4.9% aussie capped hits jobles near ocbc peak rate rba upside",
   "dollar euro oil pric rising versu weigh",
-  "$100 automated billion friday goldman jump poised right sach sell stock warn wave"
+  "$100 automated billion friday goldman jump poised right sach sell stock warn wave",
+  "closer election madrid pull spain trump washington"
  ],
  "daily": {},
  "news_count": {
@@ -413,7 +413,7 @@
   "2026-11-24": 21,
   "2026-11-25": 26,
   "2026-11-26": 16,
-  "2026-11-27": 19
+  "2026-11-27": 20
  },
  "day_news": {
   "2026-11-23": [
@@ -856,6 +856,10 @@
    {
     "ar": "يحذر بنك جولدمان ساكس من أن الأسهم مهيأة للقفز يوم الجمعة - مباشرة إلى موجة من البيع الآلي بقيمة 100 مليار دولار",
     "score": 2
+   },
+   {
+    "ar": "الانتخابات الإسبانية قد تقرّب مدريد من واشنطن في عهد ترامب",
+    "score": 4
    }
   ]
  },
