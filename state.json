@@ -201,7 +201,6 @@
   "snap:2026-11-27:12"
  ],
  "titles": [
-  "197k 203k claim estimate initial jobles",
   "20.0 6.3 expect fed nov philly",
   "american bottom get outag relax scrambl trump washington",
   "heat household oil reliant support",
@@ -400,7 +399,8 @@
   "$100 automated billion friday goldman jump poised right sach sell stock warn wave",
   "closer election madrid pull spain trump washington",
   "kevin liesman market nvidia push read signal test warsh whiplash",
-  "can constituency election influence national now political renter"
+  "can constituency election influence national now political renter",
+  "addition council decision ecb govern interest rate sett taken"
  ],
  "daily": {},
  "news_count": {
@@ -413,7 +413,7 @@
   "2026-11-24": 21,
   "2026-11-25": 26,
   "2026-11-26": 16,
-  "2026-11-27": 22
+  "2026-11-27": 23
  },
  "day_news": {
   "2026-11-23": [
@@ -868,6 +868,10 @@
    {
     "ar": "أصبح المستأجرون الآن دائرة انتخابية سياسية وطنية يمكنها التأثير على الانتخابات",
     "score": 3
+   },
+   {
+    "ar": "القرارات التي يتخذها مجلس محافظي البنك المركزي الأوروبي (بالإضافة إلى القرارات التي تحدد أسعار الفائدة)",
+    "score": 2
    }
   ]
  },
@@ -886,6 +890,7 @@
   "Credit Agricole": "",
   "Tim Kaine": "محامي وسياسي أمريكي",
   "Goldman Sachs": "",
-  "Kevin Warsh": "رئيس الاحتياطي الفيدرالي منذ عام 2026"
+  "Kevin Warsh": "رئيس الاحتياطي الفيدرالي منذ عام 2026",
+  "Governing Council": ""
  }
 }
