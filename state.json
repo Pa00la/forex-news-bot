@@ -201,8 +201,6 @@
   "snap:2026-11-27:12"
  ],
  "titles": [
-  "2026 bank call deutsche dollar got now shift tack why wrong",
-  "2027 dollar stay strong",
   "197k 203k claim estimate initial jobles",
   "20.0 6.3 expect fed nov philly",
   "american bottom get outag relax scrambl trump washington",
@@ -400,7 +398,9 @@
   "4.9% aussie capped hits jobles near ocbc peak rate rba upside",
   "dollar euro oil pric rising versu weigh",
   "$100 automated billion friday goldman jump poised right sach sell stock warn wave",
-  "closer election madrid pull spain trump washington"
+  "closer election madrid pull spain trump washington",
+  "kevin liesman market nvidia push read signal test warsh whiplash",
+  "can constituency election influence national now political renter"
  ],
  "daily": {},
  "news_count": {
@@ -413,7 +413,7 @@
   "2026-11-24": 21,
   "2026-11-25": 26,
   "2026-11-26": 16,
-  "2026-11-27": 20
+  "2026-11-27": 22
  },
  "day_news": {
   "2026-11-23": [
@@ -860,6 +860,14 @@
    {
     "ar": "الانتخابات الإسبانية قد تقرّب مدريد من واشنطن في عهد ترامب",
     "score": 4
+   },
+   {
+    "ar": "ليسمان: اختبارات نيفيديا المفاجئة تختبر جهود كيفن وورش لقراءة إشارات السوق",
+    "score": 2
+   },
+   {
+    "ar": "أصبح المستأجرون الآن دائرة انتخابية سياسية وطنية يمكنها التأثير على الانتخابات",
+    "score": 3
    }
   ]
  },
@@ -877,6 +885,7 @@
   "Ray Dalio": "مستثمر أمريكي ومدير صندوق تحوط",
   "Credit Agricole": "",
   "Tim Kaine": "محامي وسياسي أمريكي",
-  "Goldman Sachs": ""
+  "Goldman Sachs": "",
+  "Kevin Warsh": "رئيس الاحتياطي الفيدرالي منذ عام 2026"
  }
 }
