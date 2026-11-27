@@ -196,7 +196,6 @@
   "open5:طوكيو:2026-11-27"
  ],
  "titles": [
-  "bank central circular economy goes money nvidia see where",
   "deal denmark diplomatic greenland month ratify security tension trump",
   "concern downside extend growth keep limited loss oil risk strik",
   "$500 billion deployed dollar nvidia pledged street wall",
@@ -395,7 +394,8 @@
   "against appear dollar limited risk weaken yen",
   "confirm count edge election higher hung kiwi official parliament",
   "already because cba dollar done downside gold limited look work",
-  "another bring buys gold home month rbi six tonn"
+  "another bring buys gold home month rbi six tonn",
+  "attack drone ends iran italian killed kuwait trump two want war whenever"
  ],
  "daily": {},
  "news_count": {
@@ -408,7 +408,7 @@
   "2026-11-24": 21,
   "2026-11-25": 26,
   "2026-11-26": 16,
-  "2026-11-27": 16
+  "2026-11-27": 17
  },
  "day_news": {
   "2026-11-23": [
@@ -839,6 +839,10 @@
    {
     "ar": "بنك الاحتياطي الهندي لا يشتري أي ذهب لمدة ستة أشهر ولكنه يجلب 60 طنًا أخرى إلى البلاد",
     "score": 1
+   },
+   {
+    "ar": "مقتل إيطاليين اثنين في هجوم بطائرة بدون طيار في الكويت؛ ترامب يقول إن الحرب مع إيران ستنتهي \"متى أردت ذلك\"",
+    "score": 3
    }
   ]
  },
