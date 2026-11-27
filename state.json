@@ -196,7 +196,6 @@
   "open5:طوكيو:2026-11-27"
  ],
  "titles": [
-  "anthropic await debut futur improv optimism rise stock trad",
   "bank central circular economy goes money nvidia see where",
   "deal denmark diplomatic greenland month ratify security tension trump",
   "concern downside extend growth keep limited loss oil risk strik",
@@ -395,7 +394,8 @@
   "development inventory market mideast mixed oil track u.s",
   "against appear dollar limited risk weaken yen",
   "confirm count edge election higher hung kiwi official parliament",
-  "already because cba dollar done downside gold limited look work"
+  "already because cba dollar done downside gold limited look work",
+  "another bring buys gold home month rbi six tonn"
  ],
  "daily": {},
  "news_count": {
@@ -408,7 +408,7 @@
   "2026-11-24": 21,
   "2026-11-25": 26,
   "2026-11-26": 16,
-  "2026-11-27": 15
+  "2026-11-27": 16
  },
  "day_news": {
   "2026-11-23": [
@@ -835,6 +835,10 @@
    {
     "ar": "يقول CBA إن الجانب السلبي للذهب يبدو محدودًا لأن الدولار قام بالفعل بمعظم عمله",
     "score": 2
+   },
+   {
+    "ar": "بنك الاحتياطي الهندي لا يشتري أي ذهب لمدة ستة أشهر ولكنه يجلب 60 طنًا أخرى إلى البلاد",
+    "score": 1
    }
   ]
  },
