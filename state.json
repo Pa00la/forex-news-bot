@@ -196,10 +196,6 @@
   "open5:طوكيو:2026-11-27"
  ],
  "titles": [
-  "center great meet prais putin relationship stage take trump ukraine war",
-  "china discus historic meet nuclear positioned reduc russia trump u.s uniquely weapon",
-  "congres markwayne mullin nationwide outag sery tech testify",
-  "ben conservative future media party republican shapiro",
   "anthropic await debut futur improv optimism rise stock trad",
   "bank central circular economy goes money nvidia see where",
   "deal denmark diplomatic greenland month ratify security tension trump",
@@ -395,7 +391,11 @@
   "400 big bottom call early flag gold hsbc next test too",
   "2.9% boj case core dec firm high hits inflation month raise tokyo",
   "2027 australia dollar extend weaknes",
-  "20.1% china growth high industrial month oct profit rise"
+  "20.1% china growth high industrial month oct profit rise",
+  "development inventory market mideast mixed oil track u.s",
+  "against appear dollar limited risk weaken yen",
+  "confirm count edge election higher hung kiwi official parliament",
+  "already because cba dollar done downside gold limited look work"
  ],
  "daily": {},
  "news_count": {
@@ -408,7 +408,7 @@
   "2026-11-24": 21,
   "2026-11-25": 26,
   "2026-11-26": 16,
-  "2026-11-27": 11
+  "2026-11-27": 15
  },
  "day_news": {
   "2026-11-23": [
@@ -819,6 +819,22 @@
    {
     "ar": "ارتفع نمو الأرباح الصناعية في الصين إلى أعلى مستوى خلال 5 أشهر عند 20.1% في أكتوبر",
     "score": 1
+   },
+   {
+    "ar": "النفط مختلط مع تتبع الأسواق لتطورات الشرق الأوسط والمخزونات الأمريكية",
+    "score": 1
+   },
+   {
+    "ar": "يبدو أن خطر ضعف الين مقابل الدولار محدود",
+    "score": 1
+   },
+   {
+    "ar": "ارتفع الدولار النيوزيلندي مع تأكيد نتائج الانتخابات الرسمية في نيوزيلندا وجود برلمان معلق",
+    "score": 3
+   },
+   {
+    "ar": "يقول CBA إن الجانب السلبي للذهب يبدو محدودًا لأن الدولار قام بالفعل بمعظم عمله",
+    "score": 2
    }
   ]
  },
