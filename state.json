@@ -201,7 +201,6 @@
   "snap:2026-11-27:12"
  ],
  "titles": [
-  "$500 billion deployed dollar nvidia pledged street wall",
   "big democrat despite divided frustrated midterm party remain winn",
   "2026 bank call deutsche dollar got now shift tack why wrong",
   "2027 dollar stay strong",
@@ -400,7 +399,8 @@
   "another bring buys gold home month rbi six tonn",
   "attack drone ends iran italian killed kuwait trump two want war whenever",
   "4.9% aussie capped hits jobles near ocbc peak rate rba upside",
-  "dollar euro oil pric rising versu weigh"
+  "dollar euro oil pric rising versu weigh",
+  "$100 automated billion friday goldman jump poised right sach sell stock warn wave"
  ],
  "daily": {},
  "news_count": {
@@ -413,7 +413,7 @@
   "2026-11-24": 21,
   "2026-11-25": 26,
   "2026-11-26": 16,
-  "2026-11-27": 18
+  "2026-11-27": 19
  },
  "day_news": {
   "2026-11-23": [
@@ -852,6 +852,10 @@
    {
     "ar": "ارتفاع أسعار النفط قد يؤثر سلبًا على اليورو مقابل الدولار",
     "score": 2
+   },
+   {
+    "ar": "يحذر بنك جولدمان ساكس من أن الأسهم مهيأة للقفز يوم الجمعة - مباشرة إلى موجة من البيع الآلي بقيمة 100 مليار دولار",
+    "score": 2
    }
   ]
  },
@@ -868,6 +872,7 @@
   "South Africa": "",
   "Ray Dalio": "مستثمر أمريكي ومدير صندوق تحوط",
   "Credit Agricole": "",
-  "Tim Kaine": "محامي وسياسي أمريكي"
+  "Tim Kaine": "محامي وسياسي أمريكي",
+  "Goldman Sachs": ""
  }
 }
