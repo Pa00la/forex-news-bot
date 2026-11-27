@@ -196,7 +196,6 @@
   "open5:طوكيو:2026-11-27"
  ],
  "titles": [
-  "albeit bond french last now one relief see spread unlikely yield",
   "apec day distance final hand kept photo putin shake takaichi trump",
   "dollar elevated prospect rate remain rise u.s",
   "against dollar euro further risk stabiliz weaken",
@@ -395,7 +394,8 @@
   "attack dei democrat ease hope midterm some wins",
   "2.9% 3.0% core cpi expect just nov rise shy tokyo",
   "15% can earn easily face goldman hyperscaler neocloud trap utilisation",
-  "fortun gold near stock term tied"
+  "fortun gold near stock term tied",
+  "face fragile gold recovery stabiliz"
  ],
  "daily": {},
  "news_count": {
@@ -408,7 +408,7 @@
   "2026-11-24": 21,
   "2026-11-25": 26,
   "2026-11-26": 16,
-  "2026-11-27": 6
+  "2026-11-27": 7
  },
  "day_news": {
   "2026-11-23": [
@@ -798,6 +798,10 @@
    },
    {
     "ar": "ثروات الذهب مرتبطة بالأسهم على المدى القريب",
+    "score": 1
+   },
+   {
+    "ar": "الذهب يستقر ولكنه يواجه انتعاشًا هشًا",
     "score": 1
    }
   ]
