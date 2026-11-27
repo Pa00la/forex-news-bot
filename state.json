@@ -196,8 +196,6 @@
   "open5:طوكيو:2026-11-27"
  ],
  "titles": [
-  "apec day distance final hand kept photo putin shake takaichi trump",
-  "dollar elevated prospect rate remain rise u.s",
   "against dollar euro further risk stabiliz weaken",
   "broader commodity expect gold pressured raise rate retreat",
   "center great meet prais putin relationship stage take trump ukraine war",
@@ -395,7 +393,9 @@
   "2.9% 3.0% core cpi expect just nov rise shy tokyo",
   "15% can earn easily face goldman hyperscaler neocloud trap utilisation",
   "fortun gold near stock term tied",
-  "face fragile gold recovery stabiliz"
+  "face fragile gold recovery stabiliz",
+  "400 big bottom call early flag gold hsbc next test too",
+  "2.9% boj case core dec firm high hits inflation month raise tokyo"
  ],
  "daily": {},
  "news_count": {
@@ -408,7 +408,7 @@
   "2026-11-24": 21,
   "2026-11-25": 26,
   "2026-11-26": 16,
-  "2026-11-27": 7
+  "2026-11-27": 9
  },
  "day_news": {
   "2026-11-23": [
@@ -803,6 +803,14 @@
    {
     "ar": "الذهب يستقر ولكنه يواجه انتعاشًا هشًا",
     "score": 1
+   },
+   {
+    "ar": "بنك إتش إس بي سي يشير إلى 3400 دولار كاختبار كبير قادم للذهب ويقول إنه من السابق لأوانه تحديد القاع",
+    "score": 1
+   },
+   {
+    "ar": "التضخم الأساسي في طوكيو يصل إلى أعلى مستوى له منذ 16 شهرًا عند 2.9%، مما يعزز احتمالات رفع بنك اليابان للفائدة في ديسمبر",
+    "score": 2
    }
   ]
  },
