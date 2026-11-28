@@ -214,7 +214,6 @@
   "tip:2026-11-28"
  ],
  "titles": [
-  "dollar fed further peer raise rally scope",
   "either largest midterm party win year",
   "barack bigger election mississippi obama race reflect scholar senate",
   "fed goolsbee higher inflation job market stable target way",
@@ -413,7 +412,8 @@
   "addition council decision ecb govern interest rate sett taken",
   "await futur lower meet oil opec policy settle",
   "attorney democratic general justice may reshape system wave",
-  "congres holiday list messag politic pre thanksgiv trump week"
+  "congres holiday list messag politic pre thanksgiv trump week",
+  "abraham claim deny hormuz iran lincoln strike toll u.s uss"
  ],
  "daily": {},
  "news_count": {
@@ -426,7 +426,7 @@
   "2026-11-25": 26,
   "2026-11-26": 16,
   "2026-11-27": 24,
-  "2026-11-28": 1
+  "2026-11-28": 2
  },
  "day_news": {
   "2026-11-24": [
@@ -789,6 +789,10 @@
    {
     "ar": "الأسبوع في السياسة: رسائل ترامب بمناسبة عيد الشكر؛ قائمة مهام الكونغرس قبل العطلة",
     "score": 3
+   },
+   {
+    "ar": "تنفي الولايات المتحدة مزاعم إيران بشأن الضربة التي شنتها المدمرة الأمريكية يو إس إس أبراهام لينكولن وضحايا هرمز",
+    "score": 1
    }
   ]
  },
@@ -808,6 +812,7 @@
   "Tim Kaine": "محامي وسياسي أمريكي",
   "Goldman Sachs": "",
   "Kevin Warsh": "رئيس الاحتياطي الفيدرالي منذ عام 2026",
-  "Governing Council": ""
+  "Governing Council": "",
+  "Abraham Lincoln": "رئيس الولايات المتحدة من 1861 إلى 1865"
  }
 }
